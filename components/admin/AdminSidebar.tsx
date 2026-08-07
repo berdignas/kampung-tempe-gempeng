@@ -42,23 +42,23 @@ export default function AdminSidebar({
   };
 
   return (
-    <aside className="w-64 bg-slate-900 text-slate-100 h-screen sticky top-0 flex flex-col justify-between p-4 border-r border-slate-800 shadow-xl overflow-y-auto">
+    <aside className="w-64 bg-white text-slate-800 h-screen sticky top-0 flex flex-col justify-between p-4 border-r border-slate-200/80 shadow-xs overflow-y-auto z-40">
       <div>
         {/* Brand Header */}
-        <div className="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-800">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-white font-bold shadow-md shadow-primary/30">
+        <div className="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-100">
+          <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-600/20">
             K
           </div>
           <div>
-            <h1 className="font-semibold text-sm leading-tight text-white">
+            <h1 className="font-bold text-sm leading-tight text-slate-900">
               CMS Kampung Tempe
             </h1>
-            <p className="text-[11px] text-slate-400">Admin Control Panel</p>
+            <p className="text-[11px] font-medium text-emerald-600">Admin Control Panel</p>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="space-y-1">
+        <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive =
@@ -70,13 +70,18 @@ export default function AdminSidebar({
                 key={item.href}
                 href={item.href}
                 onClick={onCloseMobile}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                className={`group flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   isActive
-                    ? "bg-primary text-white shadow-md shadow-primary/20"
-                    : "text-slate-300 hover:bg-slate-800 hover:text-white"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/25 font-semibold"
+                    : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
                 }`}
               >
-                <Icon size={18} className={isActive ? "text-white" : "text-slate-400"} />
+                <Icon
+                  size={18}
+                  className={`transition-colors ${
+                    isActive ? "text-white" : "text-slate-400 group-hover:text-emerald-600"
+                  }`}
+                />
                 {item.label}
               </Link>
             );
@@ -85,10 +90,10 @@ export default function AdminSidebar({
       </div>
 
       {/* Footer Controls */}
-      <div className="space-y-3 pt-4 border-t border-slate-800">
+      <div className="space-y-2.5 pt-4 border-t border-slate-100">
         <button
           onClick={handleReset}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs text-amber-400 hover:bg-amber-950/40 border border-amber-500/20 transition"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/60 transition-all"
         >
           <RefreshCw size={14} />
           Reset Data Default
@@ -97,14 +102,14 @@ export default function AdminSidebar({
         <Link
           href="/"
           target="_blank"
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 transition"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 border border-slate-200/50 transition-all"
         >
           <ArrowLeft size={14} />
           Lihat Website Publik
         </Link>
 
-        <div className="flex items-center gap-2 px-2 text-[11px] text-slate-500 justify-center">
-          <ShieldCheck size={12} className="text-emerald-500" />
+        <div className="flex items-center gap-1.5 px-2 pt-1 text-[11px] text-slate-400 justify-center">
+          <ShieldCheck size={13} className="text-emerald-600" />
           <span>Fairness Standard Active</span>
         </div>
       </div>
