@@ -1,0 +1,236 @@
+"use client";
+
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { UMKM, daftarUMKM as initialUMKM } from "@/lib/data/umkm";
+import { Produk, daftarProduk as initialProduk } from "@/lib/data/produk";
+import { Berita, daftarBerita as initialBerita } from "@/lib/data/berita";
+import {
+  PengaturanPortal,
+  initialPengaturan,
+  loadStoredUMKM,
+  saveStoredUMKM,
+  loadStoredProduk,
+  saveStoredProduk,
+  loadStoredBerita,
+  saveStoredBerita,
+  loadStoredPengaturan,
+  saveStoredPengaturan,
+  resetAllCMSData,
+} from "./cmsStore";
+import {
+  fetchAllFromSupabase,
+  upsertUmkmSupabase,
+  deleteUmkmSupabase,
+  upsertProdukSupabase,
+  deleteProdukSupabase,
+  upsertBeritaSupabase,
+  deleteBeritaSupabase,
+  updatePengaturanSupabase,
+} from "@/lib/supabase/cmsSync";
+
+interface CMSContextType {
+  umkmList: UMKM[];
+  produkList: Produk[];
+  beritaList: Berita[];
+  pengaturan: PengaturanPortal;
+  isSupabaseActive: boolean;
+  
+  // UMKM CRUD
+  addUMKM: (data: Omit<UMKM, "id">) => void;
+  updateUMKM: (id: string, data: Partial<UMKM>) => void;
+  deleteUMKM: (id: string) => void;
+
+  // Produk CRUD
+  addProduk: (data: Omit<Produk, "id">) => void;
+  updateProduk: (id: string, data: Partial<Produk>) => void;
+  deleteProduk: (id: string) => void;
+
+  // Berita CRUD
+  addBerita: (data: Omit<Berita, "id">) => void;
+  updateBerita: (id: string, data: Partial<Berita>) => void;
+  deleteBerita: (id: string) => void;
+
+  // Pengaturan
+  updatePengaturan: (data: Partial<PengaturanPortal>) => void;
+
+  // Reset
+  resetData: () => void;
+}
+
+const CMSContext = createContext<CMSContextType | undefined>(undefined);
+
+export function CMSProvider({ children }: { children: React.ReactNode }) {
+  const [umkmList, setUmkmList] = useState<UMKM[]>(initialUMKM);
+  const [produkList, setProdukList] = useState<Produk[]>(initialProduk);
+  const [beritaList, setBeritaList] = useState<Berita[]>(initialBerita);
+  const [pengaturan, setPengaturan] = useState<PengaturanPortal>(initialPengaturan);
+  const [isSupabaseActive, setIsSupabaseActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    // 1. Muat data dari localStorage dulu untuk akses instant / offline
+    const localUmkm = loadStoredUMKM();
+    const localProduk = loadStoredProduk();
+    const localBerita = loadStoredBerita();
+    const localPengaturan = loadStoredPengaturan();
+
+    setUmkmList(localUmkm);
+    setProdukList(localProduk);
+    setBeritaList(localBerita);
+    setPengaturan(localPengaturan);
+
+    // 2. Sinkronisasi dari Supabase jika tersambung
+    fetchAllFromSupabase().then((data) => {
+      if (data) {
+        setIsSupabaseActive(true);
+        if (data.umkmList && data.umkmList.length > 0) {
+          setUmkmList(data.umkmList);
+          saveStoredUMKM(data.umkmList);
+        }
+        if (data.produkList && data.produkList.length > 0) {
+          setProdukList(data.produkList);
+          saveStoredProduk(data.produkList);
+        }
+        if (data.beritaList && data.beritaList.length > 0) {
+          setBeritaList(data.beritaList);
+          saveStoredBerita(data.beritaList);
+        }
+        if (data.pengaturan) {
+          setPengaturan(data.pengaturan);
+          saveStoredPengaturan(data.pengaturan);
+        }
+      }
+    });
+  }, []);
+
+  // Save changes to localStorage & Supabase
+  const handleSetUmkm = (newList: UMKM[]) => {
+    setUmkmList(newList);
+    saveStoredUMKM(newList);
+  };
+
+  const handleSetProduk = (newList: Produk[]) => {
+    setProdukList(newList);
+    saveStoredProduk(newList);
+  };
+
+  const handleSetBerita = (newList: Berita[]) => {
+    setBeritaList(newList);
+    saveStoredBerita(newList);
+  };
+
+  const handleSetPengaturan = (newPengaturan: PengaturanPortal) => {
+    setPengaturan(newPengaturan);
+    saveStoredPengaturan(newPengaturan);
+    updatePengaturanSupabase(newPengaturan);
+  };
+
+  // UMKM CRUD
+  const addUMKM = (data: Omit<UMKM, "id">) => {
+    const newId = `umkm-${String(Date.now()).slice(-4)}`;
+    const newItem: UMKM = { ...data, id: newId };
+    handleSetUmkm([newItem, ...umkmList]);
+    upsertUmkmSupabase(newItem);
+  };
+
+  const updateUMKM = (id: string, data: Partial<UMKM>) => {
+    const newList = umkmList.map((u) => (u.id === id ? { ...u, ...data } : u));
+    handleSetUmkm(newList);
+    const updated = newList.find((u) => u.id === id);
+    if (updated) upsertUmkmSupabase(updated);
+  };
+
+  const deleteUMKM = (id: string) => {
+    const newList = umkmList.filter((u) => u.id !== id);
+    handleSetUmkm(newList);
+    deleteUmkmSupabase(id);
+  };
+
+  // Produk CRUD
+  const addProduk = (data: Omit<Produk, "id">) => {
+    const newId = `produk-${String(Date.now()).slice(-4)}`;
+    const newItem: Produk = { ...data, id: newId };
+    handleSetProduk([newItem, ...produkList]);
+    upsertProdukSupabase(newItem);
+  };
+
+  const updateProduk = (id: string, data: Partial<Produk>) => {
+    const newList = produkList.map((p) => (p.id === id ? { ...p, ...data } : p));
+    handleSetProduk(newList);
+    const updated = newList.find((p) => p.id === id);
+    if (updated) upsertProdukSupabase(updated);
+  };
+
+  const deleteProduk = (id: string) => {
+    const newList = produkList.filter((p) => p.id !== id);
+    handleSetProduk(newList);
+    deleteProdukSupabase(id);
+  };
+
+  // Berita CRUD
+  const addBerita = (data: Omit<Berita, "id">) => {
+    const newId = `berita-${String(Date.now()).slice(-4)}`;
+    const newItem: Berita = { ...data, id: newId };
+    handleSetBerita([newItem, ...beritaList]);
+    upsertBeritaSupabase(newItem);
+  };
+
+  const updateBerita = (id: string, data: Partial<Berita>) => {
+    const newList = beritaList.map((b) => (b.id === id ? { ...b, ...data } : b));
+    handleSetBerita(newList);
+    const updated = newList.find((b) => b.id === id);
+    if (updated) upsertBeritaSupabase(updated);
+  };
+
+  const deleteBerita = (id: string) => {
+    const newList = beritaList.filter((b) => b.id !== id);
+    handleSetBerita(newList);
+    deleteBeritaSupabase(id);
+  };
+
+  // Pengaturan
+  const updatePengaturan = (data: Partial<PengaturanPortal>) => {
+    handleSetPengaturan({ ...pengaturan, ...data });
+  };
+
+  // Reset
+  const resetData = () => {
+    resetAllCMSData();
+    setUmkmList(initialUMKM);
+    setProdukList(initialProduk);
+    setBeritaList(initialBerita);
+    setPengaturan(initialPengaturan);
+  };
+
+  return (
+    <CMSContext.Provider
+      value={{
+        umkmList,
+        produkList,
+        beritaList,
+        pengaturan,
+        isSupabaseActive,
+        addUMKM,
+        updateUMKM,
+        deleteUMKM,
+        addProduk,
+        updateProduk,
+        deleteProduk,
+        addBerita,
+        updateBerita,
+        deleteBerita,
+        updatePengaturan,
+        resetData,
+      }}
+    >
+      {children}
+    </CMSContext.Provider>
+  );
+}
+
+export function useCMS() {
+  const context = useContext(CMSContext);
+  if (!context) {
+    throw new Error("useCMS must be used within a CMSProvider");
+  }
+  return context;
+}
