@@ -206,7 +206,12 @@ function mapPengaturanToDb(data: PengaturanPortal) {
 }
 
 // --- Fetch API ---
-export async function fetchAllFromSupabase() {
+export async function fetchAllFromSupabase(currentLocal?: {
+  umkmList?: UMKM[];
+  produkList?: Produk[];
+  beritaList?: Berita[];
+  pengaturan?: PengaturanPortal;
+}) {
   if (!isSupabaseConfigured || !supabase) return null;
 
   try {
@@ -217,33 +222,37 @@ export async function fetchAllFromSupabase() {
       supabase.from("pengaturan").select("*").eq("id", "default").maybeSingle(),
     ]);
 
-    let umkmList = umkmRes.data ? umkmRes.data.map(mapUmkmFromDb) : [];
-    let produkList = produkRes.data ? produkRes.data.map(mapProdukFromDb) : [];
-    let beritaList = beritaRes.data ? beritaRes.data.map(mapBeritaFromDb) : [];
-    let pengaturan = pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
+    let umkmList: UMKM[] | null =
+      umkmRes.data && umkmRes.data.length > 0 ? umkmRes.data.map(mapUmkmFromDb) : null;
+    let produkList: Produk[] | null =
+      produkRes.data && produkRes.data.length > 0 ? produkRes.data.map(mapProdukFromDb) : null;
+    let beritaList: Berita[] | null =
+      beritaRes.data && beritaRes.data.length > 0 ? beritaRes.data.map(mapBeritaFromDb) : null;
+    let pengaturan: PengaturanPortal | null =
+      pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
 
-    // Auto-seed to Supabase if tables exist but are empty
-    if (umkmRes.data && umkmList.length === 0) {
-      for (const u of initialUMKM) {
+    // If Supabase is empty, sync CURRENT LOCAL STORAGE DATA to Supabase instead of resetting!
+    if (!umkmList && currentLocal?.umkmList && currentLocal.umkmList.length > 0) {
+      for (const u of currentLocal.umkmList) {
         await supabase.from("umkm").upsert(mapUmkmToDb(u));
       }
-      umkmList = initialUMKM;
+      umkmList = currentLocal.umkmList;
     }
-    if (produkRes.data && produkList.length === 0) {
-      for (const p of initialProduk) {
+    if (!produkList && currentLocal?.produkList && currentLocal.produkList.length > 0) {
+      for (const p of currentLocal.produkList) {
         await supabase.from("produk").upsert(mapProdukToDb(p));
       }
-      produkList = initialProduk;
+      produkList = currentLocal.produkList;
     }
-    if (beritaRes.data && beritaList.length === 0) {
-      for (const b of initialBerita) {
+    if (!beritaList && currentLocal?.beritaList && currentLocal.beritaList.length > 0) {
+      for (const b of currentLocal.beritaList) {
         await supabase.from("berita").upsert(mapBeritaToDb(b));
       }
-      beritaList = initialBerita;
+      beritaList = currentLocal.beritaList;
     }
-    if (!pengaturan) {
-      await supabase.from("pengaturan").upsert(mapPengaturanToDb(initialPengaturan));
-      pengaturan = initialPengaturan;
+    if (!pengaturan && currentLocal?.pengaturan) {
+      await updatePengaturanSupabase(currentLocal.pengaturan);
+      pengaturan = currentLocal.pengaturan;
     }
 
     return { umkmList, produkList, beritaList, pengaturan };

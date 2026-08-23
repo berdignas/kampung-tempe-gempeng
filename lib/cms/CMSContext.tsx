@@ -88,17 +88,32 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     const client = supabase;
     if (isSupabaseConfigured && client) {
       const loadFromSupabase = () => {
-        fetchAllFromSupabase().then((data) => {
+        const currentLocal = {
+          umkmList: loadStoredUMKM(),
+          produkList: loadStoredProduk(),
+          beritaList: loadStoredBerita(),
+          pengaturan: loadStoredPengaturan(),
+        };
+
+        fetchAllFromSupabase(currentLocal).then((data) => {
           if (data) {
             setIsSupabaseActive(true);
-            setUmkmList(data.umkmList);
-            saveStoredUMKM(data.umkmList);
-            setProdukList(data.produkList);
-            saveStoredProduk(data.produkList);
-            setBeritaList(data.beritaList);
-            saveStoredBerita(data.beritaList);
-            setPengaturan(data.pengaturan);
-            saveStoredPengaturan(data.pengaturan);
+            if (data.umkmList && data.umkmList.length > 0) {
+              setUmkmList(data.umkmList);
+              saveStoredUMKM(data.umkmList);
+            }
+            if (data.produkList && data.produkList.length > 0) {
+              setProdukList(data.produkList);
+              saveStoredProduk(data.produkList);
+            }
+            if (data.beritaList && data.beritaList.length > 0) {
+              setBeritaList(data.beritaList);
+              saveStoredBerita(data.beritaList);
+            }
+            if (data.pengaturan) {
+              setPengaturan(data.pengaturan);
+              saveStoredPengaturan(data.pengaturan);
+            }
           }
         });
       };
@@ -215,7 +230,8 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
   // Pengaturan
   const updatePengaturan = (data: Partial<PengaturanPortal>) => {
-    handleSetPengaturan({ ...pengaturan, ...data });
+    const updated = { ...pengaturan, ...data };
+    handleSetPengaturan(updated);
   };
 
   // Reset
