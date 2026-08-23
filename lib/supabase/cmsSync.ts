@@ -292,6 +292,22 @@ export async function deleteBeritaSupabase(id: string) {
 
 export async function updatePengaturanSupabase(data: PengaturanPortal) {
   if (!isSupabaseConfigured || !supabase) return;
-  const { error } = await supabase.from("pengaturan").upsert(mapPengaturanToDb(data));
-  if (error) console.error("Error update Pengaturan to Supabase:", error);
+  const payload = mapPengaturanToDb(data);
+  const { error } = await supabase.from("pengaturan").upsert(payload);
+  if (error) {
+    console.error("Error update Pengaturan to Supabase:", error);
+    // Fallback if some new columns don't exist in Supabase yet
+    const basicPayload = {
+      id: "default",
+      nama_kawasan: data.namaKawasan,
+      subjudul_kawasan: data.subjudulKawasan,
+      alamat_sekretariat: data.alamatSekretariat,
+      nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
+      jam_layanan_pengelola: data.jamLayananPengelola,
+      email_pengelola: data.emailPengelola,
+      hero_headline: data.heroHeadline,
+      hero_subtext: data.heroSubtext,
+    };
+    await supabase.from("pengaturan").upsert(basicPayload);
+  }
 }
