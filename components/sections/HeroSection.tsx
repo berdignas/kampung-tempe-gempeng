@@ -42,9 +42,9 @@ export default function HeroSection({
       />
 
       <div className="container-content relative">
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Text — 5 cols */}
-          <div className="lg:col-span-5 flex flex-col gap-5">
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
+          {/* Text — 6 cols */}
+          <div className="lg:col-span-6 flex flex-col justify-center gap-5">
             {/* Eyebrow */}
             <div className="flex items-center gap-2">
               <MapPin size={14} className="text-primary flex-shrink-0" aria-hidden="true" />
@@ -52,7 +52,7 @@ export default function HeroSection({
             </div>
 
             {/* Headline */}
-            <h1 className="heading-1 text-text-primary">{headline}</h1>
+            <h1 className="heading-1 text-text-primary leading-tight">{headline}</h1>
 
             {/* Sub copy */}
             <p className="text-base md:text-lg text-text-secondary leading-relaxed max-w-lg">
@@ -76,43 +76,26 @@ export default function HeroSection({
             </p>
           </div>
 
-          {/* Image — 7 cols */}
-          <div className="lg:col-span-7 relative">
-            <div className="relative rounded-2xl overflow-hidden aspect-[16/10] shadow-card-hover">
+          {/* Image — 6 cols, stretched and aligned to the height of the left text column */}
+          <div className="lg:col-span-6 flex">
+            <div className="relative w-full h-full min-h-[340px] md:min-h-[420px] lg:min-h-[460px] rounded-2xl md:rounded-3xl overflow-hidden shadow-card-hover">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
                 fill
                 className="object-cover"
                 priority
-                sizes="(max-width: 1024px) 100vw, 58vw"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
-              {/* Overlay gradient */}
+              {/* Subtle overlay gradient */}
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(to top right, rgba(20,32,22,0.15) 0%, transparent 60%)",
+                    "linear-gradient(to top right, rgba(20,32,22,0.1) 0%, transparent 60%)",
                 }}
                 aria-hidden="true"
               />
-            </div>
-
-            {/* Floating stat chip */}
-            <div
-              className="absolute -bottom-4 -left-4 hidden md:flex items-center gap-3 bg-white rounded-xl px-4 py-3 shadow-card border border-border"
-              aria-hidden="true"
-            >
-              <div
-                className="w-10 h-10 rounded-full flex items-center justify-center text-white text-lg"
-                style={{ backgroundColor: "var(--color-primary)" }}
-              >
-                🫘
-              </div>
-              <div>
-                <p className="text-xs text-text-secondary">Sentra Produksi</p>
-                <p className="text-sm font-semibold text-text-primary">Bangil, Pasuruan</p>
-              </div>
             </div>
           </div>
         </div>

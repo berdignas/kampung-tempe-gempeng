@@ -76,16 +76,6 @@ export default function KampungProfileTeaser() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
-            {/* Accent card */}
-            <div
-              className="absolute -bottom-4 -right-4 hidden md:block bg-white rounded-xl p-4 shadow-card border border-border"
-              aria-hidden="true"
-            >
-              <p className="text-xs text-text-secondary">Kawasan aktif sejak</p>
-              <p className="text-lg font-bold" style={{ color: "var(--color-primary)" }}>
-                {pengaturan?.profileTeaserAccentVal || "30+ Tahun"}
-              </p>
-            </div>
           </div>
         </div>
       </div>
