@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import UMKMCard from "@/components/umkm/UMKMCard";
-import { daftarUMKM, JenisLayanan, labelLayanan } from "@/lib/data/umkm";
+import { JenisLayanan, labelLayanan } from "@/lib/data/umkm";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const layananOptions: { value: JenisLayanan | "semua"; label: string }[] = [
   { value: "semua", label: "Semua Layanan" },
@@ -14,10 +15,11 @@ const layananOptions: { value: JenisLayanan | "semua"; label: string }[] = [
 ];
 
 export default function UMKMPage() {
+  const { umkmList } = useCMS();
   const [search, setSearch] = useState("");
   const [filterLayanan, setFilterLayanan] = useState<JenisLayanan | "semua">("semua");
 
-  const filtered = daftarUMKM
+  const filtered = umkmList
     .filter((u) => u.statusPublikasi)
     .sort((a, b) => a.namaUsaha.localeCompare(b.namaUsaha, "id"))
     .filter((u) => {

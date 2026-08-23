@@ -1,9 +1,11 @@
 "use client";
 
-import { MapPin, MessageCircle, Clock, Phone, Mail } from "lucide-react";
-
+import { MapPin, MessageCircle, Clock, Mail } from "lucide-react";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 export default function KontakPage() {
+  const { pengaturan } = useCMS();
+
   return (
     <main className="pt-20">
       <section className="py-12" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="kontak-heading">
@@ -29,28 +31,28 @@ export default function KontakPage() {
                   <MapPin size={16} className="text-primary mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-text-primary">Alamat Kawasan</p>
-                    <p className="text-text-secondary">Jl. Gempeng, Kelurahan Gempeng, Kec. Bangil, Kab. Pasuruan, Jawa Timur</p>
+                    <p className="text-text-secondary">{pengaturan?.alamatSekretariat || "Jl. Gempeng Utama No. 1, Kelurahan Gempeng, Bangil"}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <MessageCircle size={16} className="text-primary flex-shrink-0" style={{ color: "#25D366" }} />
                   <div>
                     <p className="font-medium text-text-primary">WhatsApp Pengelola</p>
-                    <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">+62 812-3456-7890</a>
+                    <a href={`https://wa.me/${pengaturan?.nomorWhatsAppPengelola || "628113009000"}`} target="_blank" rel="noopener noreferrer" className="text-text-secondary hover:text-primary transition-colors">+{pengaturan?.nomorWhatsAppPengelola || "628113009000"}</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Mail size={16} className="text-primary flex-shrink-0" />
                   <div>
                     <p className="font-medium text-text-primary">Email</p>
-                    <a href="mailto:info@kampungtempe-gempeng.id" className="text-text-secondary hover:text-primary">info@kampungtempe-gempeng.id</a>
+                    <a href={`mailto:${pengaturan?.emailPengelola || "portal@kampungtempegempeng.id"}`} className="text-text-secondary hover:text-primary">{pengaturan?.emailPengelola || "portal@kampungtempegempeng.id"}</a>
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <Clock size={16} className="text-primary flex-shrink-0" />
                   <div>
                     <p className="font-medium text-text-primary">Jam Layanan</p>
-                    <p className="text-text-secondary">Senin–Jumat, 08.00–16.00 WIB</p>
+                    <p className="text-text-secondary">{pengaturan?.jamLayananPengelola || "Senin – Sabtu, 08.00 – 16.00 WIB"}</p>
                   </div>
                 </div>
               </div>

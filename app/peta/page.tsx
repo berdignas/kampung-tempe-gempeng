@@ -4,8 +4,9 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { MapPin, MessageCircle, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
-import { daftarUMKM, JenisLayanan, labelLayanan } from "@/lib/data/umkm";
+import { JenisLayanan, labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const MapView = dynamic(() => import("@/components/map/MapView"), { ssr: false, loading: () => (
   <div className="w-full h-full bg-surface-muted rounded-lg flex items-center justify-center">
@@ -22,11 +23,12 @@ const layananOptions: { value: JenisLayanan | "semua"; label: string }[] = [
 ];
 
 export default function PetaPage() {
+  const { umkmList } = useCMS();
   const [filterLayanan, setFilterLayanan] = useState<JenisLayanan | "semua">("semua");
   const [selectedUMKM, setSelectedUMKM] = useState<string | null>(null);
   const [showList, setShowList] = useState(false);
 
-  const filtered = daftarUMKM
+  const filtered = umkmList
     .filter((u) => u.statusPublikasi)
     .filter((u) => filterLayanan === "semua" || u.jenisLayanan.includes(filterLayanan));
 

@@ -1,11 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import UMKMCard from "@/components/umkm/UMKMCard";
-import { daftarUMKM } from "@/lib/data/umkm";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 export default function FeaturedUMKM() {
-  // Show first 3 in neutral (alphabetical) order — no ranking
-  const featured = [...daftarUMKM]
+  const { umkmList } = useCMS();
+
+  // Show first 3 active UMKM in neutral (alphabetical) order
+  const featured = [...umkmList]
+    .filter((u) => u.statusPublikasi)
     .sort((a, b) => a.namaUsaha.localeCompare(b.namaUsaha, "id"))
     .slice(0, 3);
 

@@ -2,23 +2,22 @@
 
 import { useState } from "react";
 import { Search, X } from "lucide-react";
-import { daftarUMKM } from "@/lib/data/umkm";
-import { daftarProduk } from "@/lib/data/produk";
-import { daftarBerita } from "@/lib/data/berita";
 import UMKMCard from "@/components/umkm/UMKMCard";
 import ProductCard from "@/components/products/ProductCard";
 import ArticleCard from "@/components/news/ArticleCard";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 type Tab = "semua" | "umkm" | "produk" | "berita";
 
 export default function SearchPage() {
+  const { umkmList, produkList, beritaList } = useCMS();
   const [query, setQuery] = useState("");
   const [activeTab, setActiveTab] = useState<Tab>("semua");
 
   const q = query.toLowerCase().trim();
 
   const umkmResults = q
-    ? daftarUMKM.filter(
+    ? umkmList.filter(
         (u) =>
           u.statusPublikasi &&
           (u.namaUsaha.toLowerCase().includes(q) ||
@@ -29,7 +28,7 @@ export default function SearchPage() {
     : [];
 
   const produkResults = q
-    ? daftarProduk.filter(
+    ? produkList.filter(
         (p) =>
           p.nama.toLowerCase().includes(q) ||
           p.deskripsi.toLowerCase().includes(q) ||
@@ -38,7 +37,7 @@ export default function SearchPage() {
     : [];
 
   const beritaResults = q
-    ? daftarBerita.filter(
+    ? beritaList.filter(
         (b) =>
           b.judul.toLowerCase().includes(q) ||
           b.ringkasan.toLowerCase().includes(q) ||

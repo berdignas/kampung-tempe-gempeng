@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import ProductCard from "@/components/products/ProductCard";
-import { daftarProduk, KategoriProduk } from "@/lib/data/produk";
+import { KategoriProduk } from "@/lib/data/produk";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const filterOptions: { value: KategoriProduk | "semua"; label: string }[] = [
   { value: "semua", label: "Semua Jenis" },
@@ -14,12 +15,13 @@ const filterOptions: { value: KategoriProduk | "semua"; label: string }[] = [
 ];
 
 export default function ProdukPage() {
+  const { produkList } = useCMS();
   const [search, setSearch] = useState("");
   const [filterKategori, setFilterKategori] = useState<KategoriProduk | "semua">("semua");
   const [filterGrosir, setFilterGrosir] = useState(false);
   const [filterKuliner, setFilterKuliner] = useState(false);
 
-  const filtered = daftarProduk.filter((p) => {
+  const filtered = produkList.filter((p) => {
     const matchSearch = !search || p.nama.toLowerCase().includes(search.toLowerCase());
     const matchKategori = filterKategori === "semua" || p.kategori === filterKategori;
     const matchGrosir = !filterGrosir || p.tersediaGrosir;

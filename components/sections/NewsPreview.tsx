@@ -1,10 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import ArticleCard from "@/components/news/ArticleCard";
-import { daftarBerita } from "@/lib/data/berita";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 export default function NewsPreview() {
-  const recent = [...daftarBerita]
+  const { beritaList } = useCMS();
+
+  const recent = [...beritaList]
     .sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime())
     .slice(0, 3);
 

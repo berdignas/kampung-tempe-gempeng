@@ -1,38 +1,43 @@
+"use client";
+
 import { notFound } from "next/navigation";
-import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin, Clock, Calendar, MessageCircle, ArrowLeft, ExternalLink, Phone,
+  MapPin, Clock, MessageCircle, ExternalLink,
 } from "lucide-react";
-import { daftarUMKM, getUMKMBySlug, labelLayanan } from "@/lib/data/umkm";
-import { daftarProduk } from "@/lib/data/produk";
+import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import UMKMCard from "@/components/umkm/UMKMCard";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 interface Props {
   params: { slug: string };
 }
 
-export async function generateStaticParams() {
-  return daftarUMKM.map((u) => ({ slug: u.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const umkm = getUMKMBySlug(params.slug);
-  if (!umkm) return {};
-  return {
-    title: umkm.namaUsaha,
-    description: umkm.deskripsi,
-  };
-}
-
 export default function DetailUMKMPage({ params }: Props) {
-  const umkm = getUMKMBySlug(params.slug);
-  if (!umkm || !umkm.statusPublikasi) notFound();
+  const { umkmList, produkList } = useCMS();
+  const umkm = umkmList.find((u) => u.slug === params.slug);
 
-  const produkUMKM = daftarProduk.filter((p) => umkm.produkIds.includes(p.id));
-  const umkmLain = daftarUMKM
+  if (!umkm || !umkm.statusPublikasi) {
+    // If not found in dynamic state, fallback search
+    return (
+      <main className="pt-24 pb-16 text-center">
+        <div className="container-content">
+          <h1 className="text-xl font-semibold mb-2">UMKM Tidak Ditemukan</h1>
+          <p className="text-text-secondary text-sm mb-4">
+            Usaha yang Anda cari tidak tersedia atau belum dipublikasikan.
+          </p>
+          <Link href="/umkm" className="btn-secondary">
+            Kembali ke Direktori UMKM
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const produkUMKM = produkList.filter((p) => umkm.produkIds.includes(p.id));
+  const umkmLain = umkmList
     .filter((u) => u.id !== umkm.id && u.statusPublikasi)
     .sort((a, b) => a.namaUsaha.localeCompare(b.namaUsaha, "id"))
     .slice(0, 3);

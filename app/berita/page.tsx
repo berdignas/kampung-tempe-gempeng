@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import ArticleCard from "@/components/news/ArticleCard";
-import { daftarBerita, KategoriBerita, labelKategoriBerita } from "@/lib/data/berita";
+import { KategoriBerita } from "@/lib/data/berita";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const kategoriOptions: { value: KategoriBerita | "semua"; label: string }[] = [
   { value: "semua", label: "Semua" },
@@ -14,9 +15,10 @@ const kategoriOptions: { value: KategoriBerita | "semua"; label: string }[] = [
 ];
 
 export default function BeritaPage() {
+  const { beritaList } = useCMS();
   const [filter, setFilter] = useState<KategoriBerita | "semua">("semua");
 
-  const sorted = [...daftarBerita].sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
+  const sorted = [...beritaList].sort((a, b) => new Date(b.tanggal).getTime() - new Date(a.tanggal).getTime());
   const featured = sorted[0];
   const rest = sorted.slice(1).filter((b) => filter === "semua" || b.kategori === filter);
 

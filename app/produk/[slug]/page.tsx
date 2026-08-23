@@ -1,29 +1,34 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, Package, ChefHat, Users } from "lucide-react";
-import { daftarProduk, getProdukBySlug } from "@/lib/data/produk";
-import { daftarUMKM } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 interface Props { params: { slug: string } }
 
-export async function generateStaticParams() {
-  return daftarProduk.map((p) => ({ slug: p.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const produk = getProdukBySlug(params.slug);
-  if (!produk) return {};
-  return { title: produk.nama, description: produk.deskripsi };
-}
-
 export default function DetailProdukPage({ params }: Props) {
-  const produk = getProdukBySlug(params.slug);
-  if (!produk) notFound();
+  const { produkList, umkmList } = useCMS();
+  const produk = produkList.find((p) => p.slug === params.slug);
 
-  const produsen = daftarUMKM.filter((u) => produk.produsenIds.includes(u.id) && u.statusPublikasi);
+  if (!produk) {
+    return (
+      <main className="pt-24 pb-16 text-center">
+        <div className="container-content">
+          <h1 className="text-xl font-semibold mb-2">Produk Tidak Ditemukan</h1>
+          <p className="text-text-secondary text-sm mb-4">
+            Produk yang Anda cari tidak tersedia dalam katalog.
+          </p>
+          <Link href="/produk" className="btn-secondary">
+            Kembali ke Katalog Produk
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const produsen = umkmList.filter((u) => produk.produsenIds.includes(u.id) && u.statusPublikasi);
 
   return (
     <main className="pt-20">

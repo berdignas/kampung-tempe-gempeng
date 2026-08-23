@@ -1,29 +1,36 @@
-import { notFound } from "next/navigation";
-import type { Metadata } from "next";
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, ArrowLeft, Share2 } from "lucide-react";
-import { daftarBerita, getBeritaBySlug, labelKategoriBerita } from "@/lib/data/berita";
+import { labelKategoriBerita } from "@/lib/data/berita";
 import { formatTanggal } from "@/lib/utils";
 import ArticleCard from "@/components/news/ArticleCard";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 interface Props { params: { slug: string } }
 
-export async function generateStaticParams() {
-  return daftarBerita.map((b) => ({ slug: b.slug }));
-}
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const berita = getBeritaBySlug(params.slug);
-  if (!berita) return {};
-  return { title: berita.judul, description: berita.ringkasan };
-}
-
 export default function DetailBeritaPage({ params }: Props) {
-  const berita = getBeritaBySlug(params.slug);
-  if (!berita) notFound();
+  const { beritaList } = useCMS();
+  const berita = beritaList.find((b) => b.slug === params.slug);
 
-  const related = daftarBerita
+  if (!berita) {
+    return (
+      <main className="pt-24 pb-16 text-center">
+        <div className="container-content">
+          <h1 className="text-xl font-semibold mb-2">Artikel Tidak Ditemukan</h1>
+          <p className="text-text-secondary text-sm mb-4">
+            Artikel atau berita yang Anda cari tidak tersedia.
+          </p>
+          <Link href="/berita" className="btn-secondary">
+            Kembali ke Berita & Kegiatan
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  const related = beritaList
     .filter((b) => b.id !== berita.id && b.kategori === berita.kategori)
     .slice(0, 3);
 
