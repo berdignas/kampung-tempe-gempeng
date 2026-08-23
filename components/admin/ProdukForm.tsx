@@ -6,6 +6,7 @@ import { Produk, KategoriProduk } from "@/lib/data/produk";
 import { useCMS } from "@/lib/cms/CMSContext";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 interface ProdukFormProps {
   initialData?: Produk;
@@ -185,6 +186,16 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
           />
         </div>
 
+        {/* Foto Produk dengan ImageUploader */}
+        <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
+          <ImageUploader
+            label="Foto Produk"
+            value={foto}
+            onChange={(url) => setFoto(url)}
+            helpText="Pilih file foto produk dari komputer Anda atau masukkan URL."
+          />
+        </div>
+
         {/* Ukuran Kemasan */}
         <div className="space-y-1.5 md:col-span-2">
           <label className="text-xs font-semibold text-slate-700">
@@ -209,18 +220,6 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
             placeholder="Masakan rumah tangga, Katering dan restoran, Warung makan"
             value={cocokUntukInput}
             onChange={(e) => setCocokUntukInput(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-amber-500 focus:outline-none"
-          />
-        </div>
-
-        {/* Foto Produk */}
-        <div className="space-y-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-slate-700">URL Foto Produk</label>
-          <input
-            type="text"
-            placeholder="/images/produk/tempe-papan.jpg"
-            value={foto}
-            onChange={(e) => setFoto(e.target.value)}
             className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-amber-500 focus:outline-none"
           />
         </div>

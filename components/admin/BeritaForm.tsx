@@ -6,6 +6,7 @@ import { Berita, KategoriBerita } from "@/lib/data/berita";
 import { useCMS } from "@/lib/cms/CMSContext";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 interface BeritaFormProps {
   initialData?: Berita;
@@ -178,15 +179,13 @@ export default function BeritaForm({ initialData, isEdit }: BeritaFormProps) {
           />
         </div>
 
-        {/* Thumbnail Foto */}
-        <div className="space-y-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-slate-700">URL Gambar Utama (Thumbnail)</label>
-          <input
-            type="text"
-            placeholder="/images/berita/berita-1.jpg"
+        {/* Thumbnail Foto dengan ImageUploader */}
+        <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
+          <ImageUploader
+            label="Gambar Utama (Thumbnail Berita)"
             value={thumbnail}
-            onChange={(e) => setThumbnail(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-blue-500 focus:outline-none"
+            onChange={(url) => setThumbnail(url)}
+            helpText="Upload foto berita dari komputer Anda (JPG, PNG, WebP) atau masukkan URL."
           />
         </div>
 

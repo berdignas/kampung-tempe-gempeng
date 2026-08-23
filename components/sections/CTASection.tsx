@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 export default function CTASection() {
+  const { pengaturan } = useCMS();
+
   return (
     <section className="section-spacing" aria-labelledby="cta-heading">
       <div className="container-content">
@@ -21,18 +26,17 @@ export default function CTASection() {
 
           <div className="relative">
             <p className="text-sm font-semibold tracking-widest uppercase text-white/70 mb-3">
-              Temukan Produsen
+              {pengaturan?.ctaSectionEyebrow || "Temukan Produsen"}
             </p>
             <h2
               id="cta-heading"
               className="text-white mb-4"
               style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}
             >
-              Temukan Produsen yang Sesuai Kebutuhan Anda
+              {pengaturan?.ctaSectionHeading || "Temukan Produsen yang Sesuai Kebutuhan Anda"}
             </h2>
             <p className="text-white/80 max-w-xl mx-auto mb-8 text-base leading-relaxed">
-              Jelajahi seluruh pelaku usaha tempe di Kampung Gempeng, lihat profil dan produk
-              mereka, lalu hubungi langsung melalui WhatsApp.
+              {pengaturan?.ctaSectionSubtext || "Jelajahi seluruh pelaku usaha tempe di Kampung Gempeng, lihat profil dan produk mereka, lalu hubungi langsung melalui WhatsApp."}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link
@@ -41,14 +45,14 @@ export default function CTASection() {
                 style={{ color: "var(--color-primary)" }}
                 aria-label="Jelajahi direktori UMKM"
               >
-                Jelajahi UMKM <ArrowRight size={15} />
+                {pengaturan?.ctaSectionBtn1Label || "Jelajahi UMKM"} <ArrowRight size={15} />
               </Link>
               <Link
                 href="/produk"
                 className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
                 aria-label="Lihat katalog produk tempe"
               >
-                Katalog Produk
+                {pengaturan?.ctaSectionBtn2Label || "Katalog Produk"}
               </Link>
             </div>
             <p className="text-xs text-white/60 mt-6">

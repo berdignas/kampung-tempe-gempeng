@@ -1,7 +1,7 @@
 -- Skrip Inisialisasi Database Supabase untuk Kampung Tempe Gempeng
 -- Jalankan skrip ini di SQL Editor pada Supabase Console
 
--- 1. Tabel Pengaturan Portal
+-- 1. Tabel Pengaturan Portal (Dua arah dengan Beranda)
 CREATE TABLE IF NOT EXISTS public.pengaturan (
   id TEXT PRIMARY KEY DEFAULT 'default',
   nama_kawasan TEXT NOT NULL,
@@ -9,9 +9,44 @@ CREATE TABLE IF NOT EXISTS public.pengaturan (
   alamat_sekretariat TEXT NOT NULL,
   nomor_whatsapp_pengelola TEXT NOT NULL,
   jam_layanan_pengelola TEXT NOT NULL,
-  hero_headline TEXT NOT NULL,
-  hero_subtext TEXT NOT NULL,
   email_pengelola TEXT NOT NULL,
+
+  hero_eyebrow TEXT,
+  hero_headline TEXT,
+  hero_subtext TEXT,
+  hero_image TEXT,
+  hero_cta_primary_label TEXT,
+  hero_cta_primary_href TEXT,
+  hero_cta_secondary_label TEXT,
+  hero_cta_secondary_href TEXT,
+
+  stats_heading TEXT,
+  stats_item1_value TEXT,
+  stats_item1_label TEXT,
+  stats_item1_note TEXT,
+  stats_item2_value TEXT,
+  stats_item2_label TEXT,
+  stats_item2_note TEXT,
+  stats_item3_value TEXT,
+  stats_item3_label TEXT,
+  stats_item3_note TEXT,
+  stats_item4_value TEXT,
+  stats_item4_label TEXT,
+  stats_item4_note TEXT,
+
+  profile_teaser_eyebrow TEXT,
+  profile_teaser_heading TEXT,
+  profile_teaser_paragraph1 TEXT,
+  profile_teaser_paragraph2 TEXT,
+  profile_teaser_image TEXT,
+  profile_teaser_accent_val TEXT,
+
+  cta_section_eyebrow TEXT,
+  cta_section_heading TEXT,
+  cta_section_subtext TEXT,
+  cta_section_btn1_label TEXT,
+  cta_section_btn2_label TEXT,
+
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 

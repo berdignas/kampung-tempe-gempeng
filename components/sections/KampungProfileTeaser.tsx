@@ -1,6 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight, Leaf, Users, Truck, BookOpen } from "lucide-react";
 import Image from "next/image";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const potensi = [
   {
@@ -26,21 +29,20 @@ const potensi = [
 ];
 
 export default function KampungProfileTeaser() {
+  const { pengaturan } = useCMS();
+
   return (
     <section className="section-spacing" aria-labelledby="profil-teaser-heading">
       <div className="container-content">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div>
-            <p className="section-label mb-3">Profil Kawasan</p>
-            <h2 id="profil-teaser-heading" className="heading-2">Mengenal Kampung Tempe Gempeng</h2>
+            <p className="section-label mb-3">{pengaturan?.profileTeaserEyebrow || "Profil Kawasan"}</p>
+            <h2 id="profil-teaser-heading" className="heading-2">{pengaturan?.profileTeaserHeading || "Mengenal Kampung Tempe Gempeng"}</h2>
             <p className="mt-4 text-text-secondary leading-relaxed">
-              Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan telah lama dikenal sebagai
-              kawasan sentra produksi tempe. Keahlian membuat tempe diwariskan turun-temurun dan
-              menjadi identitas kuat kawasan ini.
+              {pengaturan?.profileTeaserParagraph1 || "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan telah lama dikenal sebagai kawasan sentra produksi tempe. Keahlian membuat tempe diwariskan turun-temurun dan menjadi identitas kuat kawasan ini."}
             </p>
             <p className="mt-3 text-text-secondary leading-relaxed">
-              Portal ini hadir untuk memperkuat identitas digital kawasan dan menjadi media promosi
-              kolektif bagi seluruh pelaku usaha — tanpa mengutamakan siapapun secara individual.
+              {pengaturan?.profileTeaserParagraph2 || "Portal ini hadir untuk memperkuat identitas digital kawasan dan menjadi media promosi kolektif bagi seluruh pelaku usaha — tanpa mengutamakan siapapun secara individual."}
             </p>
 
             <div className="grid grid-cols-2 gap-4 mt-8">
@@ -65,10 +67,10 @@ export default function KampungProfileTeaser() {
           </div>
 
           <div className="relative">
-            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card">
+            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative">
               <Image
-                src="/images/kampung-profile.jpg"
-                alt="Suasana Kampung Tempe Gempeng dengan rumah-rumah produksi dan lingkungan hijau"
+                src={pengaturan?.profileTeaserImage || "/images/kampung-profile.jpg"}
+                alt="Suasana Kampung Tempe Gempeng"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -81,7 +83,7 @@ export default function KampungProfileTeaser() {
             >
               <p className="text-xs text-text-secondary">Kawasan aktif sejak</p>
               <p className="text-lg font-bold" style={{ color: "var(--color-primary)" }}>
-                30+ Tahun
+                {pengaturan?.profileTeaserAccentVal || "30+ Tahun"}
               </p>
             </div>
           </div>

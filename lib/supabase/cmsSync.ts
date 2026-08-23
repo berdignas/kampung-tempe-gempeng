@@ -110,15 +110,50 @@ function mapBeritaToDb(data: Berita) {
 }
 
 function mapPengaturanFromDb(row: any): PengaturanPortal {
+  if (!row) return initialPengaturan;
   return {
-    namaKawasan: row.nama_kawasan,
-    subjudulKawasan: row.subjudul_kawasan,
-    alamatSekretariat: row.alamat_sekretariat,
-    nomorWhatsAppPengelola: row.nomor_whatsapp_pengelola,
-    jamLayananPengelola: row.jam_layanan_pengelola,
-    heroHeadline: row.hero_headline,
-    heroSubtext: row.hero_subtext,
-    emailPengelola: row.email_pengelola,
+    namaKawasan: row.nama_kawasan || initialPengaturan.namaKawasan,
+    subjudulKawasan: row.subjudul_kawasan || initialPengaturan.subjudulKawasan,
+    alamatSekretariat: row.alamat_sekretariat || initialPengaturan.alamatSekretariat,
+    nomorWhatsAppPengelola: row.nomor_whatsapp_pengelola || initialPengaturan.nomorWhatsAppPengelola,
+    jamLayananPengelola: row.jam_layanan_pengelola || initialPengaturan.jamLayananPengelola,
+    emailPengelola: row.email_pengelola || initialPengaturan.emailPengelola,
+
+    heroEyebrow: row.hero_eyebrow || initialPengaturan.heroEyebrow,
+    heroHeadline: row.hero_headline || initialPengaturan.heroHeadline,
+    heroSubtext: row.hero_subtext || initialPengaturan.heroSubtext,
+    heroImage: row.hero_image || initialPengaturan.heroImage,
+    heroCtaPrimaryLabel: row.hero_cta_primary_label || initialPengaturan.heroCtaPrimaryLabel,
+    heroCtaPrimaryHref: row.hero_cta_primary_href || initialPengaturan.heroCtaPrimaryHref,
+    heroCtaSecondaryLabel: row.hero_cta_secondary_label || initialPengaturan.heroCtaSecondaryLabel,
+    heroCtaSecondaryHref: row.hero_cta_secondary_href || initialPengaturan.heroCtaSecondaryHref,
+
+    statsHeading: row.stats_heading || initialPengaturan.statsHeading,
+    statsItem1Value: row.stats_item1_value || initialPengaturan.statsItem1Value,
+    statsItem1Label: row.stats_item1_label || initialPengaturan.statsItem1Label,
+    statsItem1Note: row.stats_item1_note || initialPengaturan.statsItem1Note,
+    statsItem2Value: row.stats_item2_value || initialPengaturan.statsItem2Value,
+    statsItem2Label: row.stats_item2_label || initialPengaturan.statsItem2Label,
+    statsItem2Note: row.stats_item2_note || initialPengaturan.statsItem2Note,
+    statsItem3Value: row.stats_item3_value || initialPengaturan.statsItem3Value,
+    statsItem3Label: row.stats_item3_label || initialPengaturan.statsItem3Label,
+    statsItem3Note: row.stats_item3_note || initialPengaturan.statsItem3Note,
+    statsItem4Value: row.stats_item4_value || initialPengaturan.statsItem4Value,
+    statsItem4Label: row.stats_item4_label || initialPengaturan.statsItem4Label,
+    statsItem4Note: row.stats_item4_note || initialPengaturan.statsItem4Note,
+
+    profileTeaserEyebrow: row.profile_teaser_eyebrow || initialPengaturan.profileTeaserEyebrow,
+    profileTeaserHeading: row.profile_teaser_heading || initialPengaturan.profileTeaserHeading,
+    profileTeaserParagraph1: row.profile_teaser_paragraph1 || initialPengaturan.profileTeaserParagraph1,
+    profileTeaserParagraph2: row.profile_teaser_paragraph2 || initialPengaturan.profileTeaserParagraph2,
+    profileTeaserImage: row.profile_teaser_image || initialPengaturan.profileTeaserImage,
+    profileTeaserAccentVal: row.profile_teaser_accent_val || initialPengaturan.profileTeaserAccentVal,
+
+    ctaSectionEyebrow: row.cta_section_eyebrow || initialPengaturan.ctaSectionEyebrow,
+    ctaSectionHeading: row.cta_section_heading || initialPengaturan.ctaSectionHeading,
+    ctaSectionSubtext: row.cta_section_subtext || initialPengaturan.ctaSectionSubtext,
+    ctaSectionBtn1Label: row.cta_section_btn1_label || initialPengaturan.ctaSectionBtn1Label,
+    ctaSectionBtn2Label: row.cta_section_btn2_label || initialPengaturan.ctaSectionBtn2Label,
   };
 }
 
@@ -130,9 +165,43 @@ function mapPengaturanToDb(data: PengaturanPortal) {
     alamat_sekretariat: data.alamatSekretariat,
     nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
     jam_layanan_pengelola: data.jamLayananPengelola,
+    email_pengelola: data.emailPengelola,
+
+    hero_eyebrow: data.heroEyebrow,
     hero_headline: data.heroHeadline,
     hero_subtext: data.heroSubtext,
-    email_pengelola: data.emailPengelola,
+    hero_image: data.heroImage,
+    hero_cta_primary_label: data.heroCtaPrimaryLabel,
+    hero_cta_primary_href: data.heroCtaPrimaryHref,
+    hero_cta_secondary_label: data.heroCtaSecondaryLabel,
+    hero_cta_secondary_href: data.heroCtaSecondaryHref,
+
+    stats_heading: data.statsHeading,
+    stats_item1_value: data.statsItem1Value,
+    stats_item1_label: data.statsItem1Label,
+    stats_item1_note: data.statsItem1Note,
+    stats_item2_value: data.statsItem2Value,
+    stats_item2_label: data.statsItem2Label,
+    stats_item2_note: data.statsItem2Note,
+    stats_item3_value: data.statsItem3Value,
+    stats_item3_label: data.statsItem3Label,
+    stats_item3_note: data.statsItem3Note,
+    stats_item4_value: data.statsItem4Value,
+    stats_item4_label: data.statsItem4Label,
+    stats_item4_note: data.statsItem4Note,
+
+    profile_teaser_eyebrow: data.profileTeaserEyebrow,
+    profile_teaser_heading: data.profileTeaserHeading,
+    profile_teaser_paragraph1: data.profileTeaserParagraph1,
+    profile_teaser_paragraph2: data.profileTeaserParagraph2,
+    profile_teaser_image: data.profileTeaserImage,
+    profile_teaser_accent_val: data.profileTeaserAccentVal,
+
+    cta_section_eyebrow: data.ctaSectionEyebrow,
+    cta_section_heading: data.ctaSectionHeading,
+    cta_section_subtext: data.ctaSectionSubtext,
+    cta_section_btn1_label: data.ctaSectionBtn1Label,
+    cta_section_btn2_label: data.ctaSectionBtn2Label,
   };
 }
 
@@ -147,11 +216,6 @@ export async function fetchAllFromSupabase() {
       supabase.from("berita").select("*"),
       supabase.from("pengaturan").select("*").eq("id", "default").maybeSingle(),
     ]);
-
-    // Check if table error (e.g. table not created yet)
-    if (umkmRes.error || produkRes.error || beritaRes.error) {
-      console.warn("Supabase query warn:", umkmRes.error || produkRes.error || beritaRes.error);
-    }
 
     let umkmList = umkmRes.data ? umkmRes.data.map(mapUmkmFromDb) : [];
     let produkList = produkRes.data ? produkRes.data.map(mapProdukFromDb) : [];

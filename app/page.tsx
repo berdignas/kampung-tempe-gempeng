@@ -15,17 +15,17 @@ export default function BerandaPage() {
   return (
     <main>
       <HeroSection
-        eyebrow={pengaturan?.subjudulKawasan || "Sentra Produksi Tempe di Bangil, Pasuruan"}
+        eyebrow={pengaturan?.heroEyebrow || "Sentra Produksi Tempe di Bangil, Pasuruan"}
         headline={pengaturan?.heroHeadline || "Dari Kampung Kami, Tempe Berkualitas untuk Banyak Meja"}
         subtext={
           pengaturan?.heroSubtext ||
           "Kampung Tempe Gempeng adalah kawasan sentra produksi tempe di Kelurahan Gempeng, Kecamatan Bangil. Ratusan keluarga pengrajin tempe bekerja setiap hari untuk menghasilkan tempe berkualitas yang menjangkau pasar lokal hingga regional."
         }
-        ctaPrimaryLabel="Jelajahi UMKM"
-        ctaPrimaryHref="/umkm"
-        ctaSecondaryLabel="Lihat Peta Produksi"
-        ctaSecondaryHref="/peta"
-        imageSrc="/images/hero-tempe-production.jpg"
+        ctaPrimaryLabel={pengaturan?.heroCtaPrimaryLabel || "Jelajahi UMKM"}
+        ctaPrimaryHref={pengaturan?.heroCtaPrimaryHref || "/umkm"}
+        ctaSecondaryLabel={pengaturan?.heroCtaSecondaryLabel || "Lihat Peta Produksi"}
+        ctaSecondaryHref={pengaturan?.heroCtaSecondaryHref || "/peta"}
+        imageSrc={pengaturan?.heroImage || "/images/hero-tempe-production.jpg"}
         imageAlt="Aktivitas produksi tempe di rumah produksi Kampung Tempe Gempeng"
       />
       <StatsSection />
