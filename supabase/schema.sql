@@ -102,3 +102,6 @@ INSERT INTO public.pengaturan (
   'Kampung Tempe Gempeng adalah kawasan sentra produksi tempe di Kelurahan Gempeng, Kecamatan Bangil. Ratusan keluarga pengrajin tempe bekerja setiap hari untuk menghasilkan tempe berkualitas yang menjangkau pasar lokal hingga regional.',
   'portal@kampungtempegempeng.id'
 ) ON CONFLICT (id) DO NOTHING;
+
+-- Aktifkan Supabase Realtime untuk seluruh tabel secara instan
+ALTER PUBLICATION supabase_realtime ADD TABLE public.umkm, public.produk, public.berita, public.pengaturan;
