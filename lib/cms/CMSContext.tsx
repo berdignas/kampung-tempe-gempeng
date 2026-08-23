@@ -17,6 +17,7 @@ import {
   saveStoredPengaturan,
   resetAllCMSData,
 } from "./cmsStore";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase/client";
 import {
   fetchAllFromSupabase,
   upsertUmkmSupabase,
@@ -67,39 +68,64 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const [isSupabaseActive, setIsSupabaseActive] = useState<boolean>(false);
 
   useEffect(() => {
-    // 1. Muat data dari localStorage dulu untuk akses instant / offline
-    const localUmkm = loadStoredUMKM();
-    const localProduk = loadStoredProduk();
-    const localBerita = loadStoredBerita();
-    const localPengaturan = loadStoredPengaturan();
+    const syncLocal = () => {
+      setUmkmList(loadStoredUMKM());
+      setProdukList(loadStoredProduk());
+      setBeritaList(loadStoredBerita());
+      setPengaturan(loadStoredPengaturan());
+    };
 
-    setUmkmList(localUmkm);
-    setProdukList(localProduk);
-    setBeritaList(localBerita);
-    setPengaturan(localPengaturan);
+    // 1. Muat data awal dari localStorage
+    syncLocal();
 
-    // 2. Sinkronisasi dari Supabase jika tersambung
-    fetchAllFromSupabase().then((data) => {
-      if (data) {
-        setIsSupabaseActive(true);
-        if (data.umkmList && data.umkmList.length > 0) {
-          setUmkmList(data.umkmList);
-          saveStoredUMKM(data.umkmList);
-        }
-        if (data.produkList && data.produkList.length > 0) {
-          setProdukList(data.produkList);
-          saveStoredProduk(data.produkList);
-        }
-        if (data.beritaList && data.beritaList.length > 0) {
-          setBeritaList(data.beritaList);
-          saveStoredBerita(data.beritaList);
-        }
-        if (data.pengaturan) {
-          setPengaturan(data.pengaturan);
-          saveStoredPengaturan(data.pengaturan);
-        }
-      }
-    });
+    // 2. Listener storage lokal (sinkron antar tab di browser yang sama)
+    const handleStorageChange = () => {
+      syncLocal();
+    };
+    window.addEventListener("storage", handleStorageChange);
+
+    // 3. Listener Supabase & Realtime Websocket
+    const client = supabase;
+    if (isSupabaseConfigured && client) {
+      const loadFromSupabase = () => {
+        fetchAllFromSupabase().then((data) => {
+          if (data) {
+            setIsSupabaseActive(true);
+            setUmkmList(data.umkmList);
+            saveStoredUMKM(data.umkmList);
+            setProdukList(data.produkList);
+            saveStoredProduk(data.produkList);
+            setBeritaList(data.beritaList);
+            saveStoredBerita(data.beritaList);
+            setPengaturan(data.pengaturan);
+            saveStoredPengaturan(data.pengaturan);
+          }
+        });
+      };
+
+      loadFromSupabase();
+
+      // Langganan perubahan Realtime PostgreSQL Supabase
+      const channel = client
+        .channel("schema-db-changes")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public" },
+          () => {
+            loadFromSupabase();
+          }
+        )
+        .subscribe();
+
+      return () => {
+        window.removeEventListener("storage", handleStorageChange);
+        client.removeChannel(channel);
+      };
+    }
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   // Save changes to localStorage & Supabase

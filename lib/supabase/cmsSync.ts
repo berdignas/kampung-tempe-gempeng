@@ -1,8 +1,8 @@
 import { supabase, isSupabaseConfigured } from "./client";
-import { UMKM } from "@/lib/data/umkm";
-import { Produk } from "@/lib/data/produk";
-import { Berita } from "@/lib/data/berita";
-import { PengaturanPortal } from "@/lib/cms/cmsStore";
+import { UMKM, daftarUMKM as initialUMKM } from "@/lib/data/umkm";
+import { Produk, daftarProduk as initialProduk } from "@/lib/data/produk";
+import { Berita, daftarBerita as initialBerita } from "@/lib/data/berita";
+import { PengaturanPortal, initialPengaturan } from "@/lib/cms/cmsStore";
 
 // --- Mappers ---
 function mapUmkmFromDb(row: any): UMKM {
@@ -148,10 +148,39 @@ export async function fetchAllFromSupabase() {
       supabase.from("pengaturan").select("*").eq("id", "default").maybeSingle(),
     ]);
 
-    const umkmList = umkmRes.data ? umkmRes.data.map(mapUmkmFromDb) : null;
-    const produkList = produkRes.data ? produkRes.data.map(mapProdukFromDb) : null;
-    const beritaList = beritaRes.data ? beritaRes.data.map(mapBeritaFromDb) : null;
-    const pengaturan = pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
+    // Check if table error (e.g. table not created yet)
+    if (umkmRes.error || produkRes.error || beritaRes.error) {
+      console.warn("Supabase query warn:", umkmRes.error || produkRes.error || beritaRes.error);
+    }
+
+    let umkmList = umkmRes.data ? umkmRes.data.map(mapUmkmFromDb) : [];
+    let produkList = produkRes.data ? produkRes.data.map(mapProdukFromDb) : [];
+    let beritaList = beritaRes.data ? beritaRes.data.map(mapBeritaFromDb) : [];
+    let pengaturan = pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
+
+    // Auto-seed to Supabase if tables exist but are empty
+    if (umkmRes.data && umkmList.length === 0) {
+      for (const u of initialUMKM) {
+        await supabase.from("umkm").upsert(mapUmkmToDb(u));
+      }
+      umkmList = initialUMKM;
+    }
+    if (produkRes.data && produkList.length === 0) {
+      for (const p of initialProduk) {
+        await supabase.from("produk").upsert(mapProdukToDb(p));
+      }
+      produkList = initialProduk;
+    }
+    if (beritaRes.data && beritaList.length === 0) {
+      for (const b of initialBerita) {
+        await supabase.from("berita").upsert(mapBeritaToDb(b));
+      }
+      beritaList = initialBerita;
+    }
+    if (!pengaturan) {
+      await supabase.from("pengaturan").upsert(mapPengaturanToDb(initialPengaturan));
+      pengaturan = initialPengaturan;
+    }
 
     return { umkmList, produkList, beritaList, pengaturan };
   } catch (err) {
