@@ -7,6 +7,8 @@ import { Berita, daftarBerita as initialBerita } from "@/lib/data/berita";
 import {
   PengaturanPortal,
   initialPengaturan,
+  ProfilKampungData,
+  initialProfilKampung,
   loadStoredUMKM,
   saveStoredUMKM,
   loadStoredProduk,
@@ -15,6 +17,8 @@ import {
   saveStoredBerita,
   loadStoredPengaturan,
   saveStoredPengaturan,
+  loadStoredProfil,
+  saveStoredProfil,
   resetAllCMSData,
 } from "./cmsStore";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase/client";
@@ -27,6 +31,7 @@ import {
   upsertBeritaSupabase,
   deleteBeritaSupabase,
   updatePengaturanSupabase,
+  updateProfilSupabase,
 } from "@/lib/supabase/cmsSync";
 
 interface CMSContextType {
@@ -34,6 +39,7 @@ interface CMSContextType {
   produkList: Produk[];
   beritaList: Berita[];
   pengaturan: PengaturanPortal;
+  profilData: ProfilKampungData;
   isSupabaseActive: boolean;
   
   // UMKM CRUD
@@ -54,6 +60,9 @@ interface CMSContextType {
   // Pengaturan
   updatePengaturan: (data: Partial<PengaturanPortal>) => void;
 
+  // Profil Kampung
+  updateProfil: (data: Partial<ProfilKampungData>) => void;
+
   // Reset
   resetData: () => void;
 }
@@ -65,6 +74,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
   const [produkList, setProdukList] = useState<Produk[]>(initialProduk);
   const [beritaList, setBeritaList] = useState<Berita[]>(initialBerita);
   const [pengaturan, setPengaturan] = useState<PengaturanPortal>(initialPengaturan);
+  const [profilData, setProfilData] = useState<ProfilKampungData>(initialProfilKampung);
   const [isSupabaseActive, setIsSupabaseActive] = useState<boolean>(false);
 
   useEffect(() => {
@@ -73,6 +83,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       setProdukList(loadStoredProduk());
       setBeritaList(loadStoredBerita());
       setPengaturan(loadStoredPengaturan());
+      setProfilData(loadStoredProfil());
     };
 
     // 1. Muat data awal dari localStorage
@@ -93,6 +104,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
           produkList: loadStoredProduk(),
           beritaList: loadStoredBerita(),
           pengaturan: loadStoredPengaturan(),
+          profil: loadStoredProfil(),
         };
 
         fetchAllFromSupabase(currentLocal).then((data) => {
@@ -113,6 +125,10 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
             if (data.pengaturan) {
               setPengaturan(data.pengaturan);
               saveStoredPengaturan(data.pengaturan);
+            }
+            if (data.profil) {
+              setProfilData(data.profil);
+              saveStoredProfil(data.profil);
             }
           }
         });
@@ -163,6 +179,12 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     setPengaturan(newPengaturan);
     saveStoredPengaturan(newPengaturan);
     updatePengaturanSupabase(newPengaturan);
+  };
+
+  const handleSetProfil = (newProfil: ProfilKampungData) => {
+    setProfilData(newProfil);
+    saveStoredProfil(newProfil);
+    updateProfilSupabase(newProfil);
   };
 
   // UMKM CRUD
@@ -234,6 +256,12 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     handleSetPengaturan(updated);
   };
 
+  // Profil
+  const updateProfil = (data: Partial<ProfilKampungData>) => {
+    const updated = { ...profilData, ...data };
+    handleSetProfil(updated);
+  };
+
   // Reset
   const resetData = () => {
     resetAllCMSData();
@@ -241,6 +269,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     setProdukList(initialProduk);
     setBeritaList(initialBerita);
     setPengaturan(initialPengaturan);
+    setProfilData(initialProfilKampung);
   };
 
   return (
@@ -250,6 +279,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         produkList,
         beritaList,
         pengaturan,
+        profilData,
         isSupabaseActive,
         addUMKM,
         updateUMKM,
@@ -261,6 +291,7 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
         updateBerita,
         deleteBerita,
         updatePengaturan,
+        updateProfil,
         resetData,
       }}
     >

@@ -105,23 +105,33 @@ CREATE TABLE IF NOT EXISTS public.berita (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
+-- 5. Tabel Profil Kampung
+CREATE TABLE IF NOT EXISTS public.profil (
+  id TEXT PRIMARY KEY DEFAULT 'default',
+  data JSONB NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
+);
+
 -- Aktifkan Row Level Security (RLS)
 ALTER TABLE public.pengaturan ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.umkm ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.produk ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.berita ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.profil ENABLE ROW LEVEL SECURITY;
 
 -- Kebijakan Akses Publik (Read / Write untuk keperluan Portal & Admin)
 CREATE POLICY "Public Read Access for Pengaturan" ON public.pengaturan FOR SELECT USING (true);
 CREATE POLICY "Public Read Access for UMKM" ON public.umkm FOR SELECT USING (true);
 CREATE POLICY "Public Read Access for Produk" ON public.produk FOR SELECT USING (true);
 CREATE POLICY "Public Read Access for Berita" ON public.berita FOR SELECT USING (true);
+CREATE POLICY "Public Read Access for Profil" ON public.profil FOR SELECT USING (true);
 
 -- Permisi Mutasi (Insert/Update/Delete) untuk Anon & Authenticated (Admin CMS Portal)
 CREATE POLICY "All Access for Pengaturan" ON public.pengaturan FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "All Access for UMKM" ON public.umkm FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "All Access for Produk" ON public.produk FOR ALL USING (true) WITH CHECK (true);
 CREATE POLICY "All Access for Berita" ON public.berita FOR ALL USING (true) WITH CHECK (true);
+CREATE POLICY "All Access for Profil" ON public.profil FOR ALL USING (true) WITH CHECK (true);
 
 -- Seed Initial Data untuk Pengaturan Portal
 INSERT INTO public.pengaturan (
@@ -139,4 +149,4 @@ INSERT INTO public.pengaturan (
 ) ON CONFLICT (id) DO NOTHING;
 
 -- Aktifkan Supabase Realtime untuk seluruh tabel secara instan
-ALTER PUBLICATION supabase_realtime ADD TABLE public.umkm, public.produk, public.berita, public.pengaturan;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.umkm, public.produk, public.berita, public.pengaturan, public.profil;

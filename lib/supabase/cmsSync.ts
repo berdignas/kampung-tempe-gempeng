@@ -2,7 +2,12 @@ import { supabase, isSupabaseConfigured } from "./client";
 import { UMKM, daftarUMKM as initialUMKM } from "@/lib/data/umkm";
 import { Produk, daftarProduk as initialProduk } from "@/lib/data/produk";
 import { Berita, daftarBerita as initialBerita } from "@/lib/data/berita";
-import { PengaturanPortal, initialPengaturan } from "@/lib/cms/cmsStore";
+import {
+  PengaturanPortal,
+  initialPengaturan,
+  ProfilKampungData,
+  initialProfilKampung,
+} from "@/lib/cms/cmsStore";
 
 // --- Mappers ---
 function mapUmkmFromDb(row: any): UMKM {
@@ -211,15 +216,17 @@ export async function fetchAllFromSupabase(currentLocal?: {
   produkList?: Produk[];
   beritaList?: Berita[];
   pengaturan?: PengaturanPortal;
+  profil?: ProfilKampungData;
 }) {
   if (!isSupabaseConfigured || !supabase) return null;
 
   try {
-    const [umkmRes, produkRes, beritaRes, pengRes] = await Promise.all([
+    const [umkmRes, produkRes, beritaRes, pengRes, profilRes] = await Promise.all([
       supabase.from("umkm").select("*"),
       supabase.from("produk").select("*"),
       supabase.from("berita").select("*"),
       supabase.from("pengaturan").select("*").eq("id", "default").maybeSingle(),
+      supabase.from("profil").select("*").eq("id", "default").maybeSingle(),
     ]);
 
     let umkmList: UMKM[] | null =
@@ -230,6 +237,8 @@ export async function fetchAllFromSupabase(currentLocal?: {
       beritaRes.data && beritaRes.data.length > 0 ? beritaRes.data.map(mapBeritaFromDb) : null;
     let pengaturan: PengaturanPortal | null =
       pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
+    let profil: ProfilKampungData | null =
+      profilRes.data && profilRes.data.data ? { ...initialProfilKampung, ...profilRes.data.data } : null;
 
     // If Supabase is empty, sync CURRENT LOCAL STORAGE DATA to Supabase instead of resetting!
     if (!umkmList && currentLocal?.umkmList && currentLocal.umkmList.length > 0) {
@@ -254,8 +263,12 @@ export async function fetchAllFromSupabase(currentLocal?: {
       await updatePengaturanSupabase(currentLocal.pengaturan);
       pengaturan = currentLocal.pengaturan;
     }
+    if (!profil && currentLocal?.profil) {
+      await updateProfilSupabase(currentLocal.profil);
+      profil = currentLocal.profil;
+    }
 
-    return { umkmList, produkList, beritaList, pengaturan };
+    return { umkmList, produkList, beritaList, pengaturan, profil };
   } catch (err) {
     console.error("Gagal sinkronisasi data dari Supabase:", err);
     return null;
@@ -318,5 +331,18 @@ export async function updatePengaturanSupabase(data: PengaturanPortal) {
       hero_subtext: data.heroSubtext,
     };
     await supabase.from("pengaturan").upsert(basicPayload);
+  }
+}
+
+export async function updateProfilSupabase(data: ProfilKampungData) {
+  if (!isSupabaseConfigured || !supabase) return;
+  const payload = {
+    id: "default",
+    data: data,
+    updated_at: new Date().toISOString(),
+  };
+  const { error } = await supabase.from("profil").upsert(payload);
+  if (error) {
+    console.error("Error update Profil to Supabase:", error);
   }
 }

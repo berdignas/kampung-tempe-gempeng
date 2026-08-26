@@ -104,11 +104,104 @@ export const initialPengaturan: PengaturanPortal = {
   ctaSectionBtn2Label: "Katalog Produk",
 };
 
+// --- Profil Kampung Page Types & Defaults ---
+export interface TimelineItem {
+  tahun: string;
+  judul: string;
+  deskripsi: string;
+}
+
+export interface NilaiItem {
+  judul: string;
+  deskripsi: string;
+}
+
+export interface ProfilKampungData {
+  heroEyebrow: string;
+  heroJudul: string;
+  heroDeskripsi: string;
+  bannerFoto: string;
+  sejarahEyebrow: string;
+  sejarahJudul: string;
+  sejarahParagraf1: string;
+  sejarahParagraf2: string;
+  timeline: TimelineItem[];
+  visiJudul: string;
+  visiTeks: string;
+  misiJudul: string;
+  misiList: string[];
+  nilaiEyebrow: string;
+  nilaiJudul: string;
+  nilaiList: NilaiItem[];
+  ctaJudul: string;
+  ctaDeskripsi: string;
+}
+
+export const initialProfilKampung: ProfilKampungData = {
+  heroEyebrow: "Profil Kawasan",
+  heroJudul: "Identitas & Legasi Kampung Tempe Gempeng",
+  heroDeskripsi: "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan merupakan pusat produksi tempe yang telah menghidupi puluhan keluarga pengrajin dan melayani kebutuhan gizi masyarakat secara lintas generasi.",
+  bannerFoto: "/images/profil-kampung-banner.jpg",
+  sejarahEyebrow: "Sejarah & Perjalanan",
+  sejarahJudul: "Jejak Langkah Sentra Tempe Gempeng",
+  sejarahParagraf1: "Tradisi membuat tempe di Gempeng berawal dari keterampilan rumahan yang diturunkan antar generasi. Kualitas air, keahlian fermentasi alami, dan etos kerja warga menjadikan tempe dari Gempeng memiliki tekstur padat dan citarasa yang khas.",
+  sejarahParagraf2: "Kini, kawasan ini terus bertransformasi menjadi sentra produksi pangan lokal yang adaptif terhadap standar sanitasi dan perkembangan teknologi digital.",
+  timeline: [
+    {
+      tahun: "1990-an",
+      judul: "Awal Perkembangan Kawasan",
+      deskripsi: "Beberapa keluarga di Kelurahan Gempeng mulai memproduksi tempe secara mandiri dari skala rumah tangga.",
+    },
+    {
+      tahun: "2005",
+      judul: "Pertumbuhan Sentra Produksi",
+      deskripsi: "Jumlah rumah produksi meningkat pesat. Gempeng mulai dikenal luas sebagai pemasok tempe utama di wilayah Bangil.",
+    },
+    {
+      tahun: "2018",
+      judul: "Kemitraan dan Pendampingan Usaha",
+      deskripsi: "Berbagai instansi, akademisi, dan dinas terkait memberikan pendampingan higienitas serta legalitas UMKM.",
+    },
+    {
+      tahun: "2024",
+      judul: "Peluncuran Portal Digital Kolektif",
+      deskripsi: "Hadirnya portal informasi resmi kawasan untuk mempromosikan seluruh pelaku usaha secara adil dan setara.",
+    },
+  ],
+  visiJudul: "Visi Kawasan",
+  visiTeks: "Menjadikan Kampung Tempe Gempeng sebagai sentra produksi tempe yang mandiri, berdaya saing, berstandar higienis tinggi, serta dikenal secara luas sebagai ikon kuliner tradisional Kabupaten Pasuruan.",
+  misiJudul: "Misi Kawasan",
+  misiList: [
+    "Memperkuat promosi kolektif bagi seluruh pengrajin tempe tanpa diskriminasi.",
+    "Meningkatkan kualitas produksi dan kepatuhan terhadap standar kesehatan pangan.",
+    "Membuka jejaring kemitraan dengan sektor kuliner, distributor, dan instansi pendidikan.",
+  ],
+  nilaiEyebrow: "Prinsip Komunitas",
+  nilaiJudul: "Nilai Bersama Pelaku UMKM",
+  nilaiList: [
+    {
+      judul: "Kolektivitas & Keadilan",
+      deskripsi: "Kawasan lebih utama daripada individu. Seluruh UMKM memiliki kesempatan yang sama untuk dikenal.",
+    },
+    {
+      judul: "Kualitas & Mutu Produk",
+      deskripsi: "Menjaga kebersihan, teknik fermentasi alami, dan standar bahan baku kedelai terbaik secara rutin.",
+    },
+    {
+      judul: "Kemandirian Usaha",
+      deskripsi: "Mendorong pembeli dan mitra untuk terhubung langsung dengan produsen tanpa perantara komisi.",
+    },
+  ],
+  ctaJudul: "Ingin Mengenal Lebih Dekat?",
+  ctaDeskripsi: "Temukan lokasi rumah produksi pada peta interaktif atau jelajahi seluruh pelaku UMKM tempe di kawasan kami.",
+};
+
 const STORAGE_KEYS = {
   UMKM: "ktg_cms_umkm_v1",
   PRODUK: "ktg_cms_produk_v1",
   BERITA: "ktg_cms_berita_v1",
   PENGATURAN: "ktg_cms_pengaturan_v1",
+  PROFIL: "ktg_cms_profil_v1",
 };
 
 export function loadStoredUMKM(): UMKM[] {
@@ -193,10 +286,33 @@ export function saveStoredPengaturan(data: PengaturanPortal): void {
   }
 }
 
+export function loadStoredProfil(): ProfilKampungData {
+  if (typeof window === "undefined") return initialProfilKampung;
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.PROFIL);
+    if (!data) return initialProfilKampung;
+    const parsed = JSON.parse(data);
+    return { ...initialProfilKampung, ...parsed };
+  } catch (e) {
+    console.error("Gagal membaca Profil dari localStorage", e);
+    return initialProfilKampung;
+  }
+}
+
+export function saveStoredProfil(data: ProfilKampungData): void {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEYS.PROFIL, JSON.stringify(data));
+  } catch (e) {
+    console.error("Gagal menyimpan Profil ke localStorage", e);
+  }
+}
+
 export function resetAllCMSData(): void {
   if (typeof window === "undefined") return;
   localStorage.removeItem(STORAGE_KEYS.UMKM);
   localStorage.removeItem(STORAGE_KEYS.PRODUK);
   localStorage.removeItem(STORAGE_KEYS.BERITA);
   localStorage.removeItem(STORAGE_KEYS.PENGATURAN);
+  localStorage.removeItem(STORAGE_KEYS.PROFIL);
 }

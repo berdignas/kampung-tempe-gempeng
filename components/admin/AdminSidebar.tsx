@@ -7,6 +7,7 @@ import {
   Store,
   Package,
   Newspaper,
+  BookOpen,
   Settings,
   ArrowLeft,
   RefreshCw,
@@ -27,7 +28,8 @@ export default function AdminSidebar({
     { href: "/admin/umkm", label: "Kelola UMKM", icon: Store },
     { href: "/admin/produk", label: "Kelola Produk", icon: Package },
     { href: "/admin/berita", label: "Berita & Kegiatan", icon: Newspaper },
-    { href: "/admin/pengaturan", label: "Pengaturan Kawasan", icon: Settings },
+    { href: "/admin/profil", label: "Profil Kampung", icon: BookOpen },
+    { href: "/admin/pengaturan", label: "Pengaturan Beranda", icon: Settings },
   ];
 
   const handleReset = () => {
