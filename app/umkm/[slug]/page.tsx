@@ -3,6 +3,7 @@
 import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import {
   MapPin, Clock, MessageCircle, ExternalLink, Package, ChevronLeft, ChevronRight,
 } from "lucide-react";
@@ -10,12 +11,21 @@ import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import { useCMS } from "@/lib/cms/CMSContext";
 
+const SingleUMKMMap = dynamic(() => import("@/components/map/SingleUMKMMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[280px] bg-slate-100 rounded-2xl flex items-center justify-center text-xs text-slate-400">
+      Memuat peta lokasi...
+    </div>
+  ),
+});
+
 const PRODUK_PER_PAGE = 2;
 
 export default function DetailUMKMPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { umkmList, produkList } = useCMS();
-  const umkm = umkmList.find((u) => u.slug === slug);
+  const umkm = umkmList.find((u) => u.slug === slug || u.id === slug);
   const [produkPage, setProdukPage] = useState(0);
 
   if (!umkm || !umkm.statusPublikasi) {
@@ -34,6 +44,9 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
     );
   }
 
+  const validLat = Number(umkm.koordinat?.lat) || -7.5953;
+  const validLng = Number(umkm.koordinat?.lng) || 112.7844;
+
   const produkUMKM = produkList.filter((p) => umkm.produkIds.includes(p.id));
   const totalProdukPages = Math.ceil(produkUMKM.length / PRODUK_PER_PAGE);
   const produkSlice = produkUMKM.slice(
@@ -42,7 +55,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
   );
 
   const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
-  const mapsUrl = `https://www.google.com/maps?q=${umkm.koordinat.lat},${umkm.koordinat.lng}`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${validLat},${validLng}`;
 
   return (
     <main className="pt-20">
@@ -156,6 +169,29 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                 )}
               </section>
             )}
+
+            {/* Titik Lokasi Rumah Produksi Peta Interaktif */}
+            <section aria-labelledby="lokasi-umkm-heading" className="pt-4 border-t border-border space-y-3">
+              <div className="flex items-center justify-between">
+                <h2 id="lokasi-umkm-heading" className="text-xl font-semibold text-text-primary flex items-center gap-2">
+                  <MapPin size={20} className="text-primary" />
+                  Lokasi Rumah Produksi
+                </h2>
+                <span className="text-xs text-text-secondary">
+                  Kelurahan Gempeng, Bangil
+                </span>
+              </div>
+              <p className="text-xs text-text-secondary leading-relaxed">
+                Titik lokasi presisi rumah produksi <strong>{umkm.namaUsaha}</strong> di Kampung Tempe Gempeng. Anda dapat memperbesar peta, beralih ke tampilan foto satelit, atau membuka petunjuk arah navigasi langsung.
+              </p>
+              <SingleUMKMMap
+                lat={validLat}
+                lng={validLng}
+                namaUsaha={umkm.namaUsaha}
+                alamat={umkm.alamat}
+                height="320px"
+              />
+            </section>
           </div>
 
           {/* Sidebar */}

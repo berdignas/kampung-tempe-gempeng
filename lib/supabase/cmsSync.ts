@@ -11,6 +11,13 @@ import {
 
 // --- Mappers ---
 function mapUmkmFromDb(row: any): UMKM {
+  let lat = -7.5953;
+  let lng = 112.7844;
+  if (row.koordinat) {
+    lat = Number(row.koordinat.lat ?? row.koordinat.latitude) || -7.5953;
+    lng = Number(row.koordinat.lng ?? row.koordinat.longitude) || 112.7844;
+  }
+
   return {
     id: row.id,
     slug: row.slug,
@@ -18,7 +25,7 @@ function mapUmkmFromDb(row: any): UMKM {
     namaPemilik: row.nama_pemilik,
     deskripsi: row.deskripsi,
     alamat: row.alamat,
-    koordinat: row.koordinat || { lat: -7.5953, lng: 112.7844 },
+    koordinat: { lat, lng },
     nomorWhatsApp: row.nomor_whatsapp,
     jamOperasional: row.jam_operasional,
     tahunBerdiri: Number(row.tahun_berdiri),
@@ -30,6 +37,9 @@ function mapUmkmFromDb(row: any): UMKM {
 }
 
 function mapUmkmToDb(data: UMKM) {
+  const lat = Number(data.koordinat?.lat) || -7.5953;
+  const lng = Number(data.koordinat?.lng) || 112.7844;
+
   return {
     id: data.id,
     slug: data.slug,
@@ -37,10 +47,10 @@ function mapUmkmToDb(data: UMKM) {
     nama_pemilik: data.namaPemilik,
     deskripsi: data.deskripsi,
     alamat: data.alamat,
-    koordinat: data.koordinat,
+    koordinat: { lat, lng },
     nomor_whatsapp: data.nomorWhatsApp,
     jam_operasional: data.jamOperasional,
-    tahun_berdiri: data.tahunBerdiri,
+    tahun_berdiri: Number(data.tahunBerdiri),
     jenis_layanan: data.jenisLayanan,
     produk_ids: data.produkIds,
     galeri: data.galeri,

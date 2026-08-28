@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UMKM, JenisLayanan } from "@/lib/data/umkm";
 import { useCMS } from "@/lib/cms/CMSContext";
@@ -22,8 +22,8 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const [namaPemilik, setNamaPemilik] = useState(initialData?.namaPemilik || "");
   const [deskripsi, setDeskripsi] = useState(initialData?.deskripsi || "");
   const [alamat, setAlamat] = useState(initialData?.alamat || "");
-  const [lat, setLat] = useState(initialData?.koordinat?.lat || -7.5953);
-  const [lng, setLng] = useState(initialData?.koordinat?.lng || 112.7844);
+  const [lat, setLat] = useState(Number(initialData?.koordinat?.lat) || -7.5953);
+  const [lng, setLng] = useState(Number(initialData?.koordinat?.lng) || 112.7844);
   const [nomorWhatsApp, setNomorWhatsApp] = useState(initialData?.nomorWhatsApp || "6281");
   const [jamOperasional, setJamOperasional] = useState(
     initialData?.jamOperasional || "Setiap hari, 05.00–12.00 WIB"
@@ -45,6 +45,30 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
     initialData?.statusPublikasi ?? true
   );
 
+  // Sync state if initialData loads or updates
+  useEffect(() => {
+    if (initialData) {
+      setNamaUsaha(initialData.namaUsaha || "");
+      setNamaPemilik(initialData.namaPemilik || "");
+      setDeskripsi(initialData.deskripsi || "");
+      setAlamat(initialData.alamat || "");
+      setLat(Number(initialData.koordinat?.lat) || -7.5953);
+      setLng(Number(initialData.koordinat?.lng) || 112.7844);
+      setNomorWhatsApp(initialData.nomorWhatsApp || "6281");
+      setJamOperasional(initialData.jamOperasional || "Setiap hari, 05.00–12.00 WIB");
+      setTahunBerdiri(initialData.tahunBerdiri || 2020);
+      setJenisLayanan(initialData.jenisLayanan || ["eceran"]);
+      setProdukIds(initialData.produkIds || []);
+      setUtamaImage(initialData.galeri?.[0] || "/images/umkm/umkm-1-a.jpg");
+      setExtraImages(
+        initialData.galeri && initialData.galeri.length > 1
+          ? initialData.galeri.slice(1)
+          : []
+      );
+      setStatusPublikasi(initialData.statusPublikasi ?? true);
+    }
+  }, [initialData]);
+
   const handleAddExtraImage = () => {
     setExtraImages([...extraImages, ""]);
   };
@@ -63,10 +87,12 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    const slug = namaUsaha
+    const generatedSlug = namaUsaha
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
+
+    const slug = initialData?.slug || generatedSlug;
 
     const cleanedExtra = extraImages.map((s) => s.trim()).filter((s) => s.length > 0);
     const galeri = [utamaImage, ...cleanedExtra].filter((img) => img.length > 0);

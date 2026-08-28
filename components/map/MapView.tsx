@@ -57,9 +57,13 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
 
       umkmList.forEach((umkm) => {
         if (!umkm.koordinat) return;
+        const lat = Number(umkm.koordinat.lat);
+        const lng = Number(umkm.koordinat.lng);
+        if (isNaN(lat) || isNaN(lng)) return;
+
         const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
 
-        const marker = L.marker([umkm.koordinat.lat, umkm.koordinat.lng], {
+        const marker = L.marker([lat, lng], {
           icon: greenIcon,
           title: umkm.namaUsaha,
           alt: `Lokasi ${umkm.namaUsaha}`,

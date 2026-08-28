@@ -2,8 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { ArrowRight, Leaf, Target, HeartHandshake, ShieldCheck, Award, MapPin, ExternalLink } from "lucide-react";
 import { useCMS } from "@/lib/cms/CMSContext";
+
+const SingleUMKMMap = dynamic(() => import("@/components/map/SingleUMKMMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-[320px] bg-slate-100 rounded-2xl flex items-center justify-center text-xs text-slate-400">
+      Memuat peta lokasi...
+    </div>
+  ),
+});
 
 export default function ProfilPage() {
   const { profilData } = useCMS();
@@ -170,16 +180,13 @@ export default function ProfilPage() {
 
           <div className="grid lg:grid-cols-5 gap-8 items-start">
             {/* Map embed */}
-            <div className="lg:col-span-3 rounded-2xl overflow-hidden shadow-card border border-border">
-              <iframe
-                title="Peta Lokasi Kampung Tempe Gempeng"
-                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}&zoom=16&maptype=roadmap`}
-                width="100%"
-                height="350"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
+            <div className="lg:col-span-3">
+              <SingleUMKMMap
+                lat={parseFloat(profilData.lokasiLat) || -7.5953}
+                lng={parseFloat(profilData.lokasiLng) || 112.7844}
+                namaUsaha={profilData.lokasiLabel || "Kawasan Kampung Tempe Gempeng"}
+                alamat={profilData.lokasiAlamat || "Kelurahan Gempeng, Kecamatan Bangil, Pasuruan"}
+                height="360px"
               />
             </div>
 
@@ -204,7 +211,7 @@ export default function ProfilPage() {
                 </div>
 
                 <a
-                  href={`https://www.google.com/maps?q=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}`}
+                  href={`https://www.google.com/maps/search/?api=1&query=${parseFloat(profilData.lokasiLat) || -7.5953},${parseFloat(profilData.lokasiLng) || 112.7844}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-primary w-full justify-center gap-2"
@@ -214,7 +221,7 @@ export default function ProfilPage() {
                 </a>
 
                 <a
-                  href={`https://www.google.com/maps/dir/?api=1&destination=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}`}
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${parseFloat(profilData.lokasiLat) || -7.5953},${parseFloat(profilData.lokasiLng) || 112.7844}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn-secondary w-full justify-center gap-2"
