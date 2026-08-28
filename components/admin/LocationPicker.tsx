@@ -120,7 +120,7 @@ export default function LocationPicker({
   // Create custom pin icon
   const createPinIcon = (L: any) => {
     return L.divIcon({
-      html: `<div class="shopee-pin-wrapper" style="
+      html: `<div class="custom-pin-wrapper" style="
         position: relative;
         display: flex;
         flex-direction: column;
@@ -488,7 +488,7 @@ export default function LocationPicker({
               Titik Lokasi Rumah Produksi UMKM
             </label>
             <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
-              Gaya Shopee / Gojek
+              Peta Interaktif
             </span>
           </div>
           <p className="text-[11px] text-slate-500 mt-0.5">
@@ -723,7 +723,7 @@ export default function LocationPicker({
         )}
       </div>
 
-      {/* FULLSCREEN / MODAL MAP PICKER (Shopee / Gojek Full Experience) */}
+      {/* FULLSCREEN / MODAL MAP PICKER */}
       {isModalOpen && (
         <div className="fixed inset-0 z-[9999] flex flex-col bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
           {/* Modal Container */}
@@ -740,7 +740,7 @@ export default function LocationPicker({
                       Pilih Titik Lokasi Rumah Produksi
                     </h3>
                     <p className="text-[11px] text-slate-500">
-                      Geser peta atau klik pada titik yang tepat (seperti di aplikasi Gojek / Shopee)
+                      Geser peta atau klik pada titik yang tepat untuk menentukan lokasi usaha
                     </p>
                   </div>
                 </div>

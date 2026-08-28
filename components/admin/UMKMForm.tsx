@@ -208,7 +208,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           />
         </div>
 
-        {/* Alamat Lengkap & Penentuan Titik Lokasi Peta (Shopee/Gojek Experience) */}
+        {/* Alamat Lengkap & Penentuan Titik Lokasi Peta Interaktif */}
         <div className="md:col-span-2 space-y-4 bg-slate-50/80 p-4 sm:p-5 rounded-2xl border border-slate-200">
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
