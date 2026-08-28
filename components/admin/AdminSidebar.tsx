@@ -1,16 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Store,
-  Package,
   Newspaper,
   BookOpen,
   Settings,
   ArrowLeft,
-  RefreshCw,
   ShieldCheck,
 } from "lucide-react";
 import { useCMS } from "@/lib/cms/CMSContext";
@@ -21,39 +20,38 @@ export default function AdminSidebar({
   onCloseMobile?: () => void;
 }) {
   const pathname = usePathname();
-  const { resetData } = useCMS();
+  const { pengaturan } = useCMS();
 
   const navItems = [
     { href: "/admin", label: "Dashboard Overview", icon: LayoutDashboard },
     { href: "/admin/umkm", label: "Kelola UMKM", icon: Store },
-    { href: "/admin/produk", label: "Kelola Produk", icon: Package },
-    { href: "/admin/berita", label: "Berita & Kegiatan", icon: Newspaper },
     { href: "/admin/profil", label: "Profil Kampung", icon: BookOpen },
+    { href: "/admin/berita", label: "Berita & Kegiatan", icon: Newspaper },
     { href: "/admin/pengaturan", label: "Pengaturan Beranda", icon: Settings },
   ];
-
-  const handleReset = () => {
-    if (
-      confirm(
-        "Apakah Anda yakin ingin mengembalikan seluruh data ke data awal? Semua perubahan lokal akan dihapus."
-      )
-    ) {
-      resetData();
-      alert("Data berhasil dikembalikan ke posisi semula.");
-    }
-  };
 
   return (
     <aside className="w-64 bg-white text-slate-800 h-screen sticky top-0 flex flex-col justify-between p-4 border-r border-slate-200/80 shadow-xs overflow-y-auto z-40">
       <div>
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-3 py-4 mb-6 border-b border-slate-100">
-          <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-600/20">
-            K
-          </div>
-          <div>
-            <h1 className="font-bold text-sm leading-tight text-slate-900">
-              CMS Kampung Tempe
+          {pengaturan?.logoUrl ? (
+            <div className="relative w-9 h-9 rounded-xl overflow-hidden border border-slate-200 bg-white flex-shrink-0 shadow-xs">
+              <Image
+                src={pengaturan.logoUrl}
+                alt="Logo Website"
+                fill
+                className="object-contain p-0.5"
+              />
+            </div>
+          ) : (
+            <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold shadow-md shadow-emerald-600/20 flex-shrink-0">
+              K
+            </div>
+          )}
+          <div className="min-w-0">
+            <h1 className="font-bold text-sm leading-tight text-slate-900 truncate">
+              {pengaturan?.namaKawasan || "CMS Kampung Tempe"}
             </h1>
             <p className="text-[11px] font-medium text-emerald-600">Admin Control Panel</p>
           </div>
@@ -93,14 +91,6 @@ export default function AdminSidebar({
 
       {/* Footer Controls */}
       <div className="space-y-2.5 pt-4 border-t border-slate-100">
-        <button
-          onClick={handleReset}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-200/60 transition-all"
-        >
-          <RefreshCw size={14} />
-          Reset Data Default
-        </button>
-
         <Link
           href="/"
           target="_blank"

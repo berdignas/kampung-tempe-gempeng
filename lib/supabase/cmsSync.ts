@@ -119,6 +119,7 @@ function mapPengaturanFromDb(row: any): PengaturanPortal {
   return {
     namaKawasan: row.nama_kawasan || initialPengaturan.namaKawasan,
     subjudulKawasan: row.subjudul_kawasan || initialPengaturan.subjudulKawasan,
+    logoUrl: row.logo_url || initialPengaturan.logoUrl,
     alamatSekretariat: row.alamat_sekretariat || initialPengaturan.alamatSekretariat,
     nomorWhatsAppPengelola: row.nomor_whatsapp_pengelola || initialPengaturan.nomorWhatsAppPengelola,
     jamLayananPengelola: row.jam_layanan_pengelola || initialPengaturan.jamLayananPengelola,
@@ -167,6 +168,7 @@ function mapPengaturanToDb(data: PengaturanPortal) {
     id: "default",
     nama_kawasan: data.namaKawasan,
     subjudul_kawasan: data.subjudulKawasan,
+    logo_url: data.logoUrl,
     alamat_sekretariat: data.alamatSekretariat,
     nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
     jam_layanan_pengelola: data.jamLayananPengelola,

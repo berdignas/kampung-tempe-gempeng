@@ -427,9 +427,14 @@ export default function AdminPengaturanPage() {
       {/* Tab 5: Contact & Sekretariat */}
       {activeTab === "contact" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
-          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 pb-3 border-b border-slate-100">
-            <Building size={18} className="text-emerald-600" />
-            <h2>Kontak Sekretariat & Identitas Resmi Kawasan</h2>
+          {/* Logo Website / Kawasan */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+            <ImageUploader
+              label="Logo Resmi Website / Kawasan"
+              value={formData.logoUrl || ""}
+              onChange={(url) => setFormData({ ...formData, logoUrl: url })}
+              helpText="Upload file gambar logo (PNG transparan / JPG / SVG) dari komputer Anda atau masukkan URL. Logo ini akan tampil di Navbar, Footer, dan Panel Admin."
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

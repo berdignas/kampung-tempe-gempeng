@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS public.pengaturan (
   id TEXT PRIMARY KEY DEFAULT 'default',
   nama_kawasan TEXT NOT NULL,
   subjudul_kawasan TEXT NOT NULL,
+  logo_url TEXT,
   alamat_sekretariat TEXT NOT NULL,
   nomor_whatsapp_pengelola TEXT NOT NULL,
   jam_layanan_pengelola TEXT NOT NULL,

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { MapPin, Phone, MessageCircle, Mail } from "lucide-react";
 import { useCMS } from "@/lib/cms/CMSContext";
 
@@ -42,13 +43,24 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="inline-flex items-center gap-2 mb-4">
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: "var(--color-primary)" }}
-              >
-                T
-              </div>
+            <Link href="/" className="inline-flex items-center gap-2.5 mb-4">
+              {pengaturan?.logoUrl ? (
+                <div className="relative w-9 h-9 rounded-full overflow-hidden border border-emerald-200 bg-white flex-shrink-0 shadow-xs">
+                  <Image
+                    src={pengaturan.logoUrl}
+                    alt="Logo Kawasan"
+                    fill
+                    className="object-contain p-0.5"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0 shadow-xs"
+                  style={{ backgroundColor: "var(--color-primary)" }}
+                >
+                  T
+                </div>
+              )}
               <div>
                 <p className="font-semibold text-text-primary text-sm leading-tight">
                   {pengaturan?.namaKawasan || "Kampung Tempe Gempeng"}

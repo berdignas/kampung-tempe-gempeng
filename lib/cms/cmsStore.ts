@@ -8,6 +8,7 @@ export interface PengaturanPortal {
   // Identitas Kawasan & Kontak
   namaKawasan: string;
   subjudulKawasan: string;
+  logoUrl: string;
   alamatSekretariat: string;
   nomorWhatsAppPengelola: string;
   jamLayananPengelola: string;
@@ -58,6 +59,7 @@ export const initialPengaturan: PengaturanPortal = {
   // Identitas Kawasan & Kontak
   namaKawasan: "Kampung Tempe Gempeng",
   subjudulKawasan: "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan",
+  logoUrl: "",
   alamatSekretariat: "Jl. Gempeng Utama No. 1, Kelurahan Gempeng, Kecamatan Bangil, Pasuruan 67153",
   nomorWhatsAppPengelola: "628113009000",
   jamLayananPengelola: "Senin – Sabtu, 08.00 – 16.00 WIB",

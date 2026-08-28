@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useCMS } from "@/lib/cms/CMSContext";
 
 const navLinks = [
   { href: "/", label: "Beranda" },
@@ -17,6 +19,7 @@ const navLinks = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { pengaturan } = useCMS();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -47,25 +50,48 @@ export default function Navbar() {
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 group"
+            className="flex items-center gap-2.5 group"
             aria-label="Kampung Tempe Gempeng - Beranda"
           >
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-              style={{ backgroundColor: "var(--color-primary)" }}
-              aria-hidden="true"
-            >
-              T
-            </div>
+            {pengaturan?.logoUrl ? (
+              <div className="relative w-9 h-9 rounded-full overflow-hidden border border-emerald-200 bg-white flex-shrink-0 shadow-xs">
+                <Image
+                  src={pengaturan.logoUrl}
+                  alt="Logo Kawasan"
+                  fill
+                  className="object-contain p-0.5"
+                  priority
+                />
+              </div>
+            ) : (
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-xs"
+                style={{ backgroundColor: "var(--color-primary)" }}
+                aria-hidden="true"
+              >
+                T
+              </div>
+            )}
             <span
               className={cn(
                 "font-semibold text-sm leading-tight transition-colors",
                 scrolled ? "text-text-primary" : "text-text-primary"
               )}
             >
-              Kampung Tempe
-              <br />
-              <span className="text-xs font-normal text-text-secondary">Gempeng</span>
+              {pengaturan?.namaKawasan ? (
+                <>
+                  <span className="block font-bold">{pengaturan.namaKawasan.split(" ").slice(0, 2).join(" ")}</span>
+                  <span className="text-xs font-normal text-text-secondary">
+                    {pengaturan.namaKawasan.split(" ").slice(2).join(" ") || "Gempeng"}
+                  </span>
+                </>
+              ) : (
+                <>
+                  Kampung Tempe
+                  <br />
+                  <span className="text-xs font-normal text-text-secondary">Gempeng</span>
+                </>
+              )}
             </span>
           </Link>
 
