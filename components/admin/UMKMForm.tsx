@@ -208,30 +208,43 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           />
         </div>
 
-        {/* Alamat Lengkap */}
-        <div className="space-y-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-slate-700">Alamat Lengkap Rumah Produksi *</label>
-          <input
-            type="text"
-            required
-            placeholder="Jl. Gempeng No. 12, RT 02/RW 01, Kelurahan Gempeng, Bangil"
-            value={alamat}
-            onChange={(e) => setAlamat(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
-          />
-        </div>
+        {/* Alamat Lengkap & Penentuan Titik Lokasi Peta (Shopee/Gojek Experience) */}
+        <div className="md:col-span-2 space-y-4 bg-slate-50/80 p-4 sm:p-5 rounded-2xl border border-slate-200">
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <MapPin size={14} className="text-emerald-600" />
+                Alamat Lengkap Rumah Produksi *
+              </label>
+              <span className="text-[11px] text-slate-500">
+                (Dapat terisi otomatis dari pemilihan titik peta di bawah)
+              </span>
+            </div>
+            <input
+              type="text"
+              required
+              placeholder="Contoh: Jl. Patimura No. 12, RT 02/RW 01, Kelurahan Gempeng, Bangil"
+              value={alamat}
+              onChange={(e) => setAlamat(e.target.value)}
+              className="w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none font-medium shadow-xs"
+            />
+          </div>
 
-        {/* Penentuan Titik Lokasi Peta (Interactive Picker) */}
-        <div className="md:col-span-2 border-t border-slate-100 pt-4">
-          <LocationPicker
-            lat={lat}
-            lng={lng}
-            alamat={alamat}
-            onChange={(newLat, newLng) => {
-              setLat(newLat);
-              setLng(newLng);
-            }}
-          />
+          {/* Penentuan Titik Lokasi Peta (Interactive Picker) */}
+          <div className="pt-2 border-t border-slate-200/80">
+            <LocationPicker
+              lat={lat}
+              lng={lng}
+              alamat={alamat}
+              onChange={(newLat, newLng) => {
+                setLat(newLat);
+                setLng(newLng);
+              }}
+              onAddressSelect={(newAlamat) => {
+                setAlamat(newAlamat);
+              }}
+            />
+          </div>
         </div>
 
         {/* Deskripsi Usaha */}

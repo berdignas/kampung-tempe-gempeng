@@ -567,11 +567,17 @@ export default function AdminProfilPage() {
                 lng={parseFloat(formData.lokasiLng) || 112.7844}
                 alamat={formData.lokasiAlamat}
                 onChange={(newLat, newLng) => {
-                  setFormData({
-                    ...formData,
+                  setFormData((prev) => ({
+                    ...prev,
                     lokasiLat: String(newLat),
                     lokasiLng: String(newLng),
-                  });
+                  }));
+                }}
+                onAddressSelect={(newAlamat) => {
+                  setFormData((prev) => ({
+                    ...prev,
+                    lokasiAlamat: newAlamat,
+                  }));
                 }}
               />
             </div>
