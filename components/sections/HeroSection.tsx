@@ -27,79 +27,82 @@ export default function HeroSection({
 }: HeroSectionProps) {
   return (
     <section
-      className="relative pt-32 pb-24 md:pt-44 md:pb-36 lg:pt-48 lg:pb-40 overflow-hidden flex items-center justify-center min-h-[85vh]"
+      className="relative min-h-[100svh] flex items-center pt-24 pb-16 lg:pt-20 lg:pb-12 overflow-hidden"
       style={{ backgroundColor: "var(--color-background)" }}
       aria-label="Hero section"
     >
-      {/* Background Image with Transparency */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        <Image
-          src={imageSrc}
-          alt={imageAlt}
-          fill
-          className="object-cover opacity-20 filter brightness-95"
-          priority
-          sizes="100vw"
-        />
-        {/* Soft Multi-stop Gradient Overlays for High Legibility */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 80% at 50% 50%, rgba(247,250,248,0.75) 0%, rgba(247,250,248,0.95) 100%)",
-          }}
-          aria-hidden="true"
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to bottom, var(--color-background) 0%, transparent 20%, transparent 80%, var(--color-background) 100%)",
-          }}
-          aria-hidden="true"
-        />
-      </div>
+      {/* Background Soft Ambient Light */}
+      <div
+        className="absolute top-1/4 -left-32 w-96 h-96 rounded-full opacity-40 blur-3xl pointer-events-none"
+        style={{ backgroundColor: "var(--color-primary-soft)" }}
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-10 right-0 w-96 h-96 rounded-full opacity-30 blur-3xl pointer-events-none"
+        style={{ backgroundColor: "var(--color-primary-soft)" }}
+        aria-hidden="true"
+      />
 
-      {/* Hero Content (Centered: Eyebrow, Headline, Subtext, CTA) */}
-      <div className="container-content relative z-10">
-        <div className="max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center gap-6">
-          {/* Eyebrow Chip */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/80 border border-emerald-200 text-emerald-800 backdrop-blur-xs shadow-2xs">
-            <MapPin size={14} className="text-emerald-700 flex-shrink-0" aria-hidden="true" />
-            <span className="text-xs font-bold tracking-wide uppercase">{eyebrow}</span>
+      <div className="container-content relative z-10 w-full my-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* Kolom Kiri: Teks & Aksi */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
+            {/* Eyebrow Chip */}
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-200 text-emerald-800 shadow-2xs">
+              <MapPin size={14} className="text-emerald-700 flex-shrink-0" aria-hidden="true" />
+              <span className="text-xs font-bold tracking-wide uppercase">{eyebrow}</span>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] font-bold text-slate-900 leading-[1.18] tracking-tight">
+              {headline}
+            </h1>
+
+            {/* Subtext */}
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
+              {subtext}
+            </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
+              <Link
+                href={ctaPrimaryHref}
+                className="btn-primary shadow-md hover:shadow-lg transition-all text-sm px-6 sm:px-7 py-3 rounded-xl inline-flex items-center gap-2"
+              >
+                {ctaPrimaryLabel}
+                <ArrowRight size={17} />
+              </Link>
+              <Link
+                href={ctaSecondaryHref}
+                className="btn-secondary text-sm px-6 sm:px-7 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition-all"
+              >
+                {ctaSecondaryLabel}
+              </Link>
+            </div>
+
+            {/* Trust indicator */}
+            <p className="text-xs text-slate-400 pt-1">
+              Portal informasi resmi kawasan — bukan marketplace
+            </p>
           </div>
 
-          {/* Headline */}
-          <h1 className="heading-1 text-slate-900 leading-[1.15] tracking-tight">
-            {headline}
-          </h1>
-
-          {/* Subtext */}
-          <p className="text-base md:text-lg lg:text-xl text-slate-600 leading-relaxed max-w-2xl">
-            {subtext}
-          </p>
-
-          {/* CTA Buttons */}
-          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
-            <Link
-              href={ctaPrimaryHref}
-              className="btn-primary shadow-md hover:shadow-lg transition-all text-sm px-7 py-3 rounded-xl"
-            >
-              {ctaPrimaryLabel}
-              <ArrowRight size={17} />
-            </Link>
-            <Link
-              href={ctaSecondaryHref}
-              className="btn-secondary text-sm px-7 py-3 rounded-xl bg-white/85 hover:bg-white backdrop-blur-xs border border-slate-200 shadow-2xs"
-            >
-              {ctaSecondaryLabel}
-            </Link>
+          {/* Kolom Kanan: Gambar Hero Section */}
+          <div className="lg:col-span-5 w-full">
+            <div className="relative w-full aspect-[4/3] lg:aspect-[5/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 group">
+              <Image
+                src={imageSrc}
+                alt={imageAlt}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                priority
+                sizes="(max-width: 1024px) 100vw, 45vw"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"
+                aria-hidden="true"
+              />
+            </div>
           </div>
-
-          {/* Trust indicator */}
-          <p className="text-xs text-slate-500 mt-2">
-            Portal informasi resmi kawasan — bukan marketplace
-          </p>
         </div>
       </div>
     </section>
