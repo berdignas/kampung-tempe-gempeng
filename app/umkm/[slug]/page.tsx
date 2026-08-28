@@ -1,24 +1,24 @@
 "use client";
 
-import { use } from "react";
-import { notFound } from "next/navigation";
+import { use, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  MapPin, Clock, MessageCircle, ExternalLink,
+  MapPin, Clock, MessageCircle, ExternalLink, Package, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
-import UMKMCard from "@/components/umkm/UMKMCard";
 import { useCMS } from "@/lib/cms/CMSContext";
+
+const PRODUK_PER_PAGE = 4;
 
 export default function DetailUMKMPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
   const { umkmList, produkList } = useCMS();
   const umkm = umkmList.find((u) => u.slug === slug);
+  const [produkPage, setProdukPage] = useState(0);
 
   if (!umkm || !umkm.statusPublikasi) {
-    // If not found in dynamic state, fallback search
     return (
       <main className="pt-24 pb-16 text-center">
         <div className="container-content">
@@ -35,10 +35,11 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
   }
 
   const produkUMKM = produkList.filter((p) => umkm.produkIds.includes(p.id));
-  const umkmLain = umkmList
-    .filter((u) => u.id !== umkm.id && u.statusPublikasi)
-    .sort((a, b) => a.namaUsaha.localeCompare(b.namaUsaha, "id"))
-    .slice(0, 3);
+  const totalProdukPages = Math.ceil(produkUMKM.length / PRODUK_PER_PAGE);
+  const produkSlice = produkUMKM.slice(
+    produkPage * PRODUK_PER_PAGE,
+    (produkPage + 1) * PRODUK_PER_PAGE
+  );
 
   const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
   const mapsUrl = `https://www.google.com/maps?q=${umkm.koordinat.lat},${umkm.koordinat.lng}`;
@@ -87,27 +88,86 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
               <p className="text-text-secondary leading-relaxed">{umkm.deskripsi}</p>
             </section>
 
-            {/* Products */}
+            {/* Products with Pagination */}
             {produkUMKM.length > 0 && (
               <section aria-labelledby="produk-heading">
-                <h2 id="produk-heading" className="text-xl font-semibold text-text-primary mb-4">Produk yang Tersedia</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {produkUMKM.map((p) => (
+                <div className="flex items-center justify-between mb-4">
+                  <h2 id="produk-heading" className="text-xl font-semibold text-text-primary flex items-center gap-2">
+                    <Package size={20} className="text-primary" />
+                    Produk Tempe {umkm.namaUsaha}
+                  </h2>
+                  <span className="text-xs text-text-secondary">
+                    {produkUMKM.length} varian produk
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {produkSlice.map((p) => (
                     <Link
                       key={p.id}
                       href={`/produk/${p.slug}`}
-                      className="flex items-center gap-3 p-3 rounded-xl border border-border hover:border-primary transition-colors bg-white"
+                      className="card p-4 flex items-start gap-4 hover:border-primary transition-colors group"
                     >
-                      <div className="relative w-16 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                        <Image src={p.foto} alt={p.nama} fill className="object-cover" sizes="64px" />
+                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-sm">
+                        <Image src={p.foto} alt={p.nama} fill className="object-cover group-hover:scale-105 transition-transform" sizes="80px" />
                       </div>
-                      <div>
-                        <p className="font-semibold text-sm text-text-primary">{p.nama}</p>
-                        <p className="text-xs text-text-secondary mt-0.5">{p.ukuranKemasan.join(" · ")}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-sm text-text-primary mb-1">{p.nama}</p>
+                        <p className="text-xs text-text-secondary line-clamp-2 mb-2">{p.deskripsi}</p>
+                        <div className="flex flex-wrap gap-1.5">
+                          {p.ukuranKemasan.slice(0, 3).map((k) => (
+                            <span key={k} className="px-2 py-0.5 text-[10px] rounded-full border border-border text-text-secondary">{k}</span>
+                          ))}
+                        </div>
                       </div>
                     </Link>
                   ))}
                 </div>
+
+                {/* Pagination */}
+                {totalProdukPages > 1 && (
+                  <div className="flex items-center justify-center gap-3 mt-5 pt-4 border-t border-border">
+                    <button
+                      type="button"
+                      onClick={() => setProdukPage(Math.max(0, produkPage - 1))}
+                      disabled={produkPage === 0}
+                      className="p-2 rounded-lg border border-border text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
+                      aria-label="Halaman produk sebelumnya"
+                    >
+                      <ChevronLeft size={16} />
+                    </button>
+
+                    <div className="flex items-center gap-1.5">
+                      {Array.from({ length: totalProdukPages }).map((_, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => setProdukPage(i)}
+                          className={`w-8 h-8 rounded-lg text-xs font-semibold transition ${
+                            produkPage === i
+                              ? "text-white"
+                              : "text-text-secondary border border-border hover:bg-surface-muted"
+                          }`}
+                          style={produkPage === i ? { backgroundColor: "var(--color-primary)" } : {}}
+                          aria-label={`Halaman ${i + 1}`}
+                          aria-current={produkPage === i ? "page" : undefined}
+                        >
+                          {i + 1}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setProdukPage(Math.min(totalProdukPages - 1, produkPage + 1))}
+                      disabled={produkPage === totalProdukPages - 1}
+                      className="p-2 rounded-lg border border-border text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
+                      aria-label="Halaman produk berikutnya"
+                    >
+                      <ChevronRight size={16} />
+                    </button>
+                  </div>
+                )}
               </section>
             )}
           </div>
@@ -187,22 +247,13 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
           </aside>
         </div>
 
-        {/* Other UMKM */}
-        <section className="mt-16" aria-labelledby="umkm-lain-heading">
-          <h2 id="umkm-lain-heading" className="text-xl font-semibold text-text-primary mb-6">
-            Pelaku UMKM Lain di Kampung Tempe Gempeng
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {umkmLain.map((u) => (
-              <UMKMCard key={u.id} umkm={u} />
-            ))}
-          </div>
-          <div className="mt-6 text-center">
-            <Link href="/umkm" className="btn-secondary">
-              Lihat Semua UMKM
-            </Link>
-          </div>
-        </section>
+        {/* Back to directory */}
+        <div className="mt-12 pt-6 border-t border-border text-center">
+          <Link href="/umkm" className="btn-secondary inline-flex gap-2">
+            <ChevronLeft size={15} />
+            Kembali ke Direktori UMKM
+          </Link>
+        </div>
       </div>
 
       {/* Sticky WhatsApp (mobile) */}
