@@ -15,6 +15,7 @@ import {
   MapPin,
 } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
+import LocationPicker from "@/components/admin/LocationPicker";
 import { ProfilKampungData, TimelineItem, NilaiItem } from "@/lib/cms/cmsStore";
 
 export default function AdminProfilPage() {
@@ -559,54 +560,21 @@ export default function AdminProfilPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Latitude (Lintang)</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.lokasiLat}
-                  onChange={(e) => setFormData({ ...formData, lokasiLat: e.target.value })}
-                  placeholder="-7.5953"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Longitude (Bujur)</label>
-                <input
-                  type="text"
-                  required
-                  value={formData.lokasiLng}
-                  onChange={(e) => setFormData({ ...formData, lokasiLng: e.target.value })}
-                  placeholder="112.7844"
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono"
-                />
-              </div>
+            {/* Interactive Location Picker */}
+            <div className="pt-2">
+              <LocationPicker
+                lat={parseFloat(formData.lokasiLat) || -7.5953}
+                lng={parseFloat(formData.lokasiLng) || 112.7844}
+                alamat={formData.lokasiAlamat}
+                onChange={(newLat, newLng) => {
+                  setFormData({
+                    ...formData,
+                    lokasiLat: String(newLat),
+                    lokasiLng: String(newLng),
+                  });
+                }}
+              />
             </div>
-
-            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200/60 text-xs text-emerald-800 space-y-1.5">
-              <p className="font-semibold">💡 Cara menemukan koordinat:</p>
-              <ol className="list-decimal list-inside space-y-0.5 text-emerald-700">
-                <li>Buka <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="underline font-semibold">Google Maps</a></li>
-                <li>Klik kanan pada lokasi yang diinginkan</li>
-                <li>Klik angka koordinat yang muncul (otomatis tercopy)</li>
-                <li>Paste angka pertama (negatif) ke Latitude, angka kedua ke Longitude</li>
-              </ol>
-            </div>
-
-            {/* Preview link */}
-            {formData.lokasiLat && formData.lokasiLng && (
-              <a
-                href={`https://www.google.com/maps?q=${formData.lokasiLat},${formData.lokasiLng}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
-              >
-                <MapPin size={14} />
-                Preview Lokasi di Google Maps ↗
-              </a>
-            )}
           </div>
         </div>
       )}

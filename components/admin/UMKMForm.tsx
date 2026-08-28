@@ -7,6 +7,7 @@ import { useCMS } from "@/lib/cms/CMSContext";
 import Link from "next/link";
 import { ArrowLeft, Save, MapPin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
+import LocationPicker from "@/components/admin/LocationPicker";
 
 interface UMKMFormProps {
   initialData?: UMKM;
@@ -220,43 +221,18 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           />
         </div>
 
-        {/* Koordinat Peta */}
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Latitude (Gmaps)</label>
-          <input
-            type="number"
-            step="any"
-            value={lat}
-            onChange={(e) => setLat(Number(e.target.value))}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none font-mono"
+        {/* Penentuan Titik Lokasi Peta (Interactive Picker) */}
+        <div className="md:col-span-2 border-t border-slate-100 pt-4">
+          <LocationPicker
+            lat={lat}
+            lng={lng}
+            alamat={alamat}
+            onChange={(newLat, newLng) => {
+              setLat(newLat);
+              setLng(newLng);
+            }}
           />
         </div>
-
-        <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Longitude (Gmaps)</label>
-          <input
-            type="number"
-            step="any"
-            value={lng}
-            onChange={(e) => setLng(Number(e.target.value))}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none font-mono"
-          />
-        </div>
-
-        {/* Gmaps Quick Preview */}
-        {lat && lng && (
-          <div className="md:col-span-2 -mt-2">
-            <a
-              href={`https://www.google.com/maps?q=${lat},${lng}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11px] text-emerald-700 hover:underline font-medium"
-            >
-              <MapPin size={13} />
-              Cek titik lokasi di Google Maps ↗
-            </a>
-          </div>
-        )}
 
         {/* Deskripsi Usaha */}
         <div className="space-y-1.5 md:col-span-2">
