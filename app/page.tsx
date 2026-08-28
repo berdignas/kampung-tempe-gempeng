@@ -5,7 +5,6 @@ import StatsSection from "@/components/sections/StatsSection";
 import FeaturedUMKM from "@/components/sections/FeaturedUMKM";
 import NewsPreview from "@/components/sections/NewsPreview";
 import CTASection from "@/components/sections/CTASection";
-import ProductCategoriesSection from "@/components/sections/ProductCategoriesSection";
 import KampungProfileTeaser from "@/components/sections/KampungProfileTeaser";
 import { useCMS } from "@/lib/cms/CMSContext";
 
@@ -31,7 +30,6 @@ export default function BerandaPage() {
       <StatsSection />
       <KampungProfileTeaser />
       <FeaturedUMKM />
-      <ProductCategoriesSection />
       <NewsPreview />
       <CTASection />
     </main>

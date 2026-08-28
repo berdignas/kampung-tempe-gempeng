@@ -18,7 +18,7 @@ const footerLinks = [
     title: "Pelaku Usaha",
     links: [
       { href: "/umkm", label: "Direktori UMKM" },
-      { href: "/produk", label: "Katalog Produk" },
+      { href: "/peta", label: "Peta Produksi" },
     ],
   },
   {

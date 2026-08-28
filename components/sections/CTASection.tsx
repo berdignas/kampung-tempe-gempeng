@@ -48,11 +48,11 @@ export default function CTASection() {
                 {pengaturan?.ctaSectionBtn1Label || "Jelajahi UMKM"} <ArrowRight size={15} />
               </Link>
               <Link
-                href="/produk"
+                href="/peta"
                 className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
-                aria-label="Lihat katalog produk tempe"
+                aria-label="Lihat peta produksi tempe"
               >
-                {pengaturan?.ctaSectionBtn2Label || "Katalog Produk"}
+                {pengaturan?.ctaSectionBtn2Label === "Katalog Produk" ? "Lihat Peta Produksi" : (pengaturan?.ctaSectionBtn2Label || "Lihat Peta Produksi")}
               </Link>
             </div>
             <p className="text-xs text-white/60 mt-6">

@@ -10,7 +10,6 @@ const navLinks = [
   { href: "/", label: "Beranda" },
   { href: "/profil", label: "Profil Kampung" },
   { href: "/umkm", label: "Direktori UMKM" },
-  { href: "/produk", label: "Katalog Produk" },
   { href: "/peta", label: "Peta Produksi" },
   { href: "/berita", label: "Berita & Kegiatan" },
   { href: "/kontak", label: "Kontak" },
