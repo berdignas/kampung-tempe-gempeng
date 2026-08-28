@@ -10,7 +10,7 @@ import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import { useCMS } from "@/lib/cms/CMSContext";
 
-const PRODUK_PER_PAGE = 4;
+const PRODUK_PER_PAGE = 2;
 
 export default function DetailUMKMPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
@@ -75,7 +75,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
             {umkm.galeri.length > 1 && (
               <div className="grid grid-cols-2 gap-3">
                 {umkm.galeri.slice(1).map((img, i) => (
-                  <div key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden">
+                  <div key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-sm">
                     <Image src={img} alt={`Foto galeri ${umkm.namaUsaha} ${i + 2}`} fill className="object-cover" sizes="50vw" />
                   </div>
                 ))}
@@ -90,14 +90,14 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
 
             {/* Products with Pagination */}
             {produkUMKM.length > 0 && (
-              <section aria-labelledby="produk-heading">
+              <section aria-labelledby="produk-heading" className="pt-2">
                 <div className="flex items-center justify-between mb-4">
                   <h2 id="produk-heading" className="text-xl font-semibold text-text-primary flex items-center gap-2">
                     <Package size={20} className="text-primary" />
-                    Produk Tempe {umkm.namaUsaha}
+                    Produk Tempe yang Dihasilkan
                   </h2>
-                  <span className="text-xs text-text-secondary">
-                    {produkUMKM.length} varian produk
+                  <span className="text-xs text-text-secondary font-medium">
+                    Total {produkUMKM.length} Varian
                   </span>
                 </div>
 
@@ -106,16 +106,16 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                     <Link
                       key={p.id}
                       href={`/produk/${p.slug}`}
-                      className="card p-4 flex items-start gap-4 hover:border-primary transition-colors group"
+                      className="card p-4 flex items-start gap-4 hover:border-primary transition-all group bg-white"
                     >
-                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-sm">
+                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-xs">
                         <Image src={p.foto} alt={p.nama} fill className="object-cover group-hover:scale-105 transition-transform" sizes="80px" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm text-text-primary mb-1">{p.nama}</p>
+                        <p className="font-semibold text-sm text-text-primary mb-1 group-hover:text-primary transition-colors">{p.nama}</p>
                         <p className="text-xs text-text-secondary line-clamp-2 mb-2">{p.deskripsi}</p>
-                        <div className="flex flex-wrap gap-1.5">
-                          {p.ukuranKemasan.slice(0, 3).map((k) => (
+                        <div className="flex flex-wrap gap-1">
+                          {p.ukuranKemasan.slice(0, 2).map((k) => (
                             <span key={k} className="px-2 py-0.5 text-[10px] rounded-full border border-border text-text-secondary">{k}</span>
                           ))}
                         </div>
@@ -126,46 +126,32 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
 
                 {/* Pagination */}
                 {totalProdukPages > 1 && (
-                  <div className="flex items-center justify-center gap-3 mt-5 pt-4 border-t border-border">
-                    <button
-                      type="button"
-                      onClick={() => setProdukPage(Math.max(0, produkPage - 1))}
-                      disabled={produkPage === 0}
-                      className="p-2 rounded-lg border border-border text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
-                      aria-label="Halaman produk sebelumnya"
-                    >
-                      <ChevronLeft size={16} />
-                    </button>
+                  <div className="flex items-center justify-between mt-5 pt-4 border-t border-border">
+                    <p className="text-xs text-text-secondary">
+                      Halaman <strong className="text-text-primary">{produkPage + 1}</strong> dari <strong>{totalProdukPages}</strong>
+                    </p>
 
-                    <div className="flex items-center gap-1.5">
-                      {Array.from({ length: totalProdukPages }).map((_, i) => (
-                        <button
-                          key={i}
-                          type="button"
-                          onClick={() => setProdukPage(i)}
-                          className={`w-8 h-8 rounded-lg text-xs font-semibold transition ${
-                            produkPage === i
-                              ? "text-white"
-                              : "text-text-secondary border border-border hover:bg-surface-muted"
-                          }`}
-                          style={produkPage === i ? { backgroundColor: "var(--color-primary)" } : {}}
-                          aria-label={`Halaman ${i + 1}`}
-                          aria-current={produkPage === i ? "page" : undefined}
-                        >
-                          {i + 1}
-                        </button>
-                      ))}
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setProdukPage(Math.max(0, produkPage - 1))}
+                        disabled={produkPage === 0}
+                        className="px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1"
+                        aria-label="Halaman produk sebelumnya"
+                      >
+                        <ChevronLeft size={14} /> Sebelumnya
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setProdukPage(Math.min(totalProdukPages - 1, produkPage + 1))}
+                        disabled={produkPage === totalProdukPages - 1}
+                        className="px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1"
+                        aria-label="Halaman produk berikutnya"
+                      >
+                        Selanjutnya <ChevronRight size={14} />
+                      </button>
                     </div>
-
-                    <button
-                      type="button"
-                      onClick={() => setProdukPage(Math.min(totalProdukPages - 1, produkPage + 1))}
-                      disabled={produkPage === totalProdukPages - 1}
-                      className="p-2 rounded-lg border border-border text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition"
-                      aria-label="Halaman produk berikutnya"
-                    >
-                      <ChevronRight size={16} />
-                    </button>
                   </div>
                 )}
               </section>
@@ -175,7 +161,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
           {/* Sidebar */}
           <aside className="space-y-5" aria-label="Informasi kontak dan lokasi">
             {/* Contact card */}
-            <div className="card p-5 space-y-4">
+            <div className="card p-5 space-y-4 bg-white">
               <h2 className="font-semibold text-text-primary">Informasi Usaha</h2>
               <dl className="space-y-3 text-sm">
                 <div>
@@ -218,7 +204,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
             </div>
 
             {/* CTA */}
-            <div className="card p-5 space-y-3">
+            <div className="card p-5 space-y-3 bg-white">
               <h2 className="font-semibold text-text-primary text-sm">Hubungi Langsung</h2>
               <p className="text-xs text-text-secondary">
                 Untuk pembelian dan informasi produk, hubungi pemilik usaha secara langsung.
@@ -249,7 +235,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
 
         {/* Back to directory */}
         <div className="mt-12 pt-6 border-t border-border text-center">
-          <Link href="/umkm" className="btn-secondary inline-flex gap-2">
+          <Link href="/umkm" className="btn-secondary inline-flex items-center gap-2">
             <ChevronLeft size={15} />
             Kembali ke Direktori UMKM
           </Link>

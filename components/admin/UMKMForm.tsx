@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UMKM, JenisLayanan } from "@/lib/data/umkm";
 import { useCMS } from "@/lib/cms/CMSContext";
 import Link from "next/link";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, MapPin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
 
 interface UMKMFormProps {
@@ -35,14 +35,29 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const [utamaImage, setUtamaImage] = useState(
     initialData?.galeri?.[0] || "/images/umkm/umkm-1-a.jpg"
   );
-  const [galeriExtra, setGaleriExtra] = useState(
+  const [extraImages, setExtraImages] = useState<string[]>(
     initialData?.galeri && initialData.galeri.length > 1
-      ? initialData.galeri.slice(1).join(", ")
-      : ""
+      ? initialData.galeri.slice(1)
+      : []
   );
   const [statusPublikasi, setStatusPublikasi] = useState(
     initialData?.statusPublikasi ?? true
   );
+
+  const handleAddExtraImage = () => {
+    setExtraImages([...extraImages, ""]);
+  };
+
+  const handleUpdateExtraImage = (index: number, val: string) => {
+    const updated = [...extraImages];
+    updated[index] = val;
+    setExtraImages(updated);
+  };
+
+  const handleDeleteExtraImage = (index: number) => {
+    const updated = extraImages.filter((_, i) => i !== index);
+    setExtraImages(updated);
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +67,8 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)+/g, "");
 
-    const extra = galeriExtra
-      .split(",")
-      .map((s) => s.trim())
-      .filter((s) => s.length > 0);
-
-    const galeri = [utamaImage, ...extra].filter((img) => img.length > 0);
+    const cleanedExtra = extraImages.map((s) => s.trim()).filter((s) => s.length > 0);
+    const galeri = [utamaImage, ...cleanedExtra].filter((img) => img.length > 0);
 
     const formData = {
       slug,
@@ -77,7 +88,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
 
     if (isEdit && initialData) {
       updateUMKM(initialData.id, formData);
-      alert("Data UMKM berhasil diperbarui!");
+      alert("Data profil UMKM berhasil diperbarui!");
     } else {
       addUMKM(formData);
       alert("UMKM baru berhasil ditambahkan!");
@@ -103,7 +114,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-16">
       {/* Header Bar */}
       <div className="flex items-center justify-between border-b border-slate-200 pb-4">
         <div>
@@ -115,8 +126,11 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
             Kembali ke Daftar UMKM
           </Link>
           <h1 className="text-2xl font-bold text-slate-800">
-            {isEdit ? `Edit UMKM: ${initialData?.namaUsaha}` : "Tambah UMKM Baru"}
+            {isEdit ? `Edit Profil UMKM: ${initialData?.namaUsaha}` : "Tambah UMKM Baru"}
           </h1>
+          <p className="text-xs text-slate-500">
+            Seluruh data di bawah ini langsung terintegrasi dengan halaman profil UMKM publik (/umkm/[slug]).
+          </p>
         </div>
 
         <button
@@ -132,20 +146,20 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
         {/* Nama Usaha */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Nama Usaha *</label>
+          <label className="text-xs font-semibold text-slate-700">Nama Usaha UMKM *</label>
           <input
             type="text"
             required
             placeholder="Contoh: Tempe Bu Aminah"
             value={namaUsaha}
             onChange={(e) => setNamaUsaha(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none font-semibold text-slate-800"
           />
         </div>
 
         {/* Nama Pemilik */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Nama Pemilik *</label>
+          <label className="text-xs font-semibold text-slate-700">Nama Pemilik Usaha *</label>
           <input
             type="text"
             required
@@ -159,7 +173,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
         {/* WhatsApp & Tahun Berdiri */}
         <div className="space-y-1.5">
           <label className="text-xs font-semibold text-slate-700">
-            Nomor WhatsApp (Awali 628...) *
+            Nomor WhatsApp Pemilik (Awali 628...) *
           </label>
           <input
             type="text"
@@ -195,7 +209,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
 
         {/* Alamat Lengkap */}
         <div className="space-y-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-slate-700">Alamat Usaha *</label>
+          <label className="text-xs font-semibold text-slate-700">Alamat Lengkap Rumah Produksi *</label>
           <input
             type="text"
             required
@@ -208,26 +222,41 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
 
         {/* Koordinat Peta */}
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Latitude (Peta)</label>
+          <label className="text-xs font-semibold text-slate-700">Latitude (Gmaps)</label>
           <input
             type="number"
             step="any"
             value={lat}
             onChange={(e) => setLat(Number(e.target.value))}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none font-mono"
           />
         </div>
 
         <div className="space-y-1.5">
-          <label className="text-xs font-semibold text-slate-700">Longitude (Peta)</label>
+          <label className="text-xs font-semibold text-slate-700">Longitude (Gmaps)</label>
           <input
             type="number"
             step="any"
             value={lng}
             onChange={(e) => setLng(Number(e.target.value))}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none font-mono"
           />
         </div>
+
+        {/* Gmaps Quick Preview */}
+        {lat && lng && (
+          <div className="md:col-span-2 -mt-2">
+            <a
+              href={`https://www.google.com/maps?q=${lat},${lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-[11px] text-emerald-700 hover:underline font-medium"
+            >
+              <MapPin size={13} />
+              Cek titik lokasi di Google Maps ↗
+            </a>
+          </div>
+        )}
 
         {/* Deskripsi Usaha */}
         <div className="space-y-1.5 md:col-span-2">
@@ -238,14 +267,14 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
             placeholder="Jelaskan sejarah singkat, keunggulan proses fermentasi, atau kapasitas pasokan..."
             value={deskripsi}
             onChange={(e) => setDeskripsi(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
+            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none leading-relaxed"
           />
         </div>
 
         {/* Foto Utama Tempat Usaha */}
         <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
           <ImageUploader
-            label="Foto Utama Tempat Usaha UMKM"
+            label="Foto Utama Tempat Usaha / Produk UMKM"
             value={utamaImage}
             onChange={(url) => setUtamaImage(url)}
             helpText="Pilih file gambar dari komputer Anda atau masukkan URL."
@@ -253,17 +282,54 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
         </div>
 
         {/* Galeri Tambahan */}
-        <div className="space-y-1.5 md:col-span-2">
-          <label className="text-xs font-semibold text-slate-700">
-            URL Foto Galeri Tambahan (Pisahkan dengan koma)
-          </label>
-          <input
-            type="text"
-            placeholder="/images/umkm/umkm-1-b.jpg, /images/umkm/umkm-1-c.jpg"
-            value={galeriExtra}
-            onChange={(e) => setGaleriExtra(e.target.value)}
-            className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
-          />
+        <div className="space-y-3 md:col-span-2 border-t border-slate-100 pt-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                <ImageIcon size={14} className="text-emerald-600" />
+                Galeri Foto Tambahan Tempat Usaha / Produksi
+              </label>
+              <p className="text-[11px] text-slate-500">
+                Tambahkan foto proses pembuatan tempe, tempat fermentasi, atau suasana rumah produksi.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleAddExtraImage}
+              className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-semibold transition"
+            >
+              <Plus size={13} />
+              Tambah Foto Galeri
+            </button>
+          </div>
+
+          {extraImages.length === 0 ? (
+            <p className="text-xs text-slate-400 italic">Belum ada foto galeri tambahan.</p>
+          ) : (
+            <div className="space-y-3">
+              {extraImages.map((img, idx) => (
+                <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-semibold text-slate-600">Foto Galeri #{idx + 1}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteExtraImage(idx)}
+                      className="p-1 text-slate-400 hover:text-rose-600 rounded transition"
+                      title="Hapus foto ini"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                  <ImageUploader
+                    label={`Pilih Foto Galeri ${idx + 1}`}
+                    value={img}
+                    onChange={(url) => handleUpdateExtraImage(idx, url)}
+                    helpText="Upload file gambar dari komputer Anda atau masukkan URL."
+                  />
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Jenis Layanan */}
@@ -291,17 +357,24 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
 
         {/* Produk Diproduksi */}
         <div className="space-y-2 md:col-span-2 border-t border-slate-100 pt-4">
-          <label className="text-xs font-semibold text-slate-700">Varian Produk Diproduksi</label>
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-semibold text-slate-700">
+              Varian Produk Tempe yang Diproduksi Pelaku Usaha Ini
+            </label>
+            <span className="text-[11px] text-slate-500">
+              Centang produk yang dihasilkan (tampil dengan pagination di halaman profil)
+            </span>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
             {produkList.map((p) => (
-              <label key={p.id} className="flex items-center gap-2 cursor-pointer text-slate-700">
+              <label key={p.id} className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-slate-100/60 cursor-pointer text-slate-700">
                 <input
                   type="checkbox"
                   checked={produkIds.includes(p.id)}
                   onChange={() => toggleProduk(p.id)}
                   className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 />
-                <span>{p.nama}</span>
+                <span className="font-medium">{p.nama}</span>
               </label>
             ))}
           </div>
@@ -312,7 +385,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           <div>
             <span className="text-xs font-semibold text-slate-800">Status Publikasi</span>
             <p className="text-[11px] text-slate-500">
-              Jika aktif, UMKM ini akan tampil di direktori publik dan peta kawasan.
+              Jika aktif, profil UMKM ini akan tampil di direktori publik dan peta kawasan.
             </p>
           </div>
           <button
