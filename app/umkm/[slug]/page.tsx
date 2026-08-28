@@ -55,7 +55,6 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
   );
 
   const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${validLat},${validLng}`;
 
   return (
     <main className="pt-20">
@@ -254,16 +253,6 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
               >
                 <MessageCircle size={18} />
                 Hubungi via WhatsApp
-              </a>
-              <a
-                href={mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary w-full justify-center gap-2 text-sm"
-                aria-label={`Buka lokasi ${umkm.namaUsaha} di Google Maps`}
-              >
-                <ExternalLink size={14} />
-                Buka di Google Maps
               </a>
             </div>
           </aside>
