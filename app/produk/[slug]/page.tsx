@@ -1,16 +1,16 @@
 "use client";
 
+import { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { MessageCircle, Package, ChefHat, Users } from "lucide-react";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import { useCMS } from "@/lib/cms/CMSContext";
 
-interface Props { params: { slug: string } }
-
-export default function DetailProdukPage({ params }: Props) {
+export default function DetailProdukPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const { produkList, umkmList } = useCMS();
-  const produk = produkList.find((p) => p.slug === params.slug);
+  const produk = produkList.find((p) => p.slug === slug);
 
   if (!produk) {
     return (

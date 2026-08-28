@@ -135,6 +135,11 @@ export interface ProfilKampungData {
   nilaiList: NilaiItem[];
   ctaJudul: string;
   ctaDeskripsi: string;
+  // Lokasi Kawasan
+  lokasiLabel: string;
+  lokasiAlamat: string;
+  lokasiLat: string;
+  lokasiLng: string;
 }
 
 export const initialProfilKampung: ProfilKampungData = {
@@ -194,6 +199,11 @@ export const initialProfilKampung: ProfilKampungData = {
   ],
   ctaJudul: "Ingin Mengenal Lebih Dekat?",
   ctaDeskripsi: "Temukan lokasi rumah produksi pada peta interaktif atau jelajahi seluruh pelaku UMKM tempe di kawasan kami.",
+  // Lokasi Kawasan
+  lokasiLabel: "Kawasan Kampung Tempe Gempeng",
+  lokasiAlamat: "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan, Jawa Timur 67153",
+  lokasiLat: "-7.5953",
+  lokasiLng: "112.7844",
 };
 
 const STORAGE_KEYS = {

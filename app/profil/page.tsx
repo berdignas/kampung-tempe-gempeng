@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Leaf, Target, HeartHandshake, ShieldCheck, Award } from "lucide-react";
+import { ArrowRight, Leaf, Target, HeartHandshake, ShieldCheck, Award, MapPin, ExternalLink } from "lucide-react";
 import { useCMS } from "@/lib/cms/CMSContext";
 
 export default function ProfilPage() {
@@ -152,6 +152,78 @@ export default function ProfilPage() {
                   <p className="text-sm text-text-secondary leading-relaxed">{n.deskripsi}</p>
                 </div>
               ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Lokasi Kawasan */}
+      <section
+        className="section-spacing"
+        style={{ backgroundColor: "var(--color-surface-muted)" }}
+        aria-labelledby="lokasi-heading"
+      >
+        <div className="container-content">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <p className="section-label mb-2">Lokasi Kawasan</p>
+            <h2 id="lokasi-heading">Temukan Kami di Peta</h2>
+          </div>
+
+          <div className="grid lg:grid-cols-5 gap-8 items-start">
+            {/* Map embed */}
+            <div className="lg:col-span-3 rounded-2xl overflow-hidden shadow-card border border-border">
+              <iframe
+                title="Peta Lokasi Kampung Tempe Gempeng"
+                src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}&zoom=16&maptype=roadmap`}
+                width="100%"
+                height="350"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            {/* Info & CTA */}
+            <div className="lg:col-span-2 space-y-5">
+              <div className="card p-6 bg-white space-y-4">
+                <div className="flex items-start gap-3">
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ backgroundColor: "var(--color-primary-soft)" }}
+                  >
+                    <MapPin size={20} className="text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-text-primary text-sm mb-1">
+                      {profilData.lokasiLabel || "Kawasan Kampung Tempe Gempeng"}
+                    </h3>
+                    <p className="text-xs text-text-secondary leading-relaxed">
+                      {profilData.lokasiAlamat || "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan, Jawa Timur 67153"}
+                    </p>
+                  </div>
+                </div>
+
+                <a
+                  href={`https://www.google.com/maps?q=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary w-full justify-center gap-2"
+                >
+                  <ExternalLink size={16} />
+                  Buka di Google Maps
+                </a>
+
+                <a
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${profilData.lokasiLat || "-7.5953"},${profilData.lokasiLng || "112.7844"}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-secondary w-full justify-center gap-2"
+                >
+                  <MapPin size={16} />
+                  Petunjuk Arah ke Sini
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>

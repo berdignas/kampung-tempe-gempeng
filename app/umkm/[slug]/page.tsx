@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,13 +12,10 @@ import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import UMKMCard from "@/components/umkm/UMKMCard";
 import { useCMS } from "@/lib/cms/CMSContext";
 
-interface Props {
-  params: { slug: string };
-}
-
-export default function DetailUMKMPage({ params }: Props) {
+export default function DetailUMKMPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const { umkmList, produkList } = useCMS();
-  const umkm = umkmList.find((u) => u.slug === params.slug);
+  const umkm = umkmList.find((u) => u.slug === slug);
 
   if (!umkm || !umkm.statusPublikasi) {
     // If not found in dynamic state, fallback search

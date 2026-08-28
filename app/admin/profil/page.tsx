@@ -12,6 +12,7 @@ import {
   Plus,
   Trash2,
   Megaphone,
+  MapPin,
 } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
 import { ProfilKampungData, TimelineItem, NilaiItem } from "@/lib/cms/cmsStore";
@@ -20,7 +21,7 @@ export default function AdminProfilPage() {
   const { profilData, updateProfil } = useCMS();
   const [formData, setFormData] = useState<ProfilKampungData>(profilData);
   const [activeTab, setActiveTab] = useState<
-    "hero" | "sejarah" | "timeline" | "visimisi" | "nilai" | "cta"
+    "hero" | "sejarah" | "timeline" | "visimisi" | "nilai" | "lokasi" | "cta"
   >("hero");
 
   useEffect(() => {
@@ -131,6 +132,7 @@ export default function AdminProfilPage() {
           { id: "timeline", label: "Linimasa Sejarah", icon: BookOpen },
           { id: "visimisi", label: "Visi & Misi", icon: Target },
           { id: "nilai", label: "Nilai Bersama", icon: HeartHandshake },
+          { id: "lokasi", label: "Lokasi Kawasan", icon: MapPin },
           { id: "cta", label: "Call to Action", icon: Megaphone },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -520,7 +522,96 @@ export default function AdminProfilPage() {
         </div>
       )}
 
-      {/* Tab 6: CTA Bawah */}
+      {/* Tab 6: Lokasi Kawasan */}
+      {activeTab === "lokasi" && (
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 pb-3 border-b border-slate-100">
+            <MapPin size={18} className="text-emerald-600" />
+            <h2>Lokasi Kawasan di Google Maps</h2>
+          </div>
+
+          <p className="text-xs text-slate-500">
+            Atur label, alamat, dan koordinat kawasan yang akan ditampilkan di halaman profil publik. Pengunjung bisa langsung klik untuk menuju Google Maps.
+          </p>
+
+          <div className="space-y-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-700">Label Lokasi</label>
+              <input
+                type="text"
+                required
+                value={formData.lokasiLabel}
+                onChange={(e) => setFormData({ ...formData, lokasiLabel: e.target.value })}
+                placeholder="Kawasan Kampung Tempe Gempeng"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-semibold"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-700">Alamat Lengkap</label>
+              <textarea
+                required
+                rows={2}
+                value={formData.lokasiAlamat}
+                onChange={(e) => setFormData({ ...formData, lokasiAlamat: e.target.value })}
+                placeholder="Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan, Jawa Timur 67153"
+                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">Latitude (Lintang)</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.lokasiLat}
+                  onChange={(e) => setFormData({ ...formData, lokasiLat: e.target.value })}
+                  placeholder="-7.5953"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold text-slate-700">Longitude (Bujur)</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.lokasiLng}
+                  onChange={(e) => setFormData({ ...formData, lokasiLng: e.target.value })}
+                  placeholder="112.7844"
+                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs font-mono"
+                />
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200/60 text-xs text-emerald-800 space-y-1.5">
+              <p className="font-semibold">💡 Cara menemukan koordinat:</p>
+              <ol className="list-decimal list-inside space-y-0.5 text-emerald-700">
+                <li>Buka <a href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" className="underline font-semibold">Google Maps</a></li>
+                <li>Klik kanan pada lokasi yang diinginkan</li>
+                <li>Klik angka koordinat yang muncul (otomatis tercopy)</li>
+                <li>Paste angka pertama (negatif) ke Latitude, angka kedua ke Longitude</li>
+              </ol>
+            </div>
+
+            {/* Preview link */}
+            {formData.lokasiLat && formData.lokasiLng && (
+              <a
+                href={`https://www.google.com/maps?q=${formData.lokasiLat},${formData.lokasiLng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition"
+              >
+                <MapPin size={14} />
+                Preview Lokasi di Google Maps ↗
+              </a>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Tab 7: CTA Bawah */}
       {activeTab === "cta" && (
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-5">
           <div className="flex items-center gap-2 text-sm font-semibold text-slate-800 pb-3 border-b border-slate-100">

@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Calendar, ArrowLeft, Share2 } from "lucide-react";
@@ -8,11 +9,10 @@ import { formatTanggal } from "@/lib/utils";
 import ArticleCard from "@/components/news/ArticleCard";
 import { useCMS } from "@/lib/cms/CMSContext";
 
-interface Props { params: { slug: string } }
-
-export default function DetailBeritaPage({ params }: Props) {
+export default function DetailBeritaPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = use(params);
   const { beritaList } = useCMS();
-  const berita = beritaList.find((b) => b.slug === params.slug);
+  const berita = beritaList.find((b) => b.slug === slug);
 
   if (!berita) {
     return (
