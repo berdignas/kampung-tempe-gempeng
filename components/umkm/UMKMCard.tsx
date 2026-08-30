@@ -17,7 +17,7 @@ export default function UMKMCard({ umkm }: UMKMCardProps) {
       aria-label={`Profil UMKM: ${umkm.namaUsaha}`}
     >
       {/* Photo */}
-      <div className="relative h-48 bg-surface-muted overflow-hidden">
+      <div className="relative aspect-[16/9] w-full bg-surface-muted overflow-hidden">
         <Image
           src={umkm.galeri[0] || "/images/placeholder-umkm.jpg"}
           alt={`Foto usaha ${umkm.namaUsaha}`}

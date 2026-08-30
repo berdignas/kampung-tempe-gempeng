@@ -289,10 +289,12 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
         {/* Foto Utama Tempat Usaha */}
         <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
           <ImageUploader
-            label="Foto Utama Tempat Usaha / Produk UMKM"
+            label="Foto Utama Tempat Usaha / Profil UMKM (Tampil di Kartu & Header)"
             value={utamaImage}
             onChange={(url) => setUtamaImage(url)}
-            helpText="Pilih file gambar dari komputer Anda atau masukkan URL."
+            aspectRatio={16 / 9}
+            aspectRatioLabel="16:9 (Ukuran Pas Kartu UMKM)"
+            helpText="Pilih file gambar. Anda dapat menggeser (drag) dan mengatur zoom foto agar pas di kartu."
           />
         </div>
 
@@ -339,7 +341,9 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
                     label={`Pilih Foto Galeri ${idx + 1}`}
                     value={img}
                     onChange={(url) => handleUpdateExtraImage(idx, url)}
-                    helpText="Upload file gambar dari komputer Anda atau masukkan URL."
+                    aspectRatio={16 / 9}
+                    aspectRatioLabel="16:9"
+                    helpText="Upload file gambar dan atur posisi bingkai foto."
                   />
                 </div>
               ))}
