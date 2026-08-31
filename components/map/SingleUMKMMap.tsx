@@ -8,6 +8,7 @@ interface SingleUMKMMapProps {
   lng: number;
   namaUsaha: string;
   alamat: string;
+  foto?: string;
   height?: string;
 }
 
@@ -16,6 +17,7 @@ export default function SingleUMKMMap({
   lng,
   namaUsaha,
   alamat,
+  foto,
   height = "300px",
 }: SingleUMKMMapProps) {
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -62,13 +64,6 @@ export default function SingleUMKMMap({
         mapInstanceRef.current = null;
       }
 
-      delete (L.Icon.Default.prototype as any)._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
-
       const map = L.map(mapContainerRef.current, {
         center: [validLat, validLng],
         zoom: 17,
@@ -78,33 +73,66 @@ export default function SingleUMKMMap({
 
       updateMapLayer(map, mapType, L);
 
-      const customIcon = L.divIcon({
-        html: `<div style="
-          width: 38px; height: 38px;
-          background: #2fa84f; border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg); border: 3px solid white;
-          box-shadow: 0 6px 16px rgba(47, 168, 79, 0.45);
-          display: flex; align-items: center; justify-content: center;
-        ">
-          <div style="width: 12px; height: 12px; background: white; border-radius: 50%; transform: rotate(45deg);"></div>
-        </div>`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 38],
-        popupAnchor: [0, -40],
+      const initial = (namaUsaha || "T").charAt(0).toUpperCase();
+      const photoHtml = foto
+        ? `<img src="${foto}" alt="${namaUsaha}" style="width:100%; height:100%; object-fit:cover; border-radius:50%; display:block;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" /><div style="display:none; width:100%; height:100%; background:#2fa84f; color:white; font-weight:800; font-size:16px; align-items:center; justify-content:center; border-radius:50%;">${initial}</div>`
+        : `<div style="display:flex; width:100%; height:100%; background:#2fa84f; color:white; font-weight:800; font-size:16px; align-items:center; justify-content:center; border-radius:50%;">${initial}</div>`;
+
+      const customPhotoIcon = L.divIcon({
+        html: `
+          <div class="umkm-map-pin" style="
+            position: relative;
+            width: 52px;
+            height: 60px;
+            cursor: pointer;
+            filter: drop-shadow(0 4px 10px rgba(0,0,0,0.35));
+            transition: transform 0.2s ease;
+          ">
+            <div style="
+              width: 50px;
+              height: 50px;
+              border-radius: 50%;
+              background: #ffffff;
+              border: 3.5px solid #2fa84f;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+              position: absolute;
+              top: 0;
+              left: 1px;
+              z-index: 2;
+            ">
+              ${photoHtml}
+            </div>
+            <div style="
+              position: absolute;
+              bottom: 2px;
+              left: 20px;
+              width: 12px;
+              height: 12px;
+              background: #2fa84f;
+              transform: rotate(45deg);
+              border-bottom-right-radius: 3px;
+              z-index: 1;
+            "></div>
+          </div>
+        `,
+        iconSize: [52, 60],
+        iconAnchor: [26, 58],
+        popupAnchor: [0, -58],
         className: "",
       });
 
       const marker = L.marker([validLat, validLng], {
-        icon: customIcon,
+        icon: customPhotoIcon,
         riseOnHover: true,
       }).addTo(map);
 
       marker.bindPopup(`
-        <div style="font-family: Inter, sans-serif; min-width: 180px; padding: 2px;">
-          <h4 style="margin: 0 0 4px; font-size: 13px; font-weight: 700; color: #142016;">${namaUsaha}</h4>
-          <p style="margin: 0 0 6px; font-size: 11px; color: #667066; line-height: 1.4;">${alamat}</p>
-          <a href="https://www.google.com/maps/dir/?api=1&destination=${validLat},${validLng}" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 11px; color: #2fa84f; font-weight: 600; text-decoration: none;">
-            Petunjuk Arah ↗
+        <div style="font-family: var(--font-poppins), 'Poppins', sans-serif; min-width: 190px; padding: 2px;">
+          <h4 style="margin: 0 0 4px; font-size: 13px; font-weight: 800; color: #0f172a;">${namaUsaha}</h4>
+          <p style="margin: 0 0 8px; font-size: 11px; color: #475569; line-height: 1.4;">${alamat}</p>
+          <a href="https://www.google.com/maps/dir/?api=1&destination=${validLat},${validLng}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: white; background: #2fa84f; font-weight: 700; text-decoration: none; padding: 5px 10px; border-radius: 8px;">
+            Buka Petunjuk Arah ↗
           </a>
         </div>
       `);

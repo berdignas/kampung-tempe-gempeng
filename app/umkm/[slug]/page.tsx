@@ -246,6 +246,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                 lng={validLng}
                 namaUsaha={umkm.namaUsaha}
                 alamat={umkm.alamat}
+                foto={umkm.foto || (umkm.galeri && umkm.galeri[0])}
                 height="320px"
               />
             </section>

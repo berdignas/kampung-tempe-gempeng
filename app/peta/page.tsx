@@ -33,21 +33,20 @@ export default function PetaPage() {
     .filter((u) => filterLayanan === "semua" || u.jenisLayanan.includes(filterLayanan));
 
   return (
-    <main className="pt-16 h-screen flex flex-col">
+    <main className="pt-24 sm:pt-28 h-screen flex flex-col bg-slate-50">
       {/* Header */}
-      <div className="py-4 border-b border-border bg-white" style={{ flexShrink: 0 }}>
+      <div className="py-3 sm:py-4 border-b border-slate-200 bg-white shadow-2xs" style={{ flexShrink: 0 }}>
         <div className="container-content">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Peta Interaktif Sentra Tempe</h1>
+              <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Peta Interaktif Sentra Tempe</h1>
               <p className="text-xs text-slate-500 font-medium">Navigasi titik lokasi rumah produksi tempe aktif di Kelurahan Gempeng</p>
             </div>
-            <div className="flex gap-2 overflow-x-auto" role="group" aria-label="Filter peta">
+            <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter peta">
               {layananOptions.map((opt) => (
                 <button key={opt.value}
                   onClick={() => setFilterLayanan(opt.value)}
-                  className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${filterLayanan === opt.value ? "text-white" : "border-border text-text-secondary"}`}
-                  style={filterLayanan === opt.value ? { backgroundColor: "var(--color-primary)", borderColor: "var(--color-primary)" } : {}}
+                  className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer ${filterLayanan === opt.value ? "text-white bg-emerald-600 border-emerald-600 shadow-xs" : "border-slate-200 text-slate-600 hover:border-emerald-600 hover:text-emerald-700 bg-white"}`}
                   aria-pressed={filterLayanan === opt.value}
                 >
                   {opt.label}

@@ -16,6 +16,7 @@ export interface UMKM {
   jenisLayanan: JenisLayanan[];
   produkIds: string[];
   galeri: string[];
+  foto?: string;
   statusPublikasi: boolean;
 }
 
