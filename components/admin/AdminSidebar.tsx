@@ -11,8 +11,10 @@ import {
   Settings,
   ArrowLeft,
   ShieldCheck,
+  LogOut,
 } from "lucide-react";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAdminAuth } from "@/lib/auth/AdminAuthContext";
 
 export default function AdminSidebar({
   onCloseMobile,
@@ -21,6 +23,7 @@ export default function AdminSidebar({
 }) {
   const pathname = usePathname();
   const { pengaturan } = useCMS();
+  const { logout } = useAdminAuth();
 
   const navItems = [
     { href: "/admin", label: "Dashboard Overview", icon: LayoutDashboard },
@@ -94,15 +97,24 @@ export default function AdminSidebar({
         <Link
           href="/"
           target="_blank"
-          className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 border border-slate-200/50 transition-all"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-medium bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 text-slate-700 border border-slate-200/60 transition-all"
         >
           <ArrowLeft size={14} />
           Lihat Website Publik
         </Link>
 
+        <button
+          type="button"
+          onClick={() => logout()}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 border border-rose-200/60 transition-all cursor-pointer"
+        >
+          <LogOut size={14} />
+          Keluar (Logout)
+        </button>
+
         <div className="flex items-center gap-1.5 px-2 pt-1 text-[11px] text-slate-400 justify-center">
           <ShieldCheck size={13} className="text-emerald-600" />
-          <span>Fairness Standard Active</span>
+          <span>Sesi Admin Aktif</span>
         </div>
       </div>
     </aside>
