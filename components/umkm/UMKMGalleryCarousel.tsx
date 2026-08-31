@@ -2,18 +2,22 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Maximize2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Maximize2, X, Package } from "lucide-react";
 
 interface UMKMGalleryCarouselProps {
   images: string[];
   namaUsaha: string;
   autoPlayInterval?: number;
+  heightClass?: string;
+  badgeLabel?: string;
 }
 
 export default function UMKMGalleryCarousel({
   images,
   namaUsaha,
   autoPlayInterval = 4000,
+  heightClass = "h-[320px] sm:h-[360px] md:h-[380px]",
+  badgeLabel = "Foto Produk & Galeri",
 }: UMKMGalleryCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -91,28 +95,35 @@ export default function UMKMGalleryCarousel({
   // If only 1 image, display simple card without carousel controls
   if (total === 1) {
     return (
-      <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden shadow-sm group bg-slate-100">
+      <div className={`relative w-full ${heightClass} rounded-2xl overflow-hidden shadow-card group bg-slate-900 select-none`}>
         <Image
           src={images[0]}
           alt={`Foto galeri ${namaUsaha} 1`}
           fill
           className="object-cover cursor-pointer group-hover:scale-102 transition-transform duration-300"
-          sizes="(max-width: 1024px) 100vw, 66vw"
+          sizes="(max-width: 1024px) 100vw, 60vw"
           onClick={() => {
             setLightboxIndex(0);
             setLightboxOpen(true);
           }}
         />
+
+        {/* Badge Pembeda */}
+        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold shadow-xs">
+          <Package size={13} className="text-amber-400" />
+          <span>{badgeLabel}</span>
+        </div>
+
         <button
           type="button"
           onClick={() => {
             setLightboxIndex(0);
             setLightboxOpen(true);
           }}
-          className="absolute top-3 right-3 p-2 rounded-xl bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute top-3 right-3 z-10 p-2 rounded-xl bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-2xs"
           aria-label="Lihat ukuran penuh"
         >
-          <Maximize2 size={16} />
+          <Maximize2 size={15} />
         </button>
 
         {/* Lightbox Modal */}
@@ -148,10 +159,10 @@ export default function UMKMGalleryCarousel({
   }
 
   return (
-    <div className="relative w-full space-y-2">
+    <div className="relative w-full">
       {/* Carousel Container */}
       <div
-        className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden shadow-card group bg-slate-900 select-none"
+        className={`relative w-full ${heightClass} rounded-2xl overflow-hidden shadow-card group bg-slate-900 select-none`}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -180,11 +191,17 @@ export default function UMKMGalleryCarousel({
                 alt={`Foto galeri ${namaUsaha} ${i + 1}`}
                 fill
                 className="object-cover hover:scale-102 transition-transform duration-300"
-                sizes="(max-width: 1024px) 100vw, 66vw"
+                sizes="(max-width: 1024px) 100vw, 60vw"
                 priority={i === 0}
               />
             </div>
           ))}
+        </div>
+
+        {/* Badge Pembeda */}
+        <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold shadow-xs">
+          <Package size={13} className="text-amber-400" />
+          <span>{badgeLabel}</span>
         </div>
 
         {/* Counter Badge */}
@@ -201,7 +218,7 @@ export default function UMKMGalleryCarousel({
             setLightboxIndex(currentIndex);
             setLightboxOpen(true);
           }}
-          className="absolute top-3 left-3 z-10 p-2 rounded-xl bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-2xs"
+          className="absolute bottom-3.5 right-3.5 z-10 p-2 rounded-xl bg-black/40 hover:bg-black/60 text-white backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-2xs"
           aria-label="Perbesar foto"
         >
           <Maximize2 size={15} />
