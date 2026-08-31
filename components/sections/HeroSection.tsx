@@ -44,9 +44,9 @@ export default function HeroSection({
       />
 
       <div className="container-content relative z-10 w-full my-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Kolom Kiri: Teks & Aksi */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left space-y-6">
+          <div className="flex flex-col items-start text-left space-y-6">
             {/* Eyebrow Chip */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-200 text-emerald-800 shadow-2xs">
               <MapPin size={14} className="text-emerald-700 flex-shrink-0" aria-hidden="true" />
@@ -86,20 +86,16 @@ export default function HeroSection({
             </p>
           </div>
 
-          {/* Kolom Kanan: Gambar Hero Section */}
-          <div className="lg:col-span-5 w-full">
-            <div className="relative w-full aspect-[4/3] lg:aspect-[5/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100 group">
+          {/* Kolom Kanan: Gambar Hero Section (Ukuran dan styling disamakan persis dengan profil) */}
+          <div className="relative w-full">
+            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative bg-slate-100">
               <Image
                 src={imageSrc}
                 alt={imageAlt}
                 fill
-                className="object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                className="object-cover transition-transform duration-500 ease-out hover:scale-105"
                 priority
-                sizes="(max-width: 1024px) 100vw, 45vw"
-              />
-              <div
-                className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none"
-                aria-hidden="true"
+                sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
           </div>
