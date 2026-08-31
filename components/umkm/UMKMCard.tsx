@@ -13,23 +13,23 @@ export default function UMKMCard({ umkm }: UMKMCardProps) {
 
   return (
     <article
-      className="card overflow-hidden flex flex-col"
+      className="card overflow-hidden flex flex-col h-full bg-white transition-all duration-300 hover:shadow-card-hover group"
       aria-label={`Profil UMKM: ${umkm.namaUsaha}`}
     >
-      {/* Photo */}
-      <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden flex items-center justify-center">
+      {/* Photo with increased height */}
+      <div className="relative h-56 sm:h-64 w-full bg-slate-100 overflow-hidden flex items-center justify-center flex-shrink-0">
         {umkm.galeri && umkm.galeri[0] ? (
           <Image
             src={umkm.galeri[0]}
             alt={`Foto usaha ${umkm.namaUsaha}`}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center">
-            <Store size={32} className="opacity-35" />
-            <span className="text-[11px] font-medium">Foto Belum Tersedia</span>
+          <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-6 text-center">
+            <Store size={36} className="opacity-35 text-emerald-600" />
+            <span className="text-xs font-medium">Foto Belum Tersedia</span>
           </div>
         )}
       </div>

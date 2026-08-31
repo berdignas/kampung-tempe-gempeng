@@ -132,7 +132,7 @@ export default function UMKMPage() {
                 {filterLayanan !== "semua" && ` · Filter: ${labelLayanan[filterLayanan as JenisLayanan]}`}
                 {search && ` · Pencarian: "${search}"`}
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
                 {filtered.map((umkm) => (
                   <UMKMCard key={umkm.id} umkm={umkm} />
                 ))}

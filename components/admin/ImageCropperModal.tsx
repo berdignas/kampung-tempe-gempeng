@@ -8,8 +8,6 @@ import {
   ZoomOut,
   RotateCw,
   Move,
-  Maximize2,
-  Minimize2,
   RefreshCw,
   Sparkles,
   Sliders,
@@ -31,115 +29,166 @@ export default function ImageCropperModal({
   onClose,
   onApply,
   aspectRatio = 16 / 9,
-  aspectRatioLabel = "16:9 (Ukuran Kartu UMKM)",
+  aspectRatioLabel = "16:9 (Ukuran Pas Kartu UMKM)",
 }: ImageCropperModalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const previewCanvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Loaded image object
+  const loadedImageRef = useRef<HTMLImageElement | null>(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Position and transform state
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [rotation, setRotation] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [showGrid, setShowGrid] = useState(true);
-  const [previewUrl, setPreviewUrl] = useState<string>("");
 
-  // Reset transforms when modal opens with new image
+  // Drag tracking refs
+  const dragStartRef = useRef<{ clientX: number; clientY: number; posX: number; posY: number }>({
+    clientX: 0,
+    clientY: 0,
+    posX: 0,
+    posY: 0,
+  });
+
+  // Touch pinch tracking refs
+  const pinchStartDistRef = useRef<number | null>(null);
+  const pinchStartZoomRef = useRef<number>(1);
+
+  // Load image when imageSrc changes or modal opens
   useEffect(() => {
-    if (isOpen) {
-      setZoom(1);
-      setPosition({ x: 0, y: 0 });
-      setRotation(0);
-    }
+    if (!isOpen || !imageSrc) return;
+
+    setImageLoaded(false);
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+    setRotation(0);
+
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      loadedImageRef.current = img;
+      setImageLoaded(true);
+    };
+    img.src = imageSrc;
   }, [isOpen, imageSrc]);
 
-  // Generate real-time preview canvas
-  const generateCroppedCanvas = useCallback(
-    (outputWidth = 1200): HTMLCanvasElement | null => {
-      const img = imageRef.current;
-      const container = containerRef.current;
-      if (!img || !container) return null;
+  // Main drawing routine that works identically for workspace and export
+  const renderToCanvas = useCallback(
+    (
+      canvas: HTMLCanvasElement,
+      targetWidth: number,
+      domWidth: number,
+      pos: { x: number; y: number },
+      z: number,
+      rot: number
+    ) => {
+      const img = loadedImageRef.current;
+      if (!img || !canvas) return;
 
-      const outputHeight = Math.round(outputWidth / aspectRatio);
-      const canvas = document.createElement("canvas");
-      canvas.width = outputWidth;
-      canvas.height = outputHeight;
+      const targetHeight = Math.round(targetWidth / aspectRatio);
       const ctx = canvas.getContext("2d");
-      if (!ctx) return null;
+      if (!ctx) return;
+
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
 
-      // Container dimensions
-      const containerRect = container.getBoundingClientRect();
-      const containerW = containerRect.width;
-      const containerH = containerRect.height;
+      // Background
+      ctx.fillStyle = "#0f172a";
+      ctx.fillRect(0, 0, targetWidth, targetHeight);
 
-      // Calculate scaling between container frame and output canvas
-      const scaleToOutput = outputWidth / containerW;
+      // Effective dimensions considering 90 / 270 deg rotation
+      const isRotated90 = rot === 90 || rot === 270;
+      const effW = isRotated90 ? img.naturalHeight : img.naturalWidth;
+      const effH = isRotated90 ? img.naturalWidth : img.naturalHeight;
 
-      // Fill canvas background
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, outputWidth, outputHeight);
+      // Base scale factor to "cover" target dimensions at 100% zoom
+      const scaleFactor = Math.max(targetWidth / effW, targetHeight / effH);
+      const baseW = img.naturalWidth * scaleFactor;
+      const baseH = img.naturalHeight * scaleFactor;
+
+      const scaleRatio = targetWidth / Math.max(1, domWidth);
 
       ctx.save();
-      // Move to center of canvas
-      ctx.translate(outputWidth / 2, outputHeight / 2);
+      // Center of canvas
+      ctx.translate(targetWidth / 2, targetHeight / 2);
 
-      // Apply rotation
-      ctx.rotate((rotation * Math.PI) / 180);
+      // Rotate
+      ctx.rotate((rot * Math.PI) / 180);
 
-      // Apply pan position and zoom scale
-      ctx.translate(position.x * scaleToOutput, position.y * scaleToOutput);
-      ctx.scale(zoom, zoom);
+      // Translate (pan offset)
+      ctx.translate(pos.x * scaleRatio, pos.y * scaleRatio);
 
-      // Image natural dimensions scaled to container
-      // Calculate how the base image fits into container
-      const imgRatio = img.naturalWidth / img.naturalHeight;
-      let baseW = containerW;
-      let baseH = containerW / imgRatio;
+      // Zoom
+      ctx.scale(z, z);
 
-      if (baseH < containerH) {
-        baseH = containerH;
-        baseW = containerH * imgRatio;
-      }
+      // Draw image centered
+      ctx.drawImage(img, -baseW / 2, -baseH / 2, baseW, baseH);
 
-      const drawW = baseW * scaleToOutput;
-      const drawH = baseH * scaleToOutput;
-
-      ctx.drawImage(img, -drawW / 2, -drawH / 2, drawW, drawH);
       ctx.restore();
-
-      return canvas;
     },
-    [aspectRatio, position, rotation, zoom]
+    [aspectRatio]
   );
 
-  // Update live thumbnail preview on adjustments
+  // Redraw workspace canvas & preview canvas when state changes
   useEffect(() => {
-    if (!isOpen) return;
-    const timer = setTimeout(() => {
-      const canvas = generateCroppedCanvas(400);
-      if (canvas) {
-        setPreviewUrl(canvas.toDataURL("image/jpeg", 0.8));
+    if (!isOpen || !imageLoaded || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const domWidth = container.clientWidth || 500;
+    const dpr = typeof window !== "undefined" ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+    const workspaceWidth = Math.round(domWidth * dpr);
+
+    // Draw main interactive workspace canvas
+    if (canvasRef.current) {
+      renderToCanvas(canvasRef.current, workspaceWidth, domWidth, position, zoom, rotation);
+    }
+
+    // Draw live preview mockup canvas (400px width for sharp thumbnail)
+    if (previewCanvasRef.current) {
+      renderToCanvas(previewCanvasRef.current, 400, domWidth, position, zoom, rotation);
+    }
+  }, [isOpen, imageLoaded, position, zoom, rotation, renderToCanvas]);
+
+  // Window resize observer to adapt canvas resolution
+  useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const handleResize = () => {
+      if (containerRef.current && canvasRef.current) {
+        const domWidth = containerRef.current.clientWidth || 500;
+        const dpr = window.devicePixelRatio || 1;
+        renderToCanvas(canvasRef.current, Math.round(domWidth * dpr), domWidth, position, zoom, rotation);
       }
-    }, 50);
-    return () => clearTimeout(timer);
-  }, [isOpen, generateCroppedCanvas, position, zoom, rotation]);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isOpen, position, zoom, rotation, renderToCanvas]);
 
   // Mouse drag handlers
   const handleMouseDown = (e: React.MouseEvent) => {
     e.preventDefault();
     setIsDragging(true);
-    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+    dragStartRef.current = {
+      clientX: e.clientX,
+      clientY: e.clientY,
+      posX: position.x,
+      posY: position.y,
+    };
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
+    const dx = e.clientX - dragStartRef.current.clientX;
+    const dy = e.clientY - dragStartRef.current.clientY;
     setPosition({
-      x: e.clientX - dragStart.x,
-      y: e.clientY - dragStart.y,
+      x: dragStartRef.current.posX + dx,
+      y: dragStartRef.current.posY + dy,
     });
   };
 
@@ -147,46 +196,98 @@ export default function ImageCropperModal({
     setIsDragging(false);
   };
 
-  // Touch drag handlers for mobile / tablet
+  // Wheel zoom handler
+  const handleWheel = (e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = -e.deltaY * 0.001;
+    setZoom((prev) => Math.min(3, Math.max(1, +(prev + delta).toFixed(3))));
+  };
+
+  // Touch drag & pinch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
     if (e.touches.length === 1) {
       setIsDragging(true);
-      setDragStart({
-        x: e.touches[0].clientX - position.x,
-        y: e.touches[0].clientY - position.y,
-      });
+      dragStartRef.current = {
+        clientX: e.touches[0].clientX,
+        clientY: e.touches[0].clientY,
+        posX: position.x,
+        posY: position.y,
+      };
+      pinchStartDistRef.current = null;
+    } else if (e.touches.length === 2) {
+      setIsDragging(false);
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      pinchStartDistRef.current = dist;
+      pinchStartZoomRef.current = zoom;
     }
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isDragging || e.touches.length !== 1) return;
-    setPosition({
-      x: e.touches[0].clientX - dragStart.x,
-      y: e.touches[0].clientY - dragStart.y,
-    });
+    if (e.touches.length === 1 && isDragging) {
+      const dx = e.touches[0].clientX - dragStartRef.current.clientX;
+      const dy = e.touches[0].clientY - dragStartRef.current.clientY;
+      setPosition({
+        x: dragStartRef.current.posX + dx,
+        y: dragStartRef.current.posY + dy,
+      });
+    } else if (e.touches.length === 2 && pinchStartDistRef.current !== null) {
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      const scale = dist / pinchStartDistRef.current;
+      setZoom(Math.min(3, Math.max(1, +(pinchStartZoomRef.current * scale).toFixed(3))));
+    }
   };
 
   const handleTouchEnd = () => {
     setIsDragging(false);
+    pinchStartDistRef.current = null;
   };
 
-  // Preset alignment shortcuts
+  // Smart Alignment Presets based on actual image dimensions
   const handleAlign = (direction: "center" | "top" | "bottom" | "left" | "right") => {
+    const img = loadedImageRef.current;
+    const container = containerRef.current;
+    if (!img || !container) {
+      if (direction === "center") setPosition({ x: 0, y: 0 });
+      return;
+    }
+
+    const domWidth = container.clientWidth || 500;
+    const domHeight = domWidth / aspectRatio;
+
+    const isRotated90 = rotation === 90 || rotation === 270;
+    const effW = isRotated90 ? img.naturalHeight : img.naturalWidth;
+    const effH = isRotated90 ? img.naturalWidth : img.naturalHeight;
+
+    const scaleFactor = Math.max(domWidth / effW, domHeight / effH);
+    const curW = effW * scaleFactor * zoom;
+    const curH = effH * scaleFactor * zoom;
+
+    const maxDeltaY = Math.max(0, (curH - domHeight) / 2);
+    const maxDeltaX = Math.max(0, (curW - domWidth) / 2);
+
     switch (direction) {
       case "center":
         setPosition({ x: 0, y: 0 });
         break;
       case "top":
-        setPosition((prev) => ({ ...prev, y: 60 * zoom }));
+        // Moves image down so top of photo touches top of crop box
+        setPosition((prev) => ({ ...prev, y: Math.round(maxDeltaY) }));
         break;
       case "bottom":
-        setPosition((prev) => ({ ...prev, y: -60 * zoom }));
+        // Moves image up so bottom of photo touches bottom of crop box
+        setPosition((prev) => ({ ...prev, y: -Math.round(maxDeltaY) }));
         break;
       case "left":
-        setPosition((prev) => ({ ...prev, x: 60 * zoom }));
+        setPosition((prev) => ({ ...prev, x: Math.round(maxDeltaX) }));
         break;
       case "right":
-        setPosition((prev) => ({ ...prev, x: -60 * zoom }));
+        setPosition((prev) => ({ ...prev, x: -Math.round(maxDeltaX) }));
         break;
     }
   };
@@ -198,18 +299,23 @@ export default function ImageCropperModal({
   };
 
   const handleSave = () => {
-    const canvas = generateCroppedCanvas(1200);
-    if (canvas) {
-      const croppedDataUrl = canvas.toDataURL("image/jpeg", 0.9);
-      onApply(croppedDataUrl);
-      onClose();
-    }
+    if (!loadedImageRef.current || !containerRef.current) return;
+
+    const exportCanvas = document.createElement("canvas");
+    const domWidth = containerRef.current.clientWidth || 500;
+    const outputWidth = 1200; // High resolution output
+
+    renderToCanvas(exportCanvas, outputWidth, domWidth, position, zoom, rotation);
+
+    const croppedDataUrl = exportCanvas.toDataURL("image/jpeg", 0.92);
+    onApply(croppedDataUrl);
+    onClose();
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/75 backdrop-blur-sm p-3 sm:p-5 animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-3 sm:p-5 animate-in fade-in duration-200">
       <div className="relative w-full max-w-4xl max-h-[92vh] bg-white rounded-3xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden">
         {/* Modal Header */}
         <div className="px-5 py-4 border-b border-slate-200 flex items-center justify-between bg-white flex-shrink-0">
@@ -240,32 +346,46 @@ export default function ImageCropperModal({
         {/* Modal Body */}
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5 bg-slate-50">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
-            {/* Left/Main Column: Interactive Drag Workspace */}
+            {/* Left Column: Interactive Drag Workspace Canvas */}
             <div className="lg:col-span-8 space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-700 flex items-center gap-1.5">
                   <Sliders size={14} className="text-emerald-600" />
                   Area Pemotongan & Geser
                 </span>
-                <span className="text-[11px] text-slate-400 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-[11px] text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-slate-200 font-medium">
                   Rasio {aspectRatio === 16 / 9 ? "16:9" : "Custom"}
                 </span>
               </div>
 
-              {/* Interactive Cropper Box */}
+              {/* Interactive Cropper Box Container */}
               <div
                 ref={containerRef}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
+                onWheel={handleWheel}
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
                 style={{ aspectRatio: `${aspectRatio}` }}
-                className="relative w-full rounded-2xl overflow-hidden bg-slate-900 border-2 border-emerald-500 shadow-lg cursor-grab active:cursor-grabbing select-none flex items-center justify-center group touch-none"
+                className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border-2 border-emerald-500 shadow-lg cursor-grab active:cursor-grabbing select-none flex items-center justify-center touch-none group"
               >
-                {/* Visual Guidelines (Rule of Thirds Grid) */}
+                {/* The Interactive High-DPI Canvas */}
+                <canvas
+                  ref={canvasRef}
+                  className="w-full h-full object-contain pointer-events-none block"
+                />
+
+                {/* Loading indicator */}
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center text-xs text-slate-400 bg-slate-900/80">
+                    Memuat foto...
+                  </div>
+                )}
+
+                {/* Visual Rule-of-Thirds Guidelines */}
                 {showGrid && (
                   <div className="absolute inset-0 pointer-events-none z-20 grid grid-cols-3 grid-rows-3 opacity-35 group-hover:opacity-60 transition-opacity">
                     <div className="border-r border-b border-white/70"></div>
@@ -274,33 +394,17 @@ export default function ImageCropperModal({
                     <div className="border-r border-b border-white/70"></div>
                     <div className="border-r border-b border-white/70"></div>
                     <div className="border-b border-white/70"></div>
-                    <div className="border-r border-white/70"></div>
-                    <div className="border-r border-white/70"></div>
+                    <div className="border-r border-b border-white/70"></div>
+                    <div className="border-r border-b border-white/70"></div>
                     <div></div>
                   </div>
                 )}
 
                 {/* Drag Help Badge */}
-                <div className="absolute top-3 left-3 pointer-events-none z-30 bg-slate-900/75 backdrop-blur-xs text-white text-[10px] font-medium px-2.5 py-1 rounded-full flex items-center gap-1 shadow-md">
+                <div className="absolute top-3 left-3 pointer-events-none z-30 bg-slate-900/80 backdrop-blur-xs text-white text-[10px] font-medium px-2.5 py-1 rounded-full flex items-center gap-1 shadow-md">
                   <Move size={11} className="text-emerald-400" />
                   <span>Klik & geser foto untuk memindahkan</span>
                 </div>
-
-                {/* The Image being transformed */}
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  ref={imageRef}
-                  src={imageSrc}
-                  alt="Foto yang akan dipotong"
-                  draggable={false}
-                  style={{
-                    transform: `translate(${position.x}px, ${position.y}px) scale(${zoom}) rotate(${rotation}deg)`,
-                    transition: isDragging ? "none" : "transform 0.15s ease-out",
-                    maxHeight: "none",
-                    maxWidth: "none",
-                  }}
-                  className="w-full h-full object-cover pointer-events-none origin-center"
-                />
               </div>
 
               {/* Controls Bar */}
@@ -434,24 +538,16 @@ export default function ImageCropperModal({
 
               {/* Mockup Card */}
               <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden p-0 max-w-sm mx-auto">
-                {/* Mockup Image Box */}
+                {/* Mockup Image Canvas */}
                 <div
                   style={{ aspectRatio: `${aspectRatio}` }}
-                  className="relative w-full bg-slate-100 overflow-hidden border-b border-slate-100"
+                  className="relative w-full bg-slate-900 overflow-hidden border-b border-slate-100"
                 >
-                  {previewUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={previewUrl}
-                      alt="Pratinjau Hasil Tampilan"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs text-slate-400">
-                      Memuat pratinjau...
-                    </div>
-                  )}
-                  <span className="absolute bottom-2 right-2 bg-slate-900/80 text-white text-[9px] px-2 py-0.5 rounded-md backdrop-blur-xs font-semibold">
+                  <canvas
+                    ref={previewCanvasRef}
+                    className="w-full h-full object-contain block"
+                  />
+                  <span className="absolute bottom-2 right-2 bg-slate-900/80 text-white text-[9px] px-2 py-0.5 rounded-md backdrop-blur-xs font-semibold pointer-events-none">
                     {aspectRatioLabel.split("(")[0].trim()} Pas
                   </span>
                 </div>
@@ -465,7 +561,7 @@ export default function ImageCropperModal({
                     </span>
                   </div>
                   <p className="text-[11px] text-slate-500 leading-relaxed">
-                    Hasil pemotongan di atas adalah bentuk persis yang akan tampil di halaman website.
+                    Hasil pemotongan di atas adalah bentuk persis 100% yang akan tampil di halaman website.
                   </p>
                 </div>
               </div>
@@ -476,7 +572,7 @@ export default function ImageCropperModal({
                   Presisi Sesuai Website:
                 </p>
                 <p className="text-emerald-700 leading-relaxed">
-                  Foto yang disimpan akan otomatis terpasang dengan proporsi dan posisi yang pas tanpa terpotong sembarangan.
+                  Posisi, zoom, dan geseran foto yang Anda atur di sisi kiri akan tersimpan 100% presisi dan sama persis dengan yang terlihat di pratinjau.
                 </p>
               </div>
             </div>
