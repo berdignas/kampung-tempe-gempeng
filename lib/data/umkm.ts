@@ -34,7 +34,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 2003,
     jenisLayanan: ["eceran", "grosir"],
     produkIds: ["tempe-papan", "tempe-bulat"],
-    galeri: ["/images/umkm/umkm-1-a.jpg", "/images/umkm/umkm-1-b.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
   {
@@ -51,7 +51,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 1998,
     jenisLayanan: ["grosir", "pemasok-kuliner"],
     produkIds: ["tempe-papan", "tempe-gembus"],
-    galeri: ["/images/umkm/umkm-2-a.jpg", "/images/umkm/umkm-2-b.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
   {
@@ -68,7 +68,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 1995,
     jenisLayanan: ["eceran"],
     produkIds: ["tempe-daun-pisang", "tempe-bulat"],
-    galeri: ["/images/umkm/umkm-3-a.jpg", "/images/umkm/umkm-3-b.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
   {
@@ -85,7 +85,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 2015,
     jenisLayanan: ["grosir", "distributor"],
     produkIds: ["tempe-papan", "tempe-bulat", "tempe-gembus"],
-    galeri: ["/images/umkm/umkm-4-a.jpg", "/images/umkm/umkm-4-b.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
   {
@@ -102,7 +102,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 2008,
     jenisLayanan: ["eceran", "grosir"],
     produkIds: ["tempe-bulat", "tempe-papan"],
-    galeri: ["/images/umkm/umkm-5-a.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
   {
@@ -119,7 +119,7 @@ export const daftarUMKM: UMKM[] = [
     tahunBerdiri: 2011,
     jenisLayanan: ["pemasok-kuliner", "grosir"],
     produkIds: ["tempe-papan", "tempe-daun-pisang", "tempe-gembus"],
-    galeri: ["/images/umkm/umkm-6-a.jpg"],
+    galeri: [],
     statusPublikasi: true,
   },
 ];

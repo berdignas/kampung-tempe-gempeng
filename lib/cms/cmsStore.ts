@@ -69,7 +69,7 @@ export const initialPengaturan: PengaturanPortal = {
   heroEyebrow: "Sentra Produksi Tempe di Bangil, Pasuruan",
   heroHeadline: "Dari Kampung Kami, Tempe Berkualitas untuk Banyak Meja",
   heroSubtext: "Kampung Tempe Gempeng adalah kawasan sentra produksi tempe di Kelurahan Gempeng, Kecamatan Bangil. Ratusan keluarga pengrajin tempe bekerja setiap hari untuk menghasilkan tempe berkualitas yang menjangkau pasar lokal hingga regional.",
-  heroImage: "/images/hero-tempe-production.jpg",
+  heroImage: "",
   heroCtaPrimaryLabel: "Jelajahi UMKM",
   heroCtaPrimaryHref: "/umkm",
   heroCtaSecondaryLabel: "Lihat Peta Produksi",
@@ -95,7 +95,7 @@ export const initialPengaturan: PengaturanPortal = {
   profileTeaserHeading: "Mengenal Kampung Tempe Gempeng",
   profileTeaserParagraph1: "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan telah lama dikenal sebagai kawasan sentra produksi tempe. Keahlian membuat tempe diwariskan turun-temurun dan menjadi identitas kuat kawasan ini.",
   profileTeaserParagraph2: "Portal ini hadir untuk memperkuat identitas digital kawasan dan menjadi media promosi kolektif bagi seluruh pelaku usaha — tanpa mengutamakan siapapun secara individual.",
-  profileTeaserImage: "/images/kampung-profile.jpg",
+  profileTeaserImage: "",
   profileTeaserAccentVal: "30+ Tahun",
 
   // CTA Section
@@ -148,7 +148,7 @@ export const initialProfilKampung: ProfilKampungData = {
   heroEyebrow: "Profil Kawasan",
   heroJudul: "Identitas & Legasi Kampung Tempe Gempeng",
   heroDeskripsi: "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan merupakan pusat produksi tempe yang telah menghidupi puluhan keluarga pengrajin dan melayani kebutuhan gizi masyarakat secara lintas generasi.",
-  bannerFoto: "/images/profil-kampung-banner.jpg",
+  bannerFoto: "",
   sejarahEyebrow: "Sejarah & Perjalanan",
   sejarahJudul: "Jejak Langkah Sentra Tempe Gempeng",
   sejarahParagraf1: "Tradisi membuat tempe di Gempeng berawal dari keterampilan rumahan yang diturunkan antar generasi. Kualitas air, keahlian fermentasi alami, dan etos kerja warga menjadikan tempe dari Gempeng memiliki tekstur padat dan citarasa yang khas.",

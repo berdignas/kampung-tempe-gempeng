@@ -67,14 +67,21 @@ export default function KampungProfileTeaser() {
           </div>
 
           <div className="relative">
-            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative">
-              <Image
-                src={pengaturan?.profileTeaserImage || "/images/kampung-profile.jpg"}
-                alt="Suasana Kampung Tempe Gempeng"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative bg-slate-100 flex items-center justify-center">
+              {pengaturan?.profileTeaserImage ? (
+                <Image
+                  src={pengaturan.profileTeaserImage}
+                  alt="Suasana Kampung Tempe Gempeng"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-6 text-center">
+                  <Leaf size={48} className="opacity-30 text-emerald-600" />
+                  <p className="text-xs font-semibold text-slate-600">Kawasan Sentra Tempe Gempeng</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

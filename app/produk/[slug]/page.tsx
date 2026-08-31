@@ -46,9 +46,16 @@ export default function DetailProdukPage({ params }: { params: Promise<{ slug: s
 
         <div className="grid lg:grid-cols-2 gap-10 items-start">
           {/* Image */}
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-card">
-            <Image src={produk.foto} alt={`Foto ${produk.nama}`} fill className="object-cover" priority sizes="(max-width: 1024px) 100vw, 50vw" />
-          </div>
+          {produk.foto ? (
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-card">
+              <Image src={produk.foto} alt={`Foto ${produk.nama}`} fill className="object-cover" priority sizes="(max-width: 1024px) 100vw, 50vw" />
+            </div>
+          ) : (
+            <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400 gap-2">
+              <Package size={48} className="opacity-30" />
+              <p className="text-xs font-medium">Foto produk belum diunggah</p>
+            </div>
+          )}
 
           {/* Info */}
           <div className="space-y-5">
@@ -110,8 +117,12 @@ export default function DetailProdukPage({ params }: { params: Promise<{ slug: s
               const waUrl = buildWhatsAppUrl(u.nomorWhatsApp, buildWhatsAppMessageUMKM(u.namaUsaha));
               return (
                 <div key={u.id} className="card p-5 flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0">
-                    <Image src={u.galeri[0] || "/images/placeholder-umkm.jpg"} alt={`Foto ${u.namaUsaha}`} fill className="object-cover" sizes="64px" />
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 flex items-center justify-center">
+                    {u.galeri && u.galeri[0] ? (
+                      <Image src={u.galeri[0]} alt={`Foto ${u.namaUsaha}`} fill className="object-cover" sizes="64px" />
+                    ) : (
+                      <Package size={24} className="text-slate-400 opacity-40" />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-text-primary">{u.namaUsaha}</p>

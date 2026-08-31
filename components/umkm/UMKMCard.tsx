@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Clock, MessageCircle, ArrowRight } from "lucide-react";
+import { MapPin, Clock, MessageCircle, ArrowRight, Store } from "lucide-react";
 import { UMKM, labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 
@@ -17,14 +17,21 @@ export default function UMKMCard({ umkm }: UMKMCardProps) {
       aria-label={`Profil UMKM: ${umkm.namaUsaha}`}
     >
       {/* Photo */}
-      <div className="relative aspect-[16/9] w-full bg-surface-muted overflow-hidden">
-        <Image
-          src={umkm.galeri[0] || "/images/placeholder-umkm.jpg"}
-          alt={`Foto usaha ${umkm.namaUsaha}`}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+      <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden flex items-center justify-center">
+        {umkm.galeri && umkm.galeri[0] ? (
+          <Image
+            src={umkm.galeri[0]}
+            alt={`Foto usaha ${umkm.namaUsaha}`}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center">
+            <Store size={32} className="opacity-35" />
+            <span className="text-[11px] font-medium">Foto Belum Tersedia</span>
+          </div>
+        )}
       </div>
 
       {/* Content */}

@@ -46,18 +46,20 @@ export default function ProfilPage() {
       </section>
 
       {/* Banner Foto */}
-      <section className="container-content -mt-8 relative z-10">
-        <div className="relative aspect-[21/9] rounded-2xl overflow-hidden shadow-card">
-          <Image
-            src={profilData.bannerFoto || "/images/profil-kampung-banner.jpg"}
-            alt="Suasana pemukiman dan aktivitas Kampung Tempe Gempeng"
-            fill
-            className="object-cover"
-            priority
-            sizes="100vw"
-          />
-        </div>
-      </section>
+      {profilData.bannerFoto && (
+        <section className="container-content -mt-8 relative z-10">
+          <div className="relative aspect-[21/9] rounded-2xl overflow-hidden shadow-card">
+            <Image
+              src={profilData.bannerFoto}
+              alt="Suasana pemukiman dan aktivitas Kampung Tempe Gempeng"
+              fill
+              className="object-cover"
+              priority
+              sizes="100vw"
+            />
+          </div>
+        </section>
+      )}
 
       {/* Sejarah & Timeline */}
       <section className="section-spacing" aria-labelledby="sejarah-heading">

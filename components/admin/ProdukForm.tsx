@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Produk, KategoriProduk } from "@/lib/data/produk";
 import { useCMS } from "@/lib/cms/CMSContext";
@@ -39,7 +39,7 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
     initialData?.produsenIds || []
   );
   const [foto, setFoto] = useState(
-    initialData?.foto || "/images/produk/tempe-papan.jpg"
+    initialData?.foto || ""
   );
   const [tersediaEceran, setTersediaEceran] = useState(
     initialData?.tersediaEceran ?? true
@@ -50,6 +50,30 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
   const [tersediaPemasokKuliner, setTersediaPemasokKuliner] = useState(
     initialData?.tersediaPemasokKuliner ?? true
   );
+
+  useEffect(() => {
+    if (initialData) {
+      setNama(initialData.nama || "");
+      setKategori(initialData.kategori || "tempe-papan");
+      setDeskripsi(initialData.deskripsi || "");
+      setDeskripsiPanjang(initialData.deskripsiPanjang || "");
+      setUkuranKemasanInput(
+        initialData.ukuranKemasan
+          ? initialData.ukuranKemasan.join(", ")
+          : "Kecil (200g), Sedang (400g), Besar (600g)"
+      );
+      setCocokUntukInput(
+        initialData.cocokUntuk
+          ? initialData.cocokUntuk.join(", ")
+          : "Masakan rumah tangga, Katering dan restoran, Warung makan"
+      );
+      setProdusenIds(initialData.produsenIds || []);
+      setFoto(initialData.foto || "");
+      setTersediaEceran(initialData.tersediaEceran ?? true);
+      setTersediaGrosir(initialData.tersediaGrosir ?? true);
+      setTersediaPemasokKuliner(initialData.tersediaPemasokKuliner ?? true);
+    }
+  }, [initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,29 +128,19 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
+    <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-16">
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div>
-          <Link
-            href="/admin/produk"
-            className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 mb-1"
-          >
-            <ArrowLeft size={14} />
-            Kembali ke Katalog Produk
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-800">
-            {isEdit ? `Edit Produk: ${initialData?.nama}` : "Tambah Varian Produk Baru"}
-          </h1>
-        </div>
-
-        <button
-          type="submit"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-md transition"
+      <div className="border-b border-slate-200 pb-4">
+        <Link
+          href="/admin/produk"
+          className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 mb-1"
         >
-          <Save size={16} />
-          {isEdit ? "Simpan Perubahan" : "Simpan Produk Baru"}
-        </button>
+          <ArrowLeft size={14} />
+          Kembali ke Katalog Produk
+        </Link>
+        <h1 className="text-2xl font-bold text-slate-800">
+          {isEdit ? `Edit Produk: ${initialData?.nama}` : "Tambah Varian Produk Baru"}
+        </h1>
       </div>
 
       {/* Form Grid */}
@@ -279,6 +293,23 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
               </label>
             ))}
           </div>
+        </div>
+
+        {/* Tombol Simpan di Bawah */}
+        <div className="md:col-span-2 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <Link
+            href="/admin/produk"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition text-center"
+          >
+            Batal
+          </Link>
+          <button
+            type="submit"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-amber-600 hover:bg-amber-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition cursor-pointer active:scale-98"
+          >
+            <Save size={18} />
+            {isEdit ? "Simpan Perubahan" : "Simpan Produk Baru"}
+          </button>
         </div>
       </div>
     </form>

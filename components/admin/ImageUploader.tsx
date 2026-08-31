@@ -20,7 +20,7 @@ export default function ImageUploader({
   label,
   value,
   onChange,
-  placeholder = "/images/hero-tempe-production.jpg atau https://...",
+  placeholder = "https://... atau upload file gambar",
   helpText = "Upload foto dari file komputer Anda atau masukkan URL gambar.",
   aspectRatio = 16 / 9,
   aspectRatioLabel = "16:9 (Ukuran Kartu UMKM)",

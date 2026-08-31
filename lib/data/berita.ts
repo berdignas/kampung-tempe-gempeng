@@ -36,8 +36,8 @@ Pelatihan yang berlangsung selama satu hari penuh ini mencakup materi tentang ke
 "Kami ingin memastikan bahwa tempe yang diproduksi di Gempeng memenuhi standar sanitasi yang baik, sehingga kepercayaan konsumen terus terjaga," ujar Kepala Dinas Kesehatan Kabupaten Pasuruan.
 
 Para peserta juga mendapatkan panduan praktis berupa buku saku higienitas produksi yang dapat dijadikan referensi sehari-hari. Seluruh pelaku UMKM menyambut antusias kegiatan ini dan berharap pelatihan serupa dapat rutin dilaksanakan.`,
-    thumbnail: "/images/berita/berita-1.jpg",
-    galeri: ["/images/berita/berita-1.jpg"],
+    thumbnail: "",
+    galeri: [],
     penulis: "Tim Pengelola Portal",
   },
   {
@@ -55,8 +55,8 @@ Kunjungan ini merupakan bagian dari program pemberdayaan UMKM yang menjadi fokus
 "Kami kagum dengan kearifan lokal dan semangat para pengrajin tempe di sini. Kampung ini memiliki potensi besar untuk terus berkembang," ujar koordinator tim KKN.
 
 Sebagai bentuk kontribusi, tim KKN berencana membantu dalam penyusunan sistem dokumentasi produksi dan pelatihan pemasaran digital bagi pelaku UMKM.`,
-    thumbnail: "/images/berita/berita-2.jpg",
-    galeri: ["/images/berita/berita-2.jpg"],
+    thumbnail: "",
+    galeri: [],
     penulis: "Tim Pengelola Portal",
   },
   {
@@ -74,8 +74,8 @@ Pameran yang diikuti puluhan UMKM dari seluruh Kecamatan Bangil ini menjadi ajan
 Stand Kampung Tempe Gempeng menampilkan berbagai jenis tempe mulai dari tempe papan, tempe bulat, hingga tempe daun pisang yang langsung menarik perhatian pengunjung.
 
 "Animo masyarakat sangat tinggi. Banyak yang menanyakan cara mendapatkan tempe secara rutin dari kami," ujar salah satu peserta pameran.`,
-    thumbnail: "/images/berita/berita-3.jpg",
-    galeri: ["/images/berita/berita-3.jpg"],
+    thumbnail: "",
+    galeri: [],
     penulis: "Tim Pengelola Portal",
   },
   {
@@ -93,7 +93,7 @@ Program ini mencakup pendampingan manajemen usaha, akses permodalan, penguatan b
 "Kampung Tempe Gempeng memiliki potensi yang sangat besar. Dengan pendampingan yang tepat, kami yakin usaha tempe di sini bisa semakin berkembang dan menjangkau pasar yang lebih luas," ujar Kepala Dinas Koperasi dan UKM Kabupaten Pasuruan.
 
 Program ini dijadwalkan berlangsung selama enam bulan dengan agenda pertemuan rutin setiap dua minggu sekali.`,
-    thumbnail: "/images/berita/berita-4.jpg",
+    thumbnail: "",
     galeri: [],
     penulis: "Tim Pengelola Portal",
   },
@@ -112,7 +112,7 @@ Portal ini hadir sebagai media promosi kolektif yang menampilkan seluruh pelaku 
 "Portal ini bukan marketplace, melainkan jembatan informasi antara konsumen dan produsen tempe lokal kami," ujar koordinator pengelola portal.
 
 Hadir dalam peluncuran ini perwakilan dari Kelurahan Gempeng, Dinas Koperasi Kabupaten Pasuruan, dan seluruh pelaku UMKM tempe yang terdaftar.`,
-    thumbnail: "/images/berita/berita-5.jpg",
+    thumbnail: "",
     galeri: [],
     penulis: "Tim Pengelola Portal",
   },
@@ -131,7 +131,7 @@ Kunjungan ini merupakan bagian dari program praktik industri yang bertujuan memb
 Para siswa mendapat kesempatan menyaksikan langsung proses pemilihan kedelai, perendaman, perebusan, inokulasi ragi, hingga pengemasan tempe di beberapa rumah produksi yang menjadi lokasi kunjungan.
 
 "Kami sangat terkesan dengan dedikasi para pengrajin tempe di sini. Ini pengalaman yang tidak bisa kami dapatkan hanya dari buku," ujar salah satu siswa peserta kunjungan.`,
-    thumbnail: "/images/berita/berita-6.jpg",
+    thumbnail: "",
     galeri: [],
     penulis: "Tim Pengelola Portal",
   },

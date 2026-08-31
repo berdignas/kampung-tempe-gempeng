@@ -86,17 +86,24 @@ export default function HeroSection({
             </p>
           </div>
 
-          {/* Kolom Kanan: Gambar Hero Section (Ukuran dan styling disamakan persis dengan profil) */}
+          {/* Kolom Kanan: Gambar Hero Section */}
           <div className="relative w-full">
-            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative bg-slate-100">
-              <Image
-                src={imageSrc}
-                alt={imageAlt}
-                fill
-                className="object-cover transition-transform duration-500 ease-out hover:scale-105"
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+            <div className="rounded-2xl overflow-hidden aspect-[4/3] shadow-card relative bg-slate-100 flex items-center justify-center">
+              {imageSrc ? (
+                <Image
+                  src={imageSrc}
+                  alt={imageAlt}
+                  fill
+                  className="object-cover transition-transform duration-500 ease-out hover:scale-105"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-slate-400 gap-2 p-6 text-center">
+                  <MapPin size={48} className="opacity-30 text-emerald-600" />
+                  <p className="text-xs font-semibold text-slate-600">Sentra Produksi Tempe Gempeng</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

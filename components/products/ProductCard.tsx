@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Users } from "lucide-react";
+import { ArrowRight, Users, Package } from "lucide-react";
 import { Produk } from "@/lib/data/produk";
 import { daftarUMKM } from "@/lib/data/umkm";
 
@@ -17,14 +17,21 @@ export default function ProductCard({ produk }: ProductCardProps) {
       aria-label={`Produk: ${produk.nama}`}
     >
       {/* Photo */}
-      <div className="relative h-44 bg-surface-muted overflow-hidden">
-        <Image
-          src={produk.foto}
-          alt={`Foto produk ${produk.nama}`}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+      <div className="relative h-44 bg-slate-100 overflow-hidden flex items-center justify-center">
+        {produk.foto ? (
+          <Image
+            src={produk.foto}
+            alt={`Foto produk ${produk.nama}`}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center">
+            <Package size={32} className="opacity-35" />
+            <span className="text-[11px] font-medium">Foto Belum Tersedia</span>
+          </div>
+        )}
       </div>
 
       <div className="p-5 flex flex-col flex-1 gap-3">

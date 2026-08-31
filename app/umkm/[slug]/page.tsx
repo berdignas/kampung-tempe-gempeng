@@ -10,6 +10,7 @@ import {
 import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import { useCMS } from "@/lib/cms/CMSContext";
+import UMKMGalleryCarousel from "@/components/umkm/UMKMGalleryCarousel";
 
 const SingleUMKMMap = dynamic(() => import("@/components/map/SingleUMKMMap"), {
   ssr: false,
@@ -74,24 +75,30 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
           {/* Main content */}
           <div className="lg:col-span-2 space-y-8">
             {/* Gallery */}
-            <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-card">
-              <Image
-                src={umkm.galeri[0] || "/images/placeholder-umkm.jpg"}
-                alt={`Foto usaha ${umkm.namaUsaha}`}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 1024px) 100vw, 66vw"
-              />
-            </div>
-            {umkm.galeri.length > 1 && (
-              <div className="grid grid-cols-2 gap-3">
-                {umkm.galeri.slice(1).map((img, i) => (
-                  <div key={i} className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-sm">
-                    <Image src={img} alt={`Foto galeri ${umkm.namaUsaha} ${i + 2}`} fill className="object-cover" sizes="50vw" />
-                  </div>
-                ))}
+            {umkm.galeri && umkm.galeri[0] ? (
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-card">
+                <Image
+                  src={umkm.galeri[0]}
+                  alt={`Foto usaha ${umkm.namaUsaha}`}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                />
               </div>
+            ) : (
+              <div className="relative aspect-[16/9] rounded-2xl overflow-hidden shadow-sm bg-slate-100 border border-slate-200 flex flex-col items-center justify-center text-slate-400 gap-2">
+                <Package size={44} className="opacity-30" />
+                <p className="text-xs font-medium">Foto profil usaha belum diunggah</p>
+              </div>
+            )}
+            {/* Additional Gallery Carousel with Auto-slide & Pagination */}
+            {umkm.galeri && umkm.galeri.slice(1).filter((img) => Boolean(img && img.trim())).length > 0 && (
+              <UMKMGalleryCarousel
+                images={umkm.galeri.slice(1).filter((img) => Boolean(img && img.trim()))}
+                namaUsaha={umkm.namaUsaha}
+                autoPlayInterval={4000}
+              />
             )}
 
             {/* Story */}
@@ -120,8 +127,12 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                       href={`/produk/${p.slug}`}
                       className="card p-4 flex items-start gap-4 hover:border-primary transition-all group bg-white"
                     >
-                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-xs">
-                        <Image src={p.foto} alt={p.nama} fill className="object-cover group-hover:scale-105 transition-transform" sizes="80px" />
+                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-xs bg-slate-100 flex items-center justify-center">
+                        {p.foto ? (
+                          <Image src={p.foto} alt={p.nama} fill className="object-cover group-hover:scale-105 transition-transform" sizes="80px" />
+                        ) : (
+                          <Package size={24} className="text-slate-400 opacity-40" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-sm text-text-primary mb-1 group-hover:text-primary transition-colors">{p.nama}</p>

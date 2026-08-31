@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, ArrowRight, Newspaper } from "lucide-react";
 import { Berita, labelKategoriBerita } from "@/lib/data/berita";
 import { formatTanggal } from "@/lib/utils";
 
@@ -16,14 +16,21 @@ export default function ArticleCard({ berita, featured = false }: ArticleCardPro
         className="card overflow-hidden grid md:grid-cols-2 gap-0"
         aria-label={`Artikel utama: ${berita.judul}`}
       >
-        <div className="relative h-56 md:h-full bg-surface-muted">
-          <Image
-            src={berita.thumbnail}
-            alt={`Thumbnail artikel: ${berita.judul}`}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, 50vw"
-          />
+        <div className="relative h-56 md:h-full bg-slate-100 flex items-center justify-center">
+          {berita.thumbnail ? (
+            <Image
+              src={berita.thumbnail}
+              alt={`Thumbnail artikel: ${berita.judul}`}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          ) : (
+            <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center">
+              <Newspaper size={36} className="opacity-35" />
+              <span className="text-[11px] font-medium">Foto Belum Tersedia</span>
+            </div>
+          )}
         </div>
         <div className="p-6 flex flex-col justify-between">
           <div>
@@ -60,14 +67,21 @@ export default function ArticleCard({ berita, featured = false }: ArticleCardPro
       className="card overflow-hidden flex flex-col"
       aria-label={`Artikel: ${berita.judul}`}
     >
-      <div className="relative h-44 bg-surface-muted overflow-hidden">
-        <Image
-          src={berita.thumbnail}
-          alt={`Thumbnail artikel: ${berita.judul}`}
-          fill
-          className="object-cover transition-transform duration-300"
-          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
+      <div className="relative h-44 bg-slate-100 overflow-hidden flex items-center justify-center">
+        {berita.thumbnail ? (
+          <Image
+            src={berita.thumbnail}
+            alt={`Thumbnail artikel: ${berita.judul}`}
+            fill
+            className="object-cover transition-transform duration-300"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-slate-400 gap-1.5 p-4 text-center">
+            <Newspaper size={32} className="opacity-35" />
+            <span className="text-[11px] font-medium">Foto Belum Tersedia</span>
+          </div>
+        )}
       </div>
       <div className="p-5 flex flex-col flex-1 gap-2">
         <div className="flex items-center gap-2">

@@ -34,7 +34,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   );
   const [produkIds, setProdukIds] = useState<string[]>(initialData?.produkIds || []);
   const [utamaImage, setUtamaImage] = useState(
-    initialData?.galeri?.[0] || "/images/umkm/umkm-1-a.jpg"
+    initialData?.galeri?.[0] || ""
   );
   const [extraImages, setExtraImages] = useState<string[]>(
     initialData?.galeri && initialData.galeri.length > 1
@@ -59,7 +59,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       setTahunBerdiri(initialData.tahunBerdiri || 2020);
       setJenisLayanan(initialData.jenisLayanan || ["eceran"]);
       setProdukIds(initialData.produkIds || []);
-      setUtamaImage(initialData.galeri?.[0] || "/images/umkm/umkm-1-a.jpg");
+      setUtamaImage(initialData.galeri?.[0] || "");
       setExtraImages(
         initialData.galeri && initialData.galeri.length > 1
           ? initialData.galeri.slice(1)
@@ -143,30 +143,20 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-16">
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <div>
-          <Link
-            href="/admin/umkm"
-            className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 mb-1"
-          >
-            <ArrowLeft size={14} />
-            Kembali ke Daftar UMKM
-          </Link>
-          <h1 className="text-2xl font-bold text-slate-800">
-            {isEdit ? `Edit Profil UMKM: ${initialData?.namaUsaha}` : "Tambah UMKM Baru"}
-          </h1>
-          <p className="text-xs text-slate-500">
-            Seluruh data di bawah ini langsung terintegrasi dengan halaman profil UMKM publik (/umkm/[slug]).
-          </p>
-        </div>
-
-        <button
-          type="submit"
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-md transition"
+      <div className="border-b border-slate-200 pb-4">
+        <Link
+          href="/admin/umkm"
+          className="inline-flex items-center gap-1 text-xs text-slate-500 hover:text-slate-700 mb-1"
         >
-          <Save size={16} />
-          {isEdit ? "Simpan Perubahan" : "Simpan UMKM Baru"}
-        </button>
+          <ArrowLeft size={14} />
+          Kembali ke Daftar UMKM
+        </Link>
+        <h1 className="text-2xl font-bold text-slate-800">
+          {isEdit ? `Edit Profil UMKM: ${initialData?.namaUsaha}` : "Tambah UMKM Baru"}
+        </h1>
+        <p className="text-xs text-slate-500">
+          Seluruh data di bawah ini langsung terintegrasi dengan halaman profil UMKM publik (/umkm/[slug]).
+        </p>
       </div>
 
       {/* Form Grid */}
@@ -410,7 +400,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           <button
             type="button"
             onClick={() => setStatusPublikasi(!statusPublikasi)}
-            className={`w-12 h-6 rounded-full transition-colors relative flex items-center p-0.5 ${
+            className={`w-12 h-6 rounded-full transition-colors relative flex items-center p-0.5 cursor-pointer ${
               statusPublikasi ? "bg-emerald-600" : "bg-slate-300"
             }`}
           >
@@ -419,6 +409,23 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
                 statusPublikasi ? "translate-x-6" : "translate-x-0"
               }`}
             />
+          </button>
+        </div>
+
+        {/* Tombol Simpan Perubahan di Bawah */}
+        <div className="md:col-span-2 pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <Link
+            href="/admin/umkm"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 transition text-center"
+          >
+            Batal
+          </Link>
+          <button
+            type="submit"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition cursor-pointer active:scale-98"
+          >
+            <Save size={18} />
+            {isEdit ? "Simpan Perubahan" : "Simpan UMKM Baru"}
           </button>
         </div>
       </div>
