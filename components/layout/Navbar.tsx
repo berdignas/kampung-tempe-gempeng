@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Menu, X, ChevronRight } from "lucide-react";
+import { Menu, X, ChevronRight, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCMS } from "@/lib/cms/CMSContext";
 
@@ -37,14 +37,17 @@ export default function Navbar() {
     <>
       <header
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-200",
-          scrolled
-            ? "bg-white/95 backdrop-blur-md border-b border-border shadow-sm"
-            : "bg-transparent"
+          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-3 sm:px-6 lg:px-8",
+          scrolled ? "pt-2 sm:pt-3" : "pt-3.5 sm:pt-5"
         )}
       >
         <nav
-          className="container-content flex items-center justify-between h-16"
+          className={cn(
+            "max-w-7xl mx-auto flex items-center justify-between h-14 sm:h-16 px-4 sm:px-6 rounded-2xl transition-all duration-300",
+            scrolled
+              ? "bg-white/95 backdrop-blur-md border border-slate-200/90 shadow-md shadow-slate-900/5"
+              : "bg-white/90 backdrop-blur-md border border-slate-200/70 shadow-xs"
+          )}
           aria-label="Navigasi utama"
         >
           {/* Logo */}
@@ -72,24 +75,18 @@ export default function Navbar() {
                 T
               </div>
             )}
-            <span
-              className={cn(
-                "font-semibold text-sm leading-tight transition-colors",
-                scrolled ? "text-text-primary" : "text-text-primary"
-              )}
-            >
+            <span className="font-semibold text-sm leading-tight text-slate-900">
               {pengaturan?.namaKawasan ? (
                 <>
-                  <span className="block font-bold">{pengaturan.namaKawasan.split(" ").slice(0, 2).join(" ")}</span>
-                  <span className="text-xs font-normal text-text-secondary">
+                  <span className="block font-extrabold text-slate-900">{pengaturan.namaKawasan.split(" ").slice(0, 2).join(" ")}</span>
+                  <span className="text-xs font-medium text-slate-500">
                     {pengaturan.namaKawasan.split(" ").slice(2).join(" ") || "Gempeng"}
                   </span>
                 </>
               ) : (
                 <>
-                  Kampung Tempe
-                  <br />
-                  <span className="text-xs font-normal text-text-secondary">Gempeng</span>
+                  <span className="block font-extrabold text-slate-900">Kampung Tempe</span>
+                  <span className="text-xs font-medium text-slate-500">Gempeng</span>
                 </>
               )}
             </span>
@@ -102,10 +99,10 @@ export default function Navbar() {
                 <Link
                   href={link.href}
                   className={cn(
-                    "px-3 py-2 text-sm rounded-md transition-colors duration-150",
+                    "px-3.5 py-2 text-sm rounded-xl transition-all duration-150 font-medium",
                     pathname === link.href
-                      ? "text-primary font-semibold"
-                      : "text-text-secondary hover:text-text-primary"
+                      ? "text-emerald-700 font-bold bg-emerald-50"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
                   )}
                   aria-current={pathname === link.href ? "page" : undefined}
                 >
@@ -115,16 +112,20 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* CTA */}
+          {/* Admin CTA Button */}
           <div className="hidden lg:flex items-center gap-3">
-            <Link href="/umkm" className="btn-primary text-sm px-5 py-2.5">
-              Jelajahi UMKM
+            <Link
+              href="/admin/login"
+              className="btn-primary text-xs font-bold px-4 sm:px-5 py-2.5 rounded-full inline-flex items-center gap-1.5 shadow-xs hover:shadow-md transition-all active:scale-95"
+            >
+              <ShieldCheck size={16} />
+              <span>Admin</span>
             </Link>
           </div>
 
           {/* Mobile Hamburger */}
           <button
-            className="lg:hidden flex items-center justify-center w-10 h-10 rounded-md text-text-primary hover:bg-surface-muted transition-colors"
+            className="lg:hidden flex items-center justify-center w-10 h-10 rounded-xl text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
@@ -138,7 +139,7 @@ export default function Navbar() {
       {/* Mobile Menu Drawer */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-40 lg:hidden"
+          className="fixed inset-0 z-50 lg:hidden"
           id="mobile-menu"
           role="dialog"
           aria-label="Menu navigasi mobile"
@@ -146,17 +147,17 @@ export default function Navbar() {
         >
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+            className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs"
             onClick={() => setMenuOpen(false)}
             aria-hidden="true"
           />
           {/* Panel */}
-          <div className="absolute top-0 right-0 bottom-0 w-72 bg-white shadow-xl flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <span className="font-semibold text-text-primary">Menu</span>
+          <div className="absolute top-0 right-0 bottom-0 w-72 bg-white shadow-2xl flex flex-col z-10">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+              <span className="font-bold text-slate-900">Menu Navigasi</span>
               <button
                 onClick={() => setMenuOpen(false)}
-                className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-muted"
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 cursor-pointer"
                 aria-label="Tutup menu"
               >
                 <X size={18} />
@@ -169,10 +170,10 @@ export default function Navbar() {
                     <Link
                       href={link.href}
                       className={cn(
-                        "flex items-center justify-between px-3 py-3 rounded-lg text-sm transition-colors",
+                        "flex items-center justify-between px-3.5 py-3 rounded-xl text-sm transition-colors",
                         pathname === link.href
-                          ? "bg-primary-soft text-primary font-semibold"
-                          : "text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+                          ? "bg-emerald-50 text-emerald-700 font-bold"
+                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium"
                       )}
                     >
                       {link.label}
@@ -182,9 +183,13 @@ export default function Navbar() {
                 ))}
               </ul>
             </nav>
-            <div className="p-4 border-t border-border">
-              <Link href="/umkm" className="btn-primary w-full justify-center">
-                Jelajahi UMKM
+            <div className="p-4 border-t border-slate-100">
+              <Link
+                href="/admin/login"
+                className="btn-primary w-full justify-center text-sm font-bold flex items-center gap-2 py-3 rounded-xl"
+              >
+                <ShieldCheck size={16} />
+                <span>Masuk Admin</span>
               </Link>
             </div>
           </div>
