@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { MapPin, MessageCircle, ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { JenisLayanan, labelLayanan } from "@/lib/data/umkm";
@@ -26,7 +26,17 @@ export default function PetaPage() {
   const { umkmList } = useCMS();
   const [filterLayanan, setFilterLayanan] = useState<JenisLayanan | "semua">("semua");
   const [selectedUMKM, setSelectedUMKM] = useState<string | null>(null);
+  const [selectionCounter, setSelectionCounter] = useState(0);
   const [showList, setShowList] = useState(false);
+
+  // Stable callback — never changes identity, won't cause MapView to re-init
+  const handleSelectUMKM = useCallback((id: string) => {
+    setSelectedUMKM(id);
+    setSelectionCounter((c) => c + 1);
+  }, []);
+
+  // Combine id + counter so clicking the same item again still triggers flyTo
+  const selectionKey = selectedUMKM ? `${selectedUMKM}__${selectionCounter}` : null;
 
   const filtered = umkmList
     .filter((u) => u.statusPublikasi)
@@ -84,7 +94,7 @@ export default function PetaPage() {
                       ? "bg-emerald-50/70 border-emerald-600 shadow-2xs"
                       : "border-transparent hover:bg-slate-50 hover:border-slate-300"
                   }`}
-                  onClick={() => setSelectedUMKM(umkm.id)}
+                  onClick={() => handleSelectUMKM(umkm.id)}
                 >
                   <div className="flex items-start gap-3">
                     <div className="relative w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200 shadow-2xs">
@@ -138,8 +148,8 @@ export default function PetaPage() {
         <div className="flex-1 relative">
           <MapView
             umkmList={filtered}
-            selectedId={selectedUMKM}
-            onSelectUMKM={(id) => setSelectedUMKM(id)}
+            selectedId={selectionKey}
+            onSelectUMKM={handleSelectUMKM}
             height="100%"
           />
 
@@ -180,7 +190,7 @@ export default function PetaPage() {
                     key={umkm.id}
                     className="p-4 flex items-center gap-3 hover:bg-slate-50 cursor-pointer"
                     onClick={() => {
-                      setSelectedUMKM(umkm.id);
+                      handleSelectUMKM(umkm.id);
                       setShowList(false);
                     }}
                   >

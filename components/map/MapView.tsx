@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { UMKM } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
-import Link from "next/link";
 
 interface MapViewProps {
   umkmList: UMKM[];
@@ -21,18 +20,23 @@ export default function MapView({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersMapRef = useRef<Map<string, any>>(new Map());
+  // Stable ref for the callback so we don't recreate the map when it changes
+  const onSelectRef = useRef(onSelectUMKM);
+  onSelectRef.current = onSelectUMKM;
 
+  // Initialize map ONCE (only when umkmList reference changes)
   useEffect(() => {
     if (typeof window === "undefined" || !mapRef.current) return;
 
+    // Cleanup previous instance
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.remove();
+      mapInstanceRef.current = null;
+      markersMapRef.current.clear();
+    }
+
     import("leaflet").then((L) => {
       if (!mapRef.current) return;
-
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-        markersMapRef.current.clear();
-      }
 
       // Fix default icon paths for Next.js
       delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -49,11 +53,11 @@ export default function MapView({
       const map = L.map(mapRef.current!, {
         center: center as [number, number],
         zoom: 15,
-        scrollWheelZoom: false,
+        scrollWheelZoom: true,
       });
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
         maxZoom: 19,
       }).addTo(map);
 
@@ -72,7 +76,7 @@ export default function MapView({
 
         const photoMarkerIcon = L.divIcon({
           html: `
-            <div class="umkm-map-pin group" style="
+            <div class="umkm-map-pin" style="
               position: relative;
               width: 50px;
               height: 58px;
@@ -124,8 +128,9 @@ export default function MapView({
           riseOnHover: true,
         }).addTo(map);
 
+        // Use ref so this never causes map recreation
         marker.on("click", () => {
-          onSelectUMKM?.(umkm.id);
+          onSelectRef.current?.(umkm.id);
         });
 
         marker.bindPopup(`
@@ -172,27 +177,48 @@ export default function MapView({
         markersMapRef.current.clear();
       }
     };
-  }, [umkmList, onSelectUMKM]);
+    // Only recreate map when umkmList actually changes (filter toggle)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [umkmList]);
 
-  // Efek animasi flyTo dan open popup saat list item diklik
+  // FlyTo + open popup when sidebar item is clicked
   useEffect(() => {
     if (!selectedId || !mapInstanceRef.current) return;
 
-    const marker = markersMapRef.current.get(selectedId);
-    if (marker) {
-      const latLng = marker.getLatLng();
-      mapInstanceRef.current.flyTo(latLng, 17, {
-        animate: true,
-        duration: 1.2,
-      });
+    // selectedId format is "umkmId__counter" — extract the actual ID
+    const actualId = selectedId.split("__")[0];
+    const marker = markersMapRef.current.get(actualId);
+    if (!marker) return;
 
-      // Buka popup animasi saat kamera peta mulai mendarat
-      const timer = setTimeout(() => {
-        marker.openPopup();
-      }, 350);
+    const map = mapInstanceRef.current;
+    const latLng = marker.getLatLng();
 
-      return () => clearTimeout(timer);
-    }
+    // Close any existing popup first
+    map.closePopup();
+
+    // Smooth animated fly to the marker
+    map.flyTo(latLng, 17, {
+      animate: true,
+      duration: 1.0,
+    });
+
+    // Open the popup after the camera arrives
+    const onMoveEnd = () => {
+      marker.openPopup();
+      map.off("moveend", onMoveEnd);
+    };
+    map.on("moveend", onMoveEnd);
+
+    // Safety: also open after timeout in case moveend doesn't fire (already at location)
+    const timer = setTimeout(() => {
+      marker.openPopup();
+      map.off("moveend", onMoveEnd);
+    }, 1200);
+
+    return () => {
+      clearTimeout(timer);
+      map.off("moveend", onMoveEnd);
+    };
   }, [selectedId]);
 
   return (
