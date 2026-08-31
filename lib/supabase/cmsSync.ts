@@ -60,7 +60,6 @@ function mapUmkmToDb(data: UMKM) {
     jenis_layanan: data.jenisLayanan,
     produk_ids: data.produkIds,
     galeri,
-    foto,
     status_publikasi: data.statusPublikasi,
   };
 }
@@ -208,7 +207,6 @@ function mapPengaturanToDb(data: PengaturanPortal) {
     id: "default",
     nama_kawasan: data.namaKawasan,
     subjudul_kawasan: data.subjudulKawasan,
-    logo_url: data.logoUrl,
     alamat_sekretariat: data.alamatSekretariat,
     nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
     jam_layanan_pengelola: data.jamLayananPengelola,
@@ -249,6 +247,7 @@ function mapPengaturanToDb(data: PengaturanPortal) {
     cta_section_subtext: data.ctaSectionSubtext,
     cta_section_btn1_label: data.ctaSectionBtn1Label,
     cta_section_btn2_label: data.ctaSectionBtn2Label,
+    updated_at: new Date().toISOString(),
   };
 }
 
@@ -356,40 +355,10 @@ export async function deleteBeritaSupabase(id: string) {
 
 export async function updatePengaturanSupabase(data: PengaturanPortal) {
   if (!isSupabaseConfigured || !supabase) return;
-  const payload = {
-    ...mapPengaturanToDb(data),
-    data: data, // Include full JSONB object for schema resilience
-  };
+  const payload = mapPengaturanToDb(data);
   const { error } = await supabase.from("pengaturan").upsert(payload);
   if (error) {
-    console.warn("Retrying update Pengaturan with JSONB / clean payload:", error);
-    // 1. Coba schema JSONB (seperti tabel profil)
-    const jsonbPayload = {
-      id: "default",
-      data: data,
-      hero_image: data.heroImage,
-      logo_url: data.logoUrl,
-      updated_at: new Date().toISOString(),
-    };
-    const res = await supabase.from("pengaturan").upsert(jsonbPayload);
-    
-    // 2. Jika masih gagal, coba payload kolom esensial dengan hero_image & logo_url
-    if (res.error) {
-      const basicPayload = {
-        id: "default",
-        nama_kawasan: data.namaKawasan,
-        subjudul_kawasan: data.subjudulKawasan,
-        logo_url: data.logoUrl,
-        hero_image: data.heroImage,
-        alamat_sekretariat: data.alamatSekretariat,
-        nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
-        jam_layanan_pengelola: data.jamLayananPengelola,
-        email_pengelola: data.emailPengelola,
-        hero_headline: data.heroHeadline,
-        hero_subtext: data.heroSubtext,
-      };
-      await supabase.from("pengaturan").upsert(basicPayload);
-    }
+    console.error("Error update Pengaturan to Supabase:", error);
   }
 }
 
