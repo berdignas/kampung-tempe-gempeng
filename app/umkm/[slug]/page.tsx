@@ -1,33 +1,38 @@
 "use client";
 
-import { use, useState } from "react";
+import { use } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import {
-  MapPin, Clock, MessageCircle, ExternalLink, Package, ChevronLeft, ChevronRight, User,
+  MapPin,
+  Clock,
+  MessageCircle,
+  ChevronLeft,
+  User,
+  Calendar,
+  ShieldCheck,
+  Building2,
+  Phone,
+  Sparkles,
 } from "lucide-react";
 import { labelLayanan } from "@/lib/data/umkm";
 import { buildWhatsAppUrl, buildWhatsAppMessageUMKM } from "@/lib/whatsapp";
 import { useCMS } from "@/lib/cms/CMSContext";
-import UMKMGalleryCarousel from "@/components/umkm/UMKMGalleryCarousel";
 
 const SingleUMKMMap = dynamic(() => import("@/components/map/SingleUMKMMap"), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-[280px] bg-slate-100 rounded-2xl flex items-center justify-center text-xs text-slate-400">
-      Memuat peta lokasi...
+    <div className="w-full h-[320px] bg-slate-100 rounded-2xl flex items-center justify-center text-xs text-slate-400">
+      Memuat peta lokasi rumah produksi...
     </div>
   ),
 });
 
-const PRODUK_PER_PAGE = 2;
-
 export default function DetailUMKMPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = use(params);
-  const { umkmList, produkList } = useCMS();
+  const { umkmList } = useCMS();
   const umkm = umkmList.find((u) => u.slug === slug || u.id === slug);
-  const [produkPage, setProdukPage] = useState(0);
 
   if (!umkm || !umkm.statusPublikasi) {
     return (
@@ -35,7 +40,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
         <div className="container-content">
           <h1 className="text-xl font-semibold mb-2">UMKM Tidak Ditemukan</h1>
           <p className="text-text-secondary text-sm mb-4">
-            Usaha yang Anda cari tidak tersedia atau belum dipublikasikan.
+            Data pengrajin yang Anda cari belum terdaftar atau belum dipublikasikan.
           </p>
           <Link href="/umkm" className="btn-secondary">
             Kembali ke Direktori UMKM
@@ -47,300 +52,218 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
 
   const validLat = Number(umkm.koordinat?.lat) || -7.5953;
   const validLng = Number(umkm.koordinat?.lng) || 112.7844;
-
-  const produkUMKM = produkList.filter((p) => umkm.produkIds.includes(p.id));
-  const totalProdukPages = Math.ceil(produkUMKM.length / PRODUK_PER_PAGE);
-  const produkSlice = produkUMKM.slice(
-    produkPage * PRODUK_PER_PAGE,
-    (produkPage + 1) * PRODUK_PER_PAGE
-  );
-
+  const photoUrl = umkm.foto || (umkm.galeri && umkm.galeri[0]) || "";
   const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
 
   return (
-    <main className="pt-20">
-      <div className="container-content py-8">
+    <main className="pt-20 bg-slate-50/50 min-h-screen pb-16">
+      <div className="container-content py-8 space-y-8">
         {/* Breadcrumb */}
-        <nav aria-label="Breadcrumb" className="mb-6">
-          <ol className="flex items-center gap-2 text-sm text-text-secondary flex-wrap">
-            <li><Link href="/" className="hover:text-primary">Beranda</Link></li>
-            <li aria-hidden="true">/</li>
-            <li><Link href="/umkm" className="hover:text-primary">Direktori UMKM</Link></li>
-            <li aria-hidden="true">/</li>
-            <li className="text-text-primary font-medium truncate">{umkm.namaUsaha}</li>
+        <nav aria-label="Breadcrumb">
+          <ol className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 flex-wrap">
+            <li><Link href="/" className="hover:text-emerald-700 transition-colors">Beranda</Link></li>
+            <li aria-hidden="true" className="text-slate-300">/</li>
+            <li><Link href="/umkm" className="hover:text-emerald-700 transition-colors">Direktori UMKM</Link></li>
+            <li aria-hidden="true" className="text-slate-300">/</li>
+            <li className="text-slate-900 font-semibold truncate">{umkm.namaUsaha}</li>
           </ol>
         </nav>
 
-        {/* Baris Pertama: Hanya Foto Profil dan Foto Produk */}
-        <div className="mb-10">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 items-stretch">
-            {/* Kolom Kiri: Foto Profil Pelaku Usaha (Ukuran lebih ramping/perkecil panjang, tinggi sama) */}
-            <div className="md:col-span-5 flex flex-col">
-              <div className="relative w-full h-[320px] sm:h-[380px] md:h-[420px] rounded-2xl overflow-hidden shadow-card bg-slate-900 border border-slate-200/80 group select-none">
-                {umkm.galeri && umkm.galeri[0] ? (
+        {/* Hero Section: Foto Profil Rasio 9:16 (Kiri) + Informasi Lengkap (Kanan) */}
+        <section className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 md:p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            {/* Kolom Kiri: Foto Profil Pengrajin Berasio 9:16 */}
+            <div className="lg:col-span-4 flex justify-center lg:justify-start">
+              <div className="relative w-full max-w-[280px] sm:max-w-[310px] md:max-w-[330px] aspect-[9/16] rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-950 group select-none flex-shrink-0">
+                {photoUrl ? (
                   <>
                     <Image
-                      src={umkm.galeri[0]}
-                      alt={`Foto profil pelaku usaha ${umkm.namaPemilik || umkm.namaUsaha}`}
+                      src={photoUrl}
+                      alt={`Foto profil pengrajin ${umkm.namaPemilik || umkm.namaUsaha}`}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-103"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                       priority
-                      sizes="(max-width: 768px) 100vw, 42vw"
+                      sizes="(max-width: 768px) 100vw, 330px"
                     />
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/25 pointer-events-none" />
+                    {/* Elegant Gradient Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-black/35 pointer-events-none" />
 
-                    {/* Badge Pembeda: Profil Pelaku Usaha */}
-                    <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-xs font-semibold shadow-xs">
+                    {/* Top Badge */}
+                    <div className="absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-900/80 backdrop-blur-md text-white text-[11px] font-bold shadow-md border border-white/10">
                       <User size={13} className="text-emerald-400" />
-                      <span>Profil Pelaku Usaha</span>
+                      <span>Profil Pengrajin Tempe</span>
                     </div>
 
-                    {/* Info Nama Pemilik di bagian bawah */}
-                    <div className="absolute bottom-3.5 inset-x-3.5 z-10 text-white pointer-events-none">
+                    {/* Bottom Info Overlay */}
+                    <div className="absolute bottom-4 inset-x-4 z-10 text-white pointer-events-none space-y-1">
                       {umkm.namaPemilik && (
-                        <p className="text-[11px] text-emerald-300 font-medium tracking-wide flex items-center gap-1">
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block"></span>
-                          Pemilik Usaha
+                        <p className="text-xs text-emerald-300 font-semibold tracking-wide flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-xs animate-pulse"></span>
+                          Pemilik: {umkm.namaPemilik}
                         </p>
                       )}
-                      <h3 className="font-bold text-base md:text-lg leading-tight text-white drop-shadow-sm truncate">
-                        {umkm.namaPemilik || umkm.namaUsaha}
-                      </h3>
+                      <h2 className="font-extrabold text-lg sm:text-xl leading-tight text-white drop-shadow-md">
+                        {umkm.namaUsaha}
+                      </h2>
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center text-slate-400 gap-2 p-6 text-center">
-                    <User size={48} className="opacity-35 text-emerald-600" />
-                    <p className="text-xs font-semibold text-slate-600">Foto Profil Pelaku Usaha</p>
-                    <span className="text-[11px] text-slate-400">Belum diunggah</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Kolom Kanan: Foto Produk dengan Auto-Slide Carousel & Pagination */}
-            <div className="md:col-span-7 flex flex-col">
-              {umkm.galeri && umkm.galeri.slice(1).filter((img) => Boolean(img && img.trim())).length > 0 ? (
-                <UMKMGalleryCarousel
-                  images={umkm.galeri.slice(1).filter((img) => Boolean(img && img.trim()))}
-                  namaUsaha={umkm.namaUsaha}
-                  autoPlayInterval={4000}
-                  heightClass="h-[320px] sm:h-[380px] md:h-[420px]"
-                  badgeLabel="Foto Produk & Galeri"
-                />
-              ) : (
-                <div className="relative w-full h-[320px] sm:h-[380px] md:h-[420px] rounded-2xl overflow-hidden shadow-card bg-slate-100 border border-slate-200/80 flex flex-col items-center justify-center text-slate-400 gap-2.5 p-6 text-center">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shadow-2xs">
-                    <Package size={24} />
-                  </div>
-                  <div>
-                    <p className="text-xs font-semibold text-slate-700">Foto Produk & Galeri</p>
-                    <p className="text-[11px] text-slate-400 mt-0.5">Belum ada foto dokumentasi produk</p>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Konten di Bawah Foto: Kolom Kiri = Deskripsi, Produk, Peta; Kolom Kanan = Card Informasi Usaha & Hubungi Langsung */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Main content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Story */}
-            <section aria-labelledby="cerita-heading">
-              <h2 id="cerita-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-3">Tentang {umkm.namaUsaha}</h2>
-              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{umkm.deskripsi}</p>
-            </section>
-
-            {/* Products with Pagination */}
-            {produkUMKM.length > 0 && (
-              <section aria-labelledby="produk-heading" className="pt-2">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 id="produk-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-                    <Package size={22} className="text-primary" />
-                    Produk Tempe yang Dihasilkan
-                  </h2>
-                  <span className="text-xs text-slate-500 font-semibold bg-slate-100 px-3 py-1 rounded-full">
-                    Total {produkUMKM.length} Varian
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {produkSlice.map((p) => (
-                    <Link
-                      key={p.id}
-                      href={`/produk/${p.slug}`}
-                      className="card p-4 flex items-start gap-4 hover:border-primary transition-all group bg-white shadow-xs hover:shadow-md"
-                    >
-                      <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-xs bg-slate-100 flex items-center justify-center">
-                        {p.foto ? (
-                          <Image src={p.foto} alt={p.nama} fill className="object-cover group-hover:scale-105 transition-transform" sizes="80px" />
-                        ) : (
-                          <Package size={24} className="text-slate-400 opacity-40" />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-bold text-sm text-slate-900 mb-1 group-hover:text-primary transition-colors">{p.nama}</p>
-                        <p className="text-xs text-slate-500 line-clamp-2 mb-2 leading-relaxed">{p.deskripsi}</p>
-                        <div className="flex flex-wrap gap-1">
-                          {p.ukuranKemasan.slice(0, 2).map((k) => (
-                            <span key={k} className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-600">{k}</span>
-                          ))}
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-
-                {/* Pagination */}
-                {totalProdukPages > 1 && (
-                  <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-200">
-                    <p className="text-xs text-slate-500">
-                      Halaman <strong className="text-slate-800">{produkPage + 1}</strong> dari <strong>{totalProdukPages}</strong>
-                    </p>
-
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setProdukPage(Math.max(0, produkPage - 1))}
-                        disabled={produkPage === 0}
-                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
-                        aria-label="Halaman produk sebelumnya"
-                      >
-                        <ChevronLeft size={14} /> Sebelumnya
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setProdukPage(Math.min(totalProdukPages - 1, produkPage + 1))}
-                        disabled={produkPage === totalProdukPages - 1}
-                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
-                        aria-label="Halaman produk berikutnya"
-                      >
-                        Selanjutnya <ChevronRight size={14} />
-                      </button>
+                  <div className="w-full h-full bg-slate-100 flex flex-col items-center justify-center text-slate-400 gap-3 p-6 text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-xs">
+                      <User size={32} />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-700">Foto Profil Pengrajin</p>
+                      <span className="text-xs text-slate-400 mt-0.5 block">Format Potret 9:16</span>
                     </div>
                   </div>
                 )}
-              </section>
-            )}
-
-            {/* Titik Lokasi Rumah Produksi Peta Interaktif */}
-            <section aria-labelledby="lokasi-umkm-heading" className="pt-4 border-t border-slate-200 space-y-3">
-              <div className="flex items-center justify-between">
-                <h2 id="lokasi-umkm-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-                  <MapPin size={22} className="text-primary" />
-                  Lokasi Rumah Produksi
-                </h2>
-                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
-                  Kelurahan Gempeng, Bangil
-                </span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Titik lokasi presisi rumah produksi <strong>{umkm.namaUsaha}</strong> di Kampung Tempe Gempeng. Anda dapat memperbesar peta, beralih ke tampilan foto satelit, atau membuka petunjuk arah navigasi langsung.
+            </div>
+
+            {/* Kolom Kanan: Rincian Lengkap Profil, Cerita, & Kontak */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Header Title & Badges */}
+              <div className="space-y-3 pb-6 border-b border-slate-100">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-bold">
+                  <Sparkles size={13} className="text-emerald-600" />
+                  Sentra Produksi Tempe Kelurahan Gempeng
+                </div>
+
+                <div className="space-y-1">
+                  <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    {umkm.namaUsaha}
+                  </h1>
+                  {umkm.namaPemilik && (
+                    <p className="text-sm sm:text-base font-semibold text-emerald-700 flex items-center gap-1.5">
+                      <User size={15} />
+                      Pengrajin: {umkm.namaPemilik}
+                    </p>
+                  )}
+                </div>
+
+                {/* Badges Jenis Layanan */}
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {umkm.jenisLayanan.map((layanan) => (
+                    <span
+                      key={layanan}
+                      className="px-3 py-1 text-xs font-bold rounded-full bg-slate-100 text-slate-700 border border-slate-200"
+                    >
+                      {labelLayanan[layanan]}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cerita & Deskripsi Usaha */}
+              <div className="space-y-2.5">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                  Tentang Usaha & Produksi
+                </h3>
+                <p className="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-line">
+                  {umkm.deskripsi || "Informasi profil usaha sedang diperbarui oleh pengrajin."}
+                </p>
+              </div>
+
+              {/* Grid Ringkasan Informasi Penting */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200">
+                    <Clock size={18} />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">Jam Operasional</span>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">{umkm.jamOperasional}</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-white text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200">
+                    <Calendar size={18} />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">Tahun Berdiri</span>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5">Sejak Tahun {umkm.tahunBerdiri}</p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-start gap-3 sm:col-span-2">
+                  <div className="w-9 h-9 rounded-xl bg-white text-emerald-600 flex items-center justify-center flex-shrink-0 shadow-2xs border border-slate-200">
+                    <MapPin size={18} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[11px] font-bold text-slate-400 block uppercase tracking-wider">Alamat Lengkap Rumah Produksi</span>
+                    <p className="text-xs sm:text-sm font-semibold text-slate-800 mt-0.5 leading-snug">{umkm.alamat}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action WhatsApp Button */}
+              <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <a
+                  href={waUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-2xl bg-[#25D366] hover:bg-[#20ba59] active:scale-98 text-white font-bold text-sm shadow-md hover:shadow-lg transition-all"
+                  aria-label={`Hubungi ${umkm.namaUsaha} via WhatsApp`}
+                >
+                  <MessageCircle size={20} />
+                  <span>Hubungi Pengrajin via WhatsApp ({umkm.nomorWhatsApp})</span>
+                </a>
+
+                <Link
+                  href="/umkm"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold text-xs transition"
+                >
+                  <ChevronLeft size={16} />
+                  <span>Daftar Pengrajin Lainnya</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Bawah: Titik Lokasi Rumah Produksi Peta Interaktif */}
+        <section aria-labelledby="lokasi-umkm-heading" className="bg-white rounded-3xl border border-slate-200/90 shadow-xs p-5 sm:p-7 md:p-8 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div>
+              <h2 id="lokasi-umkm-heading" className="text-lg sm:text-xl font-extrabold text-slate-900 flex items-center gap-2">
+                <MapPin size={20} className="text-emerald-600" />
+                Peta Titik Lokasi Rumah Produksi
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Koordinat presisi rumah produksi tempe di Kelurahan Gempeng, Kecamatan Bangil
               </p>
-              <SingleUMKMMap
-                lat={validLat}
-                lng={validLng}
-                namaUsaha={umkm.namaUsaha}
-                alamat={umkm.alamat}
-                foto={umkm.foto || (umkm.galeri && umkm.galeri[0])}
-                height="320px"
-              />
-            </section>
+            </div>
+            <span className="self-start sm:self-auto text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full shadow-2xs">
+              RT/RW Setempat Gempeng
+            </span>
           </div>
 
-          {/* Sidebar Cards (Informasi Usaha & Hubungi Langsung di bawah foto) */}
-          <aside className="space-y-5 lg:sticky lg:top-24" aria-label="Informasi kontak dan lokasi">
-            {/* Contact card */}
-            <div className="card p-6 space-y-4 bg-white shadow-card border border-slate-200 rounded-2xl">
-              <h2 className="font-extrabold text-slate-900 text-base pb-3 border-b border-slate-100">
-                Informasi Usaha
-              </h2>
-              <dl className="space-y-3.5 text-sm">
-                <div>
-                  <dt className="text-xs text-text-secondary mb-0.5">Nama Usaha</dt>
-                  <dd className="font-medium text-text-primary">{umkm.namaUsaha}</dd>
-                </div>
-                {umkm.namaPemilik && (
-                  <div>
-                    <dt className="text-xs text-text-secondary mb-0.5">Pemilik</dt>
-                    <dd className="font-medium text-text-primary">{umkm.namaPemilik}</dd>
-                  </div>
-                )}
-                <div>
-                  <dt className="text-xs text-text-secondary mb-0.5">Berdiri Sejak</dt>
-                  <dd className="font-medium text-text-primary">{umkm.tahunBerdiri}</dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-text-secondary mb-0.5">Jam Operasional</dt>
-                  <dd className="font-medium text-text-primary flex items-center gap-1.5">
-                    <Clock size={14} className="text-primary" aria-hidden="true" />
-                    {umkm.jamOperasional}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-text-secondary mb-0.5">Alamat</dt>
-                  <dd className="font-medium text-text-primary flex items-start gap-1.5">
-                    <MapPin size={14} className="mt-0.5 flex-shrink-0 text-primary" aria-hidden="true" />
-                    {umkm.alamat}
-                  </dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-text-secondary mb-1.5">Jenis Layanan</dt>
-                  <dd className="flex flex-wrap gap-1.5">
-                    {umkm.jenisLayanan.map((l) => (
-                      <span key={l} className="badge-layanan">{labelLayanan[l]}</span>
-                    ))}
-                  </dd>
-                </div>
-              </dl>
-            </div>
-
-            {/* CTA Hubungi Langsung */}
-            <div className="card p-6 space-y-3.5 bg-white shadow-card border border-border/80 rounded-2xl">
-              <h2 className="font-semibold text-text-primary text-base pb-2 border-b border-border/60">
-                Hubungi Langsung
-              </h2>
-              <p className="text-xs text-text-secondary leading-relaxed">
-                Untuk pembelian dan informasi produk, hubungi pemilik usaha secara langsung.
-              </p>
-              <a
-                href={waUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-whatsapp w-full justify-center gap-2 py-3 shadow-md hover:shadow-lg transition-all"
-                aria-label={`Hubungi ${umkm.namaUsaha} via WhatsApp`}
-              >
-                <MessageCircle size={18} />
-                Hubungi via WhatsApp
-              </a>
-            </div>
-          </aside>
-        </div>
-
-        {/* Back to directory */}
-        <div className="mt-12 pt-6 border-t border-border text-center">
-          <Link href="/umkm" className="btn-secondary inline-flex items-center gap-2">
-            <ChevronLeft size={15} />
-            Kembali ke Direktori UMKM
-          </Link>
-        </div>
+          <div className="rounded-2xl overflow-hidden border border-slate-200 shadow-inner">
+            <SingleUMKMMap
+              lat={validLat}
+              lng={validLng}
+              namaUsaha={umkm.namaUsaha}
+              alamat={umkm.alamat}
+              foto={photoUrl}
+              height="360px"
+            />
+          </div>
+        </section>
       </div>
 
-      {/* Sticky WhatsApp (mobile) */}
-      <div className="fixed bottom-4 right-4 z-40 md:hidden">
+      {/* Sticky Mobile Floating WhatsApp Button */}
+      <div className="fixed bottom-5 right-5 z-40 md:hidden">
         <a
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="btn-whatsapp shadow-card-hover flex items-center gap-2 px-4"
+          className="flex items-center gap-2 px-5 py-3.5 rounded-full bg-[#25D366] text-white font-bold text-xs shadow-xl active:scale-95 transition-transform"
           aria-label={`Hubungi ${umkm.namaUsaha} via WhatsApp`}
         >
           <MessageCircle size={18} />
-          Hubungi WA
+          <span>Hubungi WA</span>
         </a>
       </div>
     </main>

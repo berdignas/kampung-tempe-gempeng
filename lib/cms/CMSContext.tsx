@@ -89,11 +89,12 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     // 1. Muat data awal dari localStorage
     syncLocal();
 
-    // 2. Listener storage lokal (sinkron antar tab di browser yang sama)
+    // 2. Listener storage lokal (sinkron antar tab & antar komponen di browser)
     const handleStorageChange = () => {
       syncLocal();
     };
     window.addEventListener("storage", handleStorageChange);
+    window.addEventListener("local-cms-update", handleStorageChange);
 
     // 3. Listener Supabase & Realtime Websocket
     const client = supabase;
@@ -150,12 +151,14 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
 
       return () => {
         window.removeEventListener("storage", handleStorageChange);
+        window.removeEventListener("local-cms-update", handleStorageChange);
         client.removeChannel(channel);
       };
     }
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("local-cms-update", handleStorageChange);
     };
   }, []);
 

@@ -40,11 +40,18 @@ export default function NewsPreview() {
             Lihat Semua Berita <ArrowRight size={15} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {recent.map((b) => (
-            <ArticleCard key={b.id} berita={b} />
-          ))}
-        </div>
+        {recent.length === 0 ? (
+          <div className="p-8 text-center bg-white/70 rounded-2xl border border-slate-200">
+            <p className="text-sm font-semibold text-slate-700">Belum ada artikel berita atau dokumentasi kegiatan.</p>
+            <p className="text-xs text-slate-500 mt-1">Kabar kawasan dan pengumuman dapat dipublikasikan melalui panel admin.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {recent.map((b) => (
+              <ArticleCard key={b.id} berita={b} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

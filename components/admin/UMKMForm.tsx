@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { UMKM, JenisLayanan } from "@/lib/data/umkm";
 import { useCMS } from "@/lib/cms/CMSContext";
 import Link from "next/link";
-import { ArrowLeft, Save, MapPin, Plus, Trash2, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, MapPin, User, Store } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
 import LocationPicker from "@/components/admin/LocationPicker";
 
@@ -16,7 +16,7 @@ interface UMKMFormProps {
 
 export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const router = useRouter();
-  const { addUMKM, updateUMKM, produkList } = useCMS();
+  const { addUMKM, updateUMKM } = useCMS();
 
   const [namaUsaha, setNamaUsaha] = useState(initialData?.namaUsaha || "");
   const [namaPemilik, setNamaPemilik] = useState(initialData?.namaPemilik || "");
@@ -32,14 +32,8 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const [jenisLayanan, setJenisLayanan] = useState<JenisLayanan[]>(
     initialData?.jenisLayanan || ["eceran"]
   );
-  const [produkIds, setProdukIds] = useState<string[]>(initialData?.produkIds || []);
-  const [utamaImage, setUtamaImage] = useState(
-    initialData?.galeri?.[0] || ""
-  );
-  const [extraImages, setExtraImages] = useState<string[]>(
-    initialData?.galeri && initialData.galeri.length > 1
-      ? initialData.galeri.slice(1)
-      : []
+  const [fotoProfil, setFotoProfil] = useState(
+    initialData?.foto || initialData?.galeri?.[0] || ""
   );
   const [statusPublikasi, setStatusPublikasi] = useState(
     initialData?.statusPublikasi ?? true
@@ -58,31 +52,10 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       setJamOperasional(initialData.jamOperasional || "Setiap hari, 05.00–12.00 WIB");
       setTahunBerdiri(initialData.tahunBerdiri || 2020);
       setJenisLayanan(initialData.jenisLayanan || ["eceran"]);
-      setProdukIds(initialData.produkIds || []);
-      setUtamaImage(initialData.galeri?.[0] || "");
-      setExtraImages(
-        initialData.galeri && initialData.galeri.length > 1
-          ? initialData.galeri.slice(1)
-          : []
-      );
+      setFotoProfil(initialData.foto || initialData.galeri?.[0] || "");
       setStatusPublikasi(initialData.statusPublikasi ?? true);
     }
   }, [initialData]);
-
-  const handleAddExtraImage = () => {
-    setExtraImages([...extraImages, ""]);
-  };
-
-  const handleUpdateExtraImage = (index: number, val: string) => {
-    const updated = [...extraImages];
-    updated[index] = val;
-    setExtraImages(updated);
-  };
-
-  const handleDeleteExtraImage = (index: number) => {
-    const updated = extraImages.filter((_, i) => i !== index);
-    setExtraImages(updated);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,11 +66,9 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       .replace(/(^-|-$)+/g, "");
 
     const slug = initialData?.slug || generatedSlug;
+    const cleanPhoto = fotoProfil.trim();
 
-    const cleanedExtra = extraImages.map((s) => s.trim()).filter((s) => s.length > 0);
-    const galeri = [utamaImage, ...cleanedExtra].filter((img) => img.length > 0);
-
-    const formData = {
+    const formData: Omit<UMKM, "id"> = {
       slug,
       namaUsaha,
       namaPemilik,
@@ -108,14 +79,15 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
       jamOperasional,
       tahunBerdiri: Number(tahunBerdiri),
       jenisLayanan,
-      produkIds,
-      galeri,
+      produkIds: [],
+      galeri: cleanPhoto ? [cleanPhoto] : [],
+      foto: cleanPhoto,
       statusPublikasi,
     };
 
     if (isEdit && initialData) {
       updateUMKM(initialData.id, formData);
-      alert("Data profil UMKM berhasil diperbarui!");
+      alert("Data profil UMKM berhasil disimpan & diperbarui!");
     } else {
       addUMKM(formData);
       alert("UMKM baru berhasil ditambahkan!");
@@ -132,14 +104,6 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
     }
   };
 
-  const toggleProduk = (prodId: string) => {
-    if (produkIds.includes(prodId)) {
-      setProdukIds(produkIds.filter((p) => p !== prodId));
-    } else {
-      setProdukIds([...produkIds, prodId]);
-    }
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl pb-16">
       {/* Header Bar */}
@@ -152,10 +116,10 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           Kembali ke Daftar UMKM
         </Link>
         <h1 className="text-2xl font-bold text-slate-800">
-          {isEdit ? `Edit Profil UMKM: ${initialData?.namaUsaha}` : "Tambah UMKM Baru"}
+          {isEdit ? `Edit Profil Pengrajin: ${initialData?.namaUsaha}` : "Tambah Pengrajin UMKM Baru"}
         </h1>
         <p className="text-xs text-slate-500">
-          Seluruh data di bawah ini langsung terintegrasi dengan halaman profil UMKM publik (/umkm/[slug]).
+          Seluruh data di bawah ini langsung terintegrasi secara presisi dengan halaman profil pengrajin (/umkm/[slug]) dan peta interaktif.
         </p>
       </div>
 
@@ -269,76 +233,26 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           <textarea
             required
             rows={4}
-            placeholder="Jelaskan sejarah singkat, keunggulan proses fermentasi, atau kapasitas pasokan..."
+            placeholder="Jelaskan sejarah singkat, keunggulan proses fermentasi kedelai alami, kapasitas pasokan harian, atau kekhasan tempe yang dihasilkan..."
             value={deskripsi}
             onChange={(e) => setDeskripsi(e.target.value)}
             className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:bg-white focus:border-emerald-500 focus:outline-none leading-relaxed"
           />
         </div>
 
-        {/* Foto Utama Tempat Usaha */}
-        <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
-          <ImageUploader
-            label="Foto Utama Tempat Usaha / Profil UMKM (Tampil di Kartu & Header)"
-            value={utamaImage}
-            onChange={(url) => setUtamaImage(url)}
-            aspectRatio={16 / 9}
-            aspectRatioLabel="16:9 (Ukuran Pas Kartu UMKM)"
-            helpText="Pilih file gambar. Anda dapat menggeser (drag) dan mengatur zoom foto agar pas di kartu."
-          />
-        </div>
-
-        {/* Galeri Tambahan */}
-        <div className="space-y-3 md:col-span-2 border-t border-slate-100 pt-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                <ImageIcon size={14} className="text-emerald-600" />
-                Galeri Foto Tambahan Tempat Usaha / Produksi
-              </label>
-              <p className="text-[11px] text-slate-500">
-                Tambahkan foto proses pembuatan tempe, tempat fermentasi, atau suasana rumah produksi.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={handleAddExtraImage}
-              className="inline-flex items-center gap-1 px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-semibold transition"
-            >
-              <Plus size={13} />
-              Tambah Foto Galeri
-            </button>
+        {/* Foto Profil Pelaku Usaha (Rasio 9:16 Potret) */}
+        <div className="space-y-2 md:col-span-2 border-t border-slate-100 pt-4">
+          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200">
+            <ImageUploader
+              label="Foto Profil Pelaku Usaha (Format Potret 9:16)"
+              value={fotoProfil}
+              onChange={(url) => setFotoProfil(url)}
+              aspectRatio={9 / 16}
+              aspectRatioLabel="9:16 (Format Potret Pelaku Usaha)"
+              previewMaxWidth="max-w-[180px]"
+              helpText="Upload foto potret pelaku usaha / pengrajin tempe. Anda dapat menggeser posisi dan mengatur zoom foto dengan rasio potret 9:16."
+            />
           </div>
-
-          {extraImages.length === 0 ? (
-            <p className="text-xs text-slate-400 italic">Belum ada foto galeri tambahan.</p>
-          ) : (
-            <div className="space-y-3">
-              {extraImages.map((img, idx) => (
-                <div key={idx} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 relative">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[11px] font-semibold text-slate-600">Foto Galeri #{idx + 1}</span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteExtraImage(idx)}
-                      className="p-1 text-slate-400 hover:text-rose-600 rounded transition"
-                      title="Hapus foto ini"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                  <ImageUploader
-                    label={`Pilih Foto Galeri ${idx + 1}`}
-                    value={img}
-                    onChange={(url) => handleUpdateExtraImage(idx, url)}
-                    aspectRatio={16 / 9}
-                    aspectRatioLabel="16:9"
-                    helpText="Upload file gambar dan atur posisi bingkai foto."
-                  />
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Jenis Layanan */}
@@ -364,37 +278,12 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
           </div>
         </div>
 
-        {/* Produk Diproduksi */}
-        <div className="space-y-2 md:col-span-2 border-t border-slate-100 pt-4">
-          <div className="flex items-center justify-between">
-            <label className="text-xs font-semibold text-slate-700">
-              Varian Produk Tempe yang Diproduksi Pelaku Usaha Ini
-            </label>
-            <span className="text-[11px] text-slate-500">
-              Centang produk yang dihasilkan (tampil dengan pagination di halaman profil)
-            </span>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
-            {produkList.map((p) => (
-              <label key={p.id} className="flex items-center gap-2 p-2.5 rounded-lg border border-slate-200 bg-slate-50/50 hover:bg-slate-100/60 cursor-pointer text-slate-700">
-                <input
-                  type="checkbox"
-                  checked={produkIds.includes(p.id)}
-                  onChange={() => toggleProduk(p.id)}
-                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
-                />
-                <span className="font-medium">{p.nama}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
         {/* Status Publikasi */}
         <div className="flex items-center justify-between md:col-span-2 border-t border-slate-100 pt-4">
           <div>
             <span className="text-xs font-semibold text-slate-800">Status Publikasi</span>
             <p className="text-[11px] text-slate-500">
-              Jika aktif, profil UMKM ini akan tampil di direktori publik dan peta kawasan.
+              Jika aktif, profil pengrajin ini akan langsung tampil di direktori publik dan peta sentra kawasan.
             </p>
           </div>
           <button
@@ -425,7 +314,7 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-md hover:shadow-lg transition cursor-pointer active:scale-98"
           >
             <Save size={18} />
-            {isEdit ? "Simpan Perubahan" : "Simpan UMKM Baru"}
+            {isEdit ? "Simpan Perubahan" : "Simpan Pengrajin Baru"}
           </button>
         </div>
       </div>

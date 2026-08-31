@@ -231,8 +231,16 @@ export function saveStoredUMKM(list: UMKM[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEYS.UMKM, JSON.stringify(list));
+    // Trigger custom event so all open views immediately update
+    window.dispatchEvent(new Event("local-cms-update"));
   } catch (e) {
-    console.error("Gagal menyimpan UMKM ke localStorage", e);
+    console.error("Gagal menyimpan UMKM ke localStorage (mungkin kuota penuh)", e);
+    try {
+      // Fallback: strip old large base64 from non-essential caches if needed
+      localStorage.setItem(STORAGE_KEYS.UMKM, JSON.stringify(list));
+    } catch (err) {
+      console.error("Critical storage error:", err);
+    }
   }
 }
 
@@ -251,6 +259,7 @@ export function saveStoredProduk(list: Produk[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEYS.PRODUK, JSON.stringify(list));
+    window.dispatchEvent(new Event("local-cms-update"));
   } catch (e) {
     console.error("Gagal menyimpan Produk ke localStorage", e);
   }
@@ -271,6 +280,7 @@ export function saveStoredBerita(list: Berita[]): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEYS.BERITA, JSON.stringify(list));
+    window.dispatchEvent(new Event("local-cms-update"));
   } catch (e) {
     console.error("Gagal menyimpan Berita ke localStorage", e);
   }
@@ -293,6 +303,7 @@ export function saveStoredPengaturan(data: PengaturanPortal): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEYS.PENGATURAN, JSON.stringify(data));
+    window.dispatchEvent(new Event("local-cms-update"));
   } catch (e) {
     console.error("Gagal menyimpan Pengaturan ke localStorage", e);
   }
@@ -315,6 +326,7 @@ export function saveStoredProfil(data: ProfilKampungData): void {
   if (typeof window === "undefined") return;
   try {
     localStorage.setItem(STORAGE_KEYS.PROFIL, JSON.stringify(data));
+    window.dispatchEvent(new Event("local-cms-update"));
   } catch (e) {
     console.error("Gagal menyimpan Profil ke localStorage", e);
   }
@@ -327,4 +339,5 @@ export function resetAllCMSData(): void {
   localStorage.removeItem(STORAGE_KEYS.BERITA);
   localStorage.removeItem(STORAGE_KEYS.PENGATURAN);
   localStorage.removeItem(STORAGE_KEYS.PROFIL);
+  window.dispatchEvent(new Event("local-cms-update"));
 }

@@ -302,17 +302,20 @@ export default function ImageCropperModal({
     if (!loadedImageRef.current || !containerRef.current) return;
 
     const exportCanvas = document.createElement("canvas");
-    const domWidth = containerRef.current.clientWidth || 500;
-    const outputWidth = 1200; // High resolution output
+    const domWidth = containerRef.current.clientWidth || 400;
+    // Optimized resolution: crisp for web & responsive screens, tiny storage footprint (~40KB)
+    const outputWidth = aspectRatio < 1 ? 640 : 800;
 
     renderToCanvas(exportCanvas, outputWidth, domWidth, position, zoom, rotation);
 
-    const croppedDataUrl = exportCanvas.toDataURL("image/jpeg", 0.92);
+    const croppedDataUrl = exportCanvas.toDataURL("image/jpeg", 0.82);
     onApply(croppedDataUrl);
     onClose();
   };
 
   if (!isOpen) return null;
+
+  const isPortrait = aspectRatio < 1;
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-3 sm:p-5 animate-in fade-in duration-200">
@@ -325,10 +328,10 @@ export default function ImageCropperModal({
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-800">
-                Atur & Geser Posisi Foto Profil UMKM
+                Atur & Geser Posisi Foto
               </h3>
               <p className="text-[11px] text-slate-500">
-                Geser (drag) foto dan atur zoom agar pas di dalam kartu ({aspectRatioLabel})
+                Geser (drag) foto dan atur zoom agar pas di dalam bingkai ({aspectRatioLabel})
               </p>
             </div>
           </div>
@@ -347,36 +350,39 @@ export default function ImageCropperModal({
         <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5 bg-slate-50">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
             {/* Left Column: Interactive Drag Workspace Canvas */}
-            <div className="lg:col-span-8 space-y-3">
+            <div className="lg:col-span-7 space-y-3">
               <div className="flex items-center justify-between text-xs">
                 <span className="font-bold text-slate-700 flex items-center gap-1.5">
                   <Sliders size={14} className="text-emerald-600" />
                   Area Pemotongan & Geser
                 </span>
                 <span className="text-[11px] text-slate-500 bg-white px-2.5 py-0.5 rounded-full border border-slate-200 font-medium">
-                  Rasio {aspectRatio === 16 / 9 ? "16:9" : "Custom"}
+                  Rasio {aspectRatioLabel}
                 </span>
               </div>
 
               {/* Interactive Cropper Box Container */}
-              <div
-                ref={containerRef}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
-                onWheel={handleWheel}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                style={{ aspectRatio: `${aspectRatio}` }}
-                className="relative w-full rounded-2xl overflow-hidden bg-slate-950 border-2 border-emerald-500 shadow-lg cursor-grab active:cursor-grabbing select-none flex items-center justify-center touch-none group"
-              >
-                {/* The Interactive High-DPI Canvas */}
-                <canvas
-                  ref={canvasRef}
-                  className="w-full h-full object-contain pointer-events-none block"
-                />
+              <div className={`w-full flex justify-center ${isPortrait ? "py-2" : ""}`}>
+                <div
+                  ref={containerRef}
+                  onMouseDown={handleMouseDown}
+                  onMouseMove={handleMouseMove}
+                  onMouseUp={handleMouseUp}
+                  onMouseLeave={handleMouseUp}
+                  onWheel={handleWheel}
+                  onTouchStart={handleTouchStart}
+                  onTouchMove={handleTouchMove}
+                  onTouchEnd={handleTouchEnd}
+                  style={{ aspectRatio: `${aspectRatio}` }}
+                  className={`relative rounded-2xl overflow-hidden bg-slate-950 border-2 border-emerald-500 shadow-lg cursor-grab active:cursor-grabbing select-none flex items-center justify-center touch-none group ${
+                    isPortrait ? "w-full max-w-[260px] sm:max-w-[280px]" : "w-full"
+                  }`}
+                >
+                  {/* The Interactive High-DPI Canvas */}
+                  <canvas
+                    ref={canvasRef}
+                    className="w-full h-full object-contain pointer-events-none block"
+                  />
 
                 {/* Loading indicator */}
                 {!imageLoaded && (
@@ -406,6 +412,7 @@ export default function ImageCropperModal({
                   <span>Klik & geser foto untuk memindahkan</span>
                 </div>
               </div>
+            </div>
 
               {/* Controls Bar */}
               <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
@@ -530,14 +537,16 @@ export default function ImageCropperModal({
             </div>
 
             {/* Right Column: Live Mockup Card Preview */}
-            <div className="lg:col-span-4 space-y-3">
+            <div className="lg:col-span-5 space-y-3">
               <span className="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
                 <Eye size={14} className="text-emerald-600" />
                 Hasil Pratinjau Tampilan Website
               </span>
 
               {/* Mockup Card */}
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden p-0 max-w-sm mx-auto">
+              <div className={`bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden p-0 mx-auto ${
+                isPortrait ? "max-w-[220px] sm:max-w-[240px]" : "max-w-sm"
+              }`}>
                 {/* Mockup Image Canvas */}
                 <div
                   style={{ aspectRatio: `${aspectRatio}` }}

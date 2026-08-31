@@ -18,6 +18,9 @@ function mapUmkmFromDb(row: any): UMKM {
     lng = Number(row.koordinat.lng ?? row.koordinat.longitude) || 112.7844;
   }
 
+  const galeri = Array.isArray(row.galeri) ? row.galeri : [];
+  const foto = row.foto || (galeri.length > 0 ? galeri[0] : "");
+
   return {
     id: row.id,
     slug: row.slug,
@@ -31,7 +34,8 @@ function mapUmkmFromDb(row: any): UMKM {
     tahunBerdiri: Number(row.tahun_berdiri),
     jenisLayanan: row.jenis_layanan || [],
     produkIds: row.produk_ids || [],
-    galeri: row.galeri || [],
+    galeri: galeri.length > 0 ? galeri : (foto ? [foto] : []),
+    foto,
     statusPublikasi: row.status_publikasi ?? true,
   };
 }
@@ -39,6 +43,8 @@ function mapUmkmFromDb(row: any): UMKM {
 function mapUmkmToDb(data: UMKM) {
   const lat = Number(data.koordinat?.lat) || -7.5953;
   const lng = Number(data.koordinat?.lng) || 112.7844;
+  const foto = data.foto || (data.galeri && data.galeri[0]) || "";
+  const galeri = data.galeri && data.galeri.length > 0 ? data.galeri : (foto ? [foto] : []);
 
   return {
     id: data.id,
@@ -53,7 +59,8 @@ function mapUmkmToDb(data: UMKM) {
     tahun_berdiri: Number(data.tahunBerdiri),
     jenis_layanan: data.jenisLayanan,
     produk_ids: data.produkIds,
-    galeri: data.galeri,
+    galeri,
+    foto,
     status_publikasi: data.statusPublikasi,
   };
 }

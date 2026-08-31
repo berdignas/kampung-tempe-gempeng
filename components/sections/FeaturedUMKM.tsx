@@ -39,11 +39,18 @@ export default function FeaturedUMKM() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-          {featured.map((umkm) => (
-            <UMKMCard key={umkm.id} umkm={umkm} />
-          ))}
-        </div>
+        {featured.length === 0 ? (
+          <div className="p-8 text-center bg-slate-50/70 rounded-2xl border border-slate-200">
+            <p className="text-sm font-semibold text-slate-700">Belum ada data pelaku usaha UMKM yang terdaftar.</p>
+            <p className="text-xs text-slate-500 mt-1">Data profil pengrajin tempe dapat ditambahkan melalui panel admin.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+            {featured.map((umkm) => (
+              <UMKMCard key={umkm.id} umkm={umkm} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

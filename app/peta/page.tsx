@@ -98,69 +98,76 @@ export default function PetaPage() {
               Klik untuk ke Titik
             </span>
           </div>
-          <ul className="divide-y divide-slate-100" role="list">
-            {filtered.map((umkm) => {
-              const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
-              const photoUrl = umkm.foto || (umkm.galeri && umkm.galeri[0]) || "";
-              const initial = (umkm.namaUsaha || "T").charAt(0).toUpperCase();
-              const isSelected = selectedUMKM === umkm.id;
+          {filtered.length === 0 ? (
+            <div className="p-8 text-center text-slate-500">
+              <p className="text-xs font-semibold text-slate-700">Belum ada titik lokasi terdaftar</p>
+              <p className="text-[11px] text-slate-400 mt-1">Tambahkan data UMKM dengan koordinat melalui panel admin.</p>
+            </div>
+          ) : (
+            <ul className="divide-y divide-slate-100" role="list">
+              {filtered.map((umkm) => {
+                const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
+                const photoUrl = umkm.foto || (umkm.galeri && umkm.galeri[0]) || "";
+                const initial = (umkm.namaUsaha || "T").charAt(0).toUpperCase();
+                const isSelected = selectedUMKM === umkm.id;
 
-              return (
-                <li
-                  key={umkm.id}
-                  className={`p-4 transition-all cursor-pointer border-l-4 ${
-                    isSelected
-                      ? "bg-emerald-50/70 border-emerald-600 shadow-2xs"
-                      : "border-transparent hover:bg-slate-50 hover:border-slate-300"
-                  }`}
-                  onClick={() => handleSelectUMKM(umkm.id)}
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="relative w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200 shadow-2xs">
-                      {photoUrl ? (
-                        <img src={photoUrl} alt={umkm.namaUsaha} className="w-full h-full object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-emerald-600 text-white font-bold text-sm flex items-center justify-center">
-                          {initial}
+                return (
+                  <li
+                    key={umkm.id}
+                    className={`p-4 transition-all cursor-pointer border-l-4 ${
+                      isSelected
+                        ? "bg-emerald-50/70 border-emerald-600 shadow-2xs"
+                        : "border-transparent hover:bg-slate-50 hover:border-slate-300"
+                    }`}
+                    onClick={() => handleSelectUMKM(umkm.id)}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="relative w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200 shadow-2xs">
+                        {photoUrl ? (
+                          <img src={photoUrl} alt={umkm.namaUsaha} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full bg-emerald-600 text-white font-bold text-sm flex items-center justify-center">
+                            {initial}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-bold text-sm truncate ${isSelected ? "text-emerald-800" : "text-slate-900"}`}>
+                          {umkm.namaUsaha}
+                        </p>
+                        <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{umkm.alamat}</p>
+                        <div className="flex gap-1 mt-2 flex-wrap">
+                          {umkm.jenisLayanan.map((l) => (
+                            <span key={l} className="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                              {labelLayanan[l]}
+                            </span>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className={`font-bold text-sm truncate ${isSelected ? "text-emerald-800" : "text-slate-900"}`}>
-                        {umkm.namaUsaha}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{umkm.alamat}</p>
-                      <div className="flex gap-1 mt-2 flex-wrap">
-                        {umkm.jenisLayanan.map((l) => (
-                          <span key={l} className="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
-                            {labelLayanan[l]}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-slate-100">
-                        <Link
-                          href={`/umkm/${umkm.slug}`}
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline flex items-center gap-1"
-                        >
-                          Lihat Profil <ArrowRight size={11} />
-                        </Link>
-                        <a
-                          href={waUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
-                        >
-                          <MessageCircle size={12} /> WhatsApp
-                        </a>
+                        <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-slate-100">
+                          <Link
+                            href={`/umkm/${umkm.slug}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline flex items-center gap-1"
+                          >
+                            Lihat Profil <ArrowRight size={11} />
+                          </Link>
+                          <a
+                            href={waUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                          >
+                            <MessageCircle size={12} /> WhatsApp
+                          </a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </aside>
 
         {/* Map */}
