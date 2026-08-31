@@ -1,7 +1,15 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Upload, X, Image as ImageIcon, Link as LinkIcon, Move, SlidersHorizontal } from "lucide-react";
+import {
+  Upload,
+  X,
+  Image as ImageIcon,
+  Link as LinkIcon,
+  SlidersHorizontal,
+  Trash2,
+  Crop,
+} from "lucide-react";
 import ImageCropperModal from "./ImageCropperModal";
 import { useAlertModal } from "@/components/ui/AlertModal";
 
@@ -34,16 +42,13 @@ export default function ImageUploader({
   const [cropperSrc, setCropperSrc] = useState<string>("");
   const { showAlert } = useAlertModal();
 
-  // Tentukan lebar maksimum container preview berdasarkan rasio jika tidak dispesifikasikan
-  const resolvedMaxWidth =
-    previewMaxWidth ||
-    (aspectRatio >= 2.2
-      ? "max-w-2xl"
-      : aspectRatio >= 1.6
-      ? "max-w-lg"
-      : aspectRatio >= 1.2
-      ? "max-w-md"
-      : "max-w-xs");
+  // Width for the preview column depending on ratio
+  const previewColWidth =
+    aspectRatio < 0.8
+      ? "w-32 sm:w-36 flex-shrink-0"
+      : aspectRatio <= 1.1
+      ? "w-36 sm:w-44 flex-shrink-0"
+      : "w-44 sm:w-56 flex-shrink-0";
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -54,8 +59,6 @@ export default function ImageUploader({
         title: "Format File Tidak Didukung",
         message: "Silakan pilih file gambar yang valid seperti JPG, PNG, atau WebP.",
         type: "warning",
-        badgeText: "Peringatan",
-        confirmText: "Mengerti",
       });
       return;
     }
@@ -76,7 +79,6 @@ export default function ImageUploader({
     };
     reader.readAsDataURL(file);
 
-    // Reset file input value so selecting the same file triggers onChange again
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -90,96 +92,132 @@ export default function ImageUploader({
 
   return (
     <div className="space-y-2">
-      {label && <label className="block text-xs font-semibold text-slate-700">{label}</label>}
+      {label && <label className="block text-xs font-bold text-slate-800">{label}</label>}
 
-      {/* Preview Box if image exists (Ukuran dan rasio sesuai tampilan website) */}
-      {value && (
-        <div className={`relative group w-full ${resolvedMaxWidth} rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mb-3 shadow-xs`}>
-          <div style={{ aspectRatio: `${aspectRatio}` }} className="relative w-full overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={value} alt="Pratinjau Gambar" className="w-full h-full object-cover" />
+      {/* Hidden File Input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={handleFileChange}
+      />
 
-            {/* Quick Action Overlay */}
-            <div className="absolute inset-0 bg-slate-900/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-2xs p-3">
-              {allowCrop && (
-                <button
-                  type="button"
-                  onClick={handleOpenCropperForExisting}
-                  className="px-3 py-2 bg-white/95 hover:bg-white text-slate-800 rounded-xl text-xs font-bold shadow-lg transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
-                >
-                  <Move size={14} className="text-emerald-600" />
-                  <span>Geser / Atur Posisi</span>
-                </button>
-              )}
-
-              <button
-                type="button"
-                onClick={() => onChange("")}
-                className="px-3 py-2 bg-rose-600/90 hover:bg-rose-600 text-white rounded-xl text-xs font-semibold shadow-lg transition flex items-center gap-1.5 active:scale-95 cursor-pointer"
-                title="Hapus Gambar"
-              >
-                <X size={14} />
-                <span>Hapus</span>
-              </button>
-            </div>
+      {/* Side-by-Side Card: Image on Left, Upload Buttons on Right */}
+      <div className="p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200 shadow-2xs flex flex-col sm:flex-row gap-4 items-start">
+        {/* LEFT: Image Preview Box */}
+        <div className={previewColWidth}>
+          <div
+            style={{ aspectRatio: `${aspectRatio}` }}
+            className="relative w-full rounded-xl overflow-hidden border border-slate-200 bg-slate-100 flex items-center justify-center shadow-xs group"
+          >
+            {value ? (
+              <>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={value}
+                  alt="Pratinjau Foto"
+                  className="w-full h-full object-cover"
+                />
+                {allowCrop && (
+                  <button
+                    type="button"
+                    onClick={handleOpenCropperForExisting}
+                    className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-white gap-1 text-[11px] font-semibold cursor-pointer"
+                  >
+                    <Crop size={18} />
+                    <span>Atur Posisi</span>
+                  </button>
+                )}
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center p-3 text-center text-slate-400 gap-1.5">
+                <ImageIcon size={26} className="text-slate-300 stroke-[1.5]" />
+                <span className="text-[10px] font-semibold text-slate-400">
+                  Belum ada foto
+                </span>
+              </div>
+            )}
           </div>
 
-          {/* Bottom Bar on Preview */}
-          {allowCrop && (
-            <div className="p-2.5 bg-white border-t border-slate-200 flex items-center justify-between gap-2">
-              <span className="text-[11px] text-slate-500 font-medium truncate flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                Preview Pas: {aspectRatioLabel}
-              </span>
+          <div className="mt-1.5 text-center">
+            <span className="text-[10px] text-slate-400 font-medium block">
+              Format: {aspectRatioLabel}
+            </span>
+          </div>
+        </div>
+
+        {/* RIGHT: Action Controls & URL Input */}
+        <div className="flex-1 w-full space-y-3">
+          {/* Action Buttons Row */}
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              disabled={isUploading}
+              onClick={() => fileInputRef.current?.click()}
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-xs transition cursor-pointer disabled:opacity-50"
+            >
+              <Upload size={14} />
+              <span>{isUploading ? "Memproses..." : value ? "Ganti / Upload Foto" : "Cari & Upload File"}</span>
+            </button>
+
+            {value && allowCrop && (
               <button
                 type="button"
                 onClick={handleOpenCropperForExisting}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition cursor-pointer active:scale-95"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition cursor-pointer"
               >
-                <SlidersHorizontal size={13} />
+                <SlidersHorizontal size={13} className="text-slate-600" />
                 <span>Sesuaikan Posisi</span>
               </button>
+            )}
+
+            {value && (
+              <button
+                type="button"
+                onClick={() => onChange("")}
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-600 active:scale-95 text-xs font-semibold rounded-xl border border-rose-200 transition cursor-pointer"
+                title="Hapus foto saat ini"
+              >
+                <Trash2 size={13} />
+                <span>Hapus</span>
+              </button>
+            )}
+          </div>
+
+          {/* URL Input */}
+          <div className="space-y-1">
+            <label className="text-[11px] font-semibold text-slate-500 flex items-center gap-1">
+              <LinkIcon size={12} />
+              <span>Atau masukkan tautan URL gambar:</span>
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                placeholder={placeholder}
+                className="w-full pl-3 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-emerald-500 focus:outline-none transition font-medium text-slate-700"
+              />
+              {value && (
+                <button
+                  type="button"
+                  onClick={() => onChange("")}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
+                >
+                  <X size={13} />
+                </button>
+              )}
             </div>
+          </div>
+
+          {helpText && (
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              {helpText}
+            </p>
           )}
         </div>
-      )}
-
-      {/* Control Buttons & Inputs */}
-      <div className="flex flex-col sm:flex-row gap-2">
-        {/* Hidden File Input */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-
-        {/* Upload Button */}
-        <button
-          type="button"
-          disabled={isUploading}
-          onClick={() => fileInputRef.current?.click()}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-semibold rounded-xl transition shadow-2xs cursor-pointer active:scale-95"
-        >
-          <Upload size={15} />
-          {isUploading ? "Memproses Gambar..." : "📁 Cari & Upload File"}
-        </button>
-
-        {/* Text Input URL Fallback */}
-        <div className="relative flex-1">
-          <LinkIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:bg-white focus:border-emerald-500 focus:outline-none"
-          />
-        </div>
       </div>
-
-      {helpText && <p className="text-[11px] text-slate-500">{helpText}</p>}
 
       {/* Image Cropper Modal */}
       {allowCrop && (

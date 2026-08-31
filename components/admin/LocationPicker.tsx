@@ -12,7 +12,6 @@ import {
   Maximize2,
   X,
   Loader2,
-  Sparkles,
   Building2,
   MapPinCheck,
   ChevronDown,
@@ -43,14 +42,6 @@ interface SearchSuggestion {
     state?: string;
   };
 }
-
-const BANGIL_LANDMARKS = [
-  { name: "Sentra Tempe Gempeng", lat: -7.5953, lng: 112.7844, desc: "Pusat UMKM Gempeng" },
-  { name: "Balai Kelurahan Gempeng", lat: -7.5941, lng: 112.7835, desc: "Kantor Kelurahan" },
-  { name: "Pasar Bangil", lat: -7.5982, lng: 112.7788, desc: "Pasar Tradisional" },
-  { name: "Stasiun Bangil", lat: -7.6015, lng: 112.7725, desc: "Stasiun Kereta Api" },
-  { name: "Alun-Alun Bangil", lat: -7.5997, lng: 112.776, desc: "Pusat Kota Bangil" },
-];
 
 export default function LocationPicker({
   lat,
@@ -490,32 +481,32 @@ export default function LocationPicker({
       />
 
       {/* Header Bar & Quick Actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1">
         <div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs flex-shrink-0">
               <MapPin size={14} />
             </span>
             <label className="text-xs font-bold text-slate-800">
               Titik Lokasi Rumah Produksi UMKM
             </label>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
               Peta Interaktif
             </span>
           </div>
-          <p className="text-[11px] text-slate-500 mt-0.5">
+          <p className="text-[11px] text-slate-500 mt-1">
             Tentukan titik usaha Anda secara presisi dengan cari nama jalan, tombol GPS, atau geser peta.
           </p>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {/* GPS Button */}
           <button
             type="button"
             onClick={handleGetCurrentLocation}
             disabled={isLocatingGPS}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold shadow-xs transition disabled:opacity-50 cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold shadow-xs transition disabled:opacity-50 cursor-pointer"
             title="Deteksi lokasi posisi saya saat ini"
           >
             {isLocatingGPS ? (
@@ -523,14 +514,14 @@ export default function LocationPicker({
             ) : (
               <Navigation size={13} className="text-white fill-white" />
             )}
-            <span>{isLocatingGPS ? "Mencari GPS..." : "Lokasi Saya (GPS)"}</span>
+            <span>{isLocatingGPS ? "Mencari..." : "Lokasi Saya (GPS)"}</span>
           </button>
 
           {/* Fullscreen Modal Picker Button */}
           <button
             type="button"
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold shadow-xs transition active:scale-95 cursor-pointer"
+            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition active:scale-95 cursor-pointer"
             title="Buka pemilih peta interaktif layar penuh"
           >
             <Maximize2 size={13} />
@@ -548,7 +539,7 @@ export default function LocationPicker({
             value={searchQuery}
             onChange={(e) => handleSearchInputChange(e.target.value)}
             placeholder="Ketik nama jalan, pasar, RT/RW, atau tempat di sekitar Bangil/Pasuruan..."
-            className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition font-medium shadow-xs"
+            className="w-full pl-10 pr-24 py-2.5 bg-white border border-slate-200 rounded-xl text-xs focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition font-medium shadow-2xs"
           />
           {isSearching && (
             <div className="absolute right-3 text-emerald-600 flex items-center gap-1 text-[11px] font-medium">
@@ -584,26 +575,6 @@ export default function LocationPicker({
             ))}
           </div>
         )}
-      </div>
-
-      {/* Quick Landmark Chips */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[11px] no-scrollbar">
-        <span className="text-slate-400 font-medium flex items-center gap-1 text-[10px] flex-shrink-0">
-          <Sparkles size={11} className="text-amber-500" />
-          Pintas:
-        </span>
-        {BANGIL_LANDMARKS.map((lm) => (
-          <button
-            key={lm.name}
-            type="button"
-            onClick={() =>
-              handleApplyCoordinates(lm.lat, lm.lng, `Peta bergeser ke ${lm.name}`, 17)
-            }
-            className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-slate-200 text-slate-700 font-medium transition flex-shrink-0 cursor-pointer active:scale-95"
-          >
-            {lm.name}
-          </button>
-        ))}
       </div>
 
       {/* Feedback Toast */}
@@ -660,8 +631,8 @@ export default function LocationPicker({
         </button>
 
         {/* Bottom Location Floating Card */}
-        <div className="absolute bottom-2.5 left-2.5 right-2.5 z-[400] bg-white/95 backdrop-blur-md p-3 rounded-xl border border-slate-200/80 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div className="flex items-start gap-2 min-w-0">
+        <div className="absolute bottom-2.5 left-2.5 right-2.5 z-[400] bg-white/95 backdrop-blur-md p-3 rounded-xl border border-slate-200/80 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+          <div className="flex items-start gap-2.5 min-w-0">
             <div className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 mt-0.5">
               <MapPinCheck size={14} />
             </div>
@@ -675,25 +646,25 @@ export default function LocationPicker({
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 flex-shrink-0 self-end sm:self-center">
+          <div className="flex items-center gap-2 flex-shrink-0 self-end sm:self-center">
             {onAddressSelect && (
               <button
                 type="button"
                 onClick={handleApplyAddressToForm}
-                className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-semibold transition flex items-center gap-1 active:scale-95 cursor-pointer"
+                className="px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-bold transition flex items-center gap-1 active:scale-95 cursor-pointer"
                 title="Salin nama alamat ini ke kolom Alamat Usaha"
               >
-                <Check size={12} />
-                Terapkan ke Form
+                <Check size={13} />
+                <span>Terapkan ke Form</span>
               </button>
             )}
 
             <button
               type="button"
               onClick={() => setIsModalOpen(true)}
-              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition flex items-center gap-1 shadow-xs active:scale-95 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition flex items-center gap-1 shadow-xs active:scale-95 cursor-pointer"
             >
-              Ubah di Peta
+              <span>Ubah di Peta</span>
             </button>
           </div>
         </div>
@@ -808,22 +779,6 @@ export default function LocationPicker({
                     ))}
                   </div>
                 )}
-              </div>
-
-              {/* Quick Landmarks */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-0.5 text-[11px] no-scrollbar">
-                {BANGIL_LANDMARKS.map((lm) => (
-                  <button
-                    key={lm.name}
-                    type="button"
-                    onClick={() =>
-                      handleApplyCoordinates(lm.lat, lm.lng, `Peta bergeser ke ${lm.name}`, 17)
-                    }
-                    className="px-2.5 py-1 rounded-full bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 border border-slate-200 text-slate-700 font-medium transition flex-shrink-0 text-[10px] cursor-pointer"
-                  >
-                    {lm.name}
-                  </button>
-                ))}
               </div>
             </div>
 
