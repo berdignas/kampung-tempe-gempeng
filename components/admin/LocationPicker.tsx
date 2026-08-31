@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
+import { useAlertModal } from "@/components/ui/AlertModal";
 
 interface LocationPickerProps {
   lat: number;
@@ -58,6 +59,7 @@ export default function LocationPicker({
   alamat,
   onAddressSelect,
 }: LocationPickerProps) {
+  const { showAlert } = useAlertModal();
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const modalMapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -431,7 +433,12 @@ export default function LocationPicker({
   // Get GPS Location (1-Click)
   const handleGetCurrentLocation = () => {
     if (!navigator.geolocation) {
-      alert("Browser Anda tidak mendukung deteksi lokasi otomatis.");
+      showAlert({
+        title: "GPS Tidak Didukung",
+        message: "Browser Anda tidak mendukung deteksi lokasi otomatis.",
+        type: "warning",
+        confirmText: "Mengerti",
+      });
       return;
     }
 
@@ -448,7 +455,12 @@ export default function LocationPicker({
         if (err.code === 1) {
           msg = "Izin lokasi tidak diberikan. Harap aktifkan izin lokasi di browser Anda.";
         }
-        alert(msg);
+        showAlert({
+          title: "Akses GPS Gagal",
+          message: msg,
+          type: "error",
+          confirmText: "Tutup",
+        });
         setIsLocatingGPS(false);
       },
       { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }

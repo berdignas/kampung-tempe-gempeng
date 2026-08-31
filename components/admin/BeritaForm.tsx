@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Berita, KategoriBerita } from "@/lib/data/berita";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAlertModal } from "@/components/ui/AlertModal";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -16,6 +17,7 @@ interface BeritaFormProps {
 export default function BeritaForm({ initialData, isEdit }: BeritaFormProps) {
   const router = useRouter();
   const { addBerita, updateBerita } = useCMS();
+  const { showAlert } = useAlertModal();
 
   const [judul, setJudul] = useState(initialData?.judul || "");
   const [kategori, setKategori] = useState<KategoriBerita>(
@@ -76,13 +78,29 @@ export default function BeritaForm({ initialData, isEdit }: BeritaFormProps) {
 
     if (isEdit && initialData) {
       updateBerita(initialData.id, formData);
-      alert("Artikel berita berhasil diperbarui!");
+      showAlert({
+        title: "Artikel Berita Berhasil Diperbarui!",
+        message: `Artikel "${judul}" berhasil disimpan dan diperbarui di portal kabar & berita.`,
+        type: "success",
+        badgeText: "Artikel Diperbarui",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/berita/${slug}`,
+        actionText: "Lihat Artikel di Web",
+        onConfirm: () => router.push("/admin/berita"),
+      });
     } else {
       addBerita(formData);
-      alert("Artikel berita baru berhasil dipublikasikan!");
+      showAlert({
+        title: "Artikel Berita Berhasil Dipublikasikan!",
+        message: `Artikel "${judul}" berhasil dipublikasikan dan langsung aktif di halaman berita kawasan.`,
+        type: "success",
+        badgeText: "Dipublikasikan",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/berita/${slug}`,
+        actionText: "Lihat Artikel di Web",
+        onConfirm: () => router.push("/admin/berita"),
+      });
     }
-
-    router.push("/admin/berita");
   };
 
   return (

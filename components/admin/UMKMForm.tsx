@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { UMKM, JenisLayanan } from "@/lib/data/umkm";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAlertModal } from "@/components/ui/AlertModal";
 import Link from "next/link";
 import { ArrowLeft, Save, MapPin, User, Store } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -17,6 +18,7 @@ interface UMKMFormProps {
 export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
   const router = useRouter();
   const { addUMKM, updateUMKM } = useCMS();
+  const { showAlert } = useAlertModal();
 
   const [namaUsaha, setNamaUsaha] = useState(initialData?.namaUsaha || "");
   const [namaPemilik, setNamaPemilik] = useState(initialData?.namaPemilik || "");
@@ -87,13 +89,29 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
 
     if (isEdit && initialData) {
       updateUMKM(initialData.id, formData);
-      alert("Data profil UMKM berhasil disimpan & diperbarui!");
+      showAlert({
+        title: "Profil Pengrajin Berhasil Diperbarui!",
+        message: `Data usaha "${namaUsaha}" beserta foto profil berhasil disimpan ke database.`,
+        type: "success",
+        badgeText: "Perubahan Disimpan",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/umkm/${slug}`,
+        actionText: "Lihat Profil Pengrajin di Web",
+        onConfirm: () => router.push("/admin/umkm"),
+      });
     } else {
       addUMKM(formData);
-      alert("UMKM baru berhasil ditambahkan!");
+      showAlert({
+        title: "Pengrajin Baru Berhasil Ditambahkan!",
+        message: `Pengrajin "${namaUsaha}" berhasil didaftarkan dan langsung tampil di direktori UMKM & peta interaktif.`,
+        type: "success",
+        badgeText: "Pengrajin Aktif",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/umkm/${slug}`,
+        actionText: "Lihat Halaman Publik",
+        onConfirm: () => router.push("/admin/umkm"),
+      });
     }
-
-    router.push("/admin/umkm");
   };
 
   const toggleLayanan = (layanan: JenisLayanan) => {

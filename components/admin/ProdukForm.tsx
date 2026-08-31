@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Produk, KategoriProduk } from "@/lib/data/produk";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAlertModal } from "@/components/ui/AlertModal";
 import Link from "next/link";
 import { ArrowLeft, Save } from "lucide-react";
 import ImageUploader from "@/components/admin/ImageUploader";
@@ -16,6 +17,7 @@ interface ProdukFormProps {
 export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
   const router = useRouter();
   const { addProduk, updateProduk, umkmList } = useCMS();
+  const { showAlert } = useAlertModal();
 
   const [nama, setNama] = useState(initialData?.nama || "");
   const [kategori, setKategori] = useState<KategoriProduk>(
@@ -110,13 +112,29 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
 
     if (isEdit && initialData) {
       updateProduk(initialData.id, formData);
-      alert("Produk berhasil diperbarui!");
+      showAlert({
+        title: "Produk Berhasil Diperbarui!",
+        message: `Produk "${nama}" berhasil disimpan dan diperbarui di katalog produk.`,
+        type: "success",
+        badgeText: "Katalog Diperbarui",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/produk/${slug}`,
+        actionText: "Lihat Produk di Web",
+        onConfirm: () => router.push("/admin/produk"),
+      });
     } else {
       addProduk(formData);
-      alert("Produk baru berhasil ditambahkan!");
+      showAlert({
+        title: "Produk Baru Berhasil Ditambahkan!",
+        message: `Produk "${nama}" berhasil ditambahkan ke katalog portal Kampung Tempe.`,
+        type: "success",
+        badgeText: "Produk Aktif",
+        confirmText: "Kembali ke Daftar",
+        actionHref: `/produk/${slug}`,
+        actionText: "Lihat Produk di Web",
+        onConfirm: () => router.push("/admin/produk"),
+      });
     }
-
-    router.push("/admin/produk");
   };
 
   const toggleProdusen = (id: string) => {

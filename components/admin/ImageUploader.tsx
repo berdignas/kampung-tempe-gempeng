@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Upload, X, Image as ImageIcon, Link as LinkIcon, Move, SlidersHorizontal } from "lucide-react";
 import ImageCropperModal from "./ImageCropperModal";
+import { useAlertModal } from "@/components/ui/AlertModal";
 
 interface ImageUploaderProps {
   label?: string;
@@ -31,6 +32,7 @@ export default function ImageUploader({
   const [isUploading, setIsUploading] = useState(false);
   const [isCropperOpen, setIsCropperOpen] = useState(false);
   const [cropperSrc, setCropperSrc] = useState<string>("");
+  const { showAlert } = useAlertModal();
 
   // Tentukan lebar maksimum container preview berdasarkan rasio jika tidak dispesifikasikan
   const resolvedMaxWidth =
@@ -48,7 +50,13 @@ export default function ImageUploader({
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      alert("Silakan pilih file gambar yang valid (JPG, PNG, WebP, dsb).");
+      showAlert({
+        title: "Format File Tidak Didukung",
+        message: "Silakan pilih file gambar yang valid seperti JPG, PNG, atau WebP.",
+        type: "warning",
+        badgeText: "Peringatan",
+        confirmText: "Mengerti",
+      });
       return;
     }
 

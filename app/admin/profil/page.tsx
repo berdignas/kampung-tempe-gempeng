@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAlertModal } from "@/components/ui/AlertModal";
 import {
   Save,
   BookOpen,
@@ -20,6 +21,7 @@ import { ProfilKampungData, TimelineItem, NilaiItem } from "@/lib/cms/cmsStore";
 
 export default function AdminProfilPage() {
   const { profilData, updateProfil } = useCMS();
+  const { showAlert } = useAlertModal();
   const [formData, setFormData] = useState<ProfilKampungData>(profilData);
   const [activeTab, setActiveTab] = useState<
     "hero" | "sejarah" | "timeline" | "visimisi" | "nilai" | "lokasi" | "cta"
@@ -34,7 +36,15 @@ export default function AdminProfilPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updateProfil(formData);
-    alert("Konten Halaman Profil Kampung berhasil disimpan & diperbarui!");
+    showAlert({
+      title: "Profil Kawasan Berhasil Disimpan!",
+      message: "Seluruh sejarah, visi-misi, nilai kearifan, dan peta lokasi sekretariat telah berhasil diperbarui.",
+      type: "success",
+      badgeText: "Profil Kampung Diperbarui",
+      confirmText: "Oke, Selesai",
+      actionHref: "/profil",
+      actionText: "Lihat Halaman Profil Publik",
+    });
   };
 
   // Timeline handlers

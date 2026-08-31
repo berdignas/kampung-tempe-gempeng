@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { CMSProvider } from "@/lib/cms/CMSContext";
+import { AlertModalProvider } from "@/components/ui/AlertModal";
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -12,21 +13,25 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
   if (isAdmin) {
     return (
       <CMSProvider>
-        <div className="min-h-screen bg-slate-100 flex flex-col">{children}</div>
+        <AlertModalProvider>
+          <div className="min-h-screen bg-slate-100 flex flex-col">{children}</div>
+        </AlertModalProvider>
       </CMSProvider>
     );
   }
 
   return (
     <CMSProvider>
-      <div
-        className="min-h-screen flex flex-col"
-        style={{ backgroundColor: "var(--color-background)" }}
-      >
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
-      </div>
+      <AlertModalProvider>
+        <div
+          className="min-h-screen flex flex-col"
+          style={{ backgroundColor: "var(--color-background)" }}
+        >
+          <Navbar />
+          <div className="flex-1">{children}</div>
+          <Footer />
+        </div>
+      </AlertModalProvider>
     </CMSProvider>
   );
 }

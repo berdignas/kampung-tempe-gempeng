@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useCMS } from "@/lib/cms/CMSContext";
+import { useAlertModal } from "@/components/ui/AlertModal";
 import {
   Save,
   Building,
@@ -16,6 +17,7 @@ import ImageUploader from "@/components/admin/ImageUploader";
 
 export default function AdminPengaturanPage() {
   const { pengaturan, updatePengaturan } = useCMS();
+  const { showAlert } = useAlertModal();
   const [formData, setFormData] = useState(pengaturan);
   const [activeTab, setActiveTab] = useState<
     "hero" | "stats" | "profile" | "cta" | "contact"
@@ -30,7 +32,15 @@ export default function AdminPengaturanPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     updatePengaturan(formData);
-    alert("Seluruh konten halaman utama & pengaturan portal berhasil disimpan & di-update!");
+    showAlert({
+      title: "Pengaturan Berhasil Disimpan!",
+      message: "Seluruh perubahan teks, statistik, foto hero banner, dan kontak portal telah berhasil diperbarui ke database.",
+      type: "success",
+      badgeText: "Tersimpan Permanen",
+      confirmText: "Oke, Selesai",
+      actionHref: "/",
+      actionText: "Lihat Halaman Beranda Publik",
+    });
   };
 
   return (
