@@ -150,19 +150,19 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
           <div className="lg:col-span-2 space-y-8">
             {/* Story */}
             <section aria-labelledby="cerita-heading">
-              <h2 id="cerita-heading" className="text-xl font-semibold text-text-primary mb-3">Tentang {umkm.namaUsaha}</h2>
-              <p className="text-text-secondary leading-relaxed">{umkm.deskripsi}</p>
+              <h2 id="cerita-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 mb-3">Tentang {umkm.namaUsaha}</h2>
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{umkm.deskripsi}</p>
             </section>
 
             {/* Products with Pagination */}
             {produkUMKM.length > 0 && (
               <section aria-labelledby="produk-heading" className="pt-2">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 id="produk-heading" className="text-xl font-semibold text-text-primary flex items-center gap-2">
-                    <Package size={20} className="text-primary" />
+                  <h2 id="produk-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                    <Package size={22} className="text-primary" />
                     Produk Tempe yang Dihasilkan
                   </h2>
-                  <span className="text-xs text-text-secondary font-medium">
+                  <span className="text-xs text-slate-500 font-semibold bg-slate-100 px-3 py-1 rounded-full">
                     Total {produkUMKM.length} Varian
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                     <Link
                       key={p.id}
                       href={`/produk/${p.slug}`}
-                      className="card p-4 flex items-start gap-4 hover:border-primary transition-all group bg-white"
+                      className="card p-4 flex items-start gap-4 hover:border-primary transition-all group bg-white shadow-xs hover:shadow-md"
                     >
                       <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 shadow-xs bg-slate-100 flex items-center justify-center">
                         {p.foto ? (
@@ -182,11 +182,11 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm text-text-primary mb-1 group-hover:text-primary transition-colors">{p.nama}</p>
-                        <p className="text-xs text-text-secondary line-clamp-2 mb-2">{p.deskripsi}</p>
+                        <p className="font-bold text-sm text-slate-900 mb-1 group-hover:text-primary transition-colors">{p.nama}</p>
+                        <p className="text-xs text-slate-500 line-clamp-2 mb-2 leading-relaxed">{p.deskripsi}</p>
                         <div className="flex flex-wrap gap-1">
                           {p.ukuranKemasan.slice(0, 2).map((k) => (
-                            <span key={k} className="px-2 py-0.5 text-[10px] rounded-full border border-border text-text-secondary">{k}</span>
+                            <span key={k} className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-slate-100 text-slate-600">{k}</span>
                           ))}
                         </div>
                       </div>
@@ -196,9 +196,9 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
 
                 {/* Pagination */}
                 {totalProdukPages > 1 && (
-                  <div className="flex items-center justify-between mt-5 pt-4 border-t border-border">
-                    <p className="text-xs text-text-secondary">
-                      Halaman <strong className="text-text-primary">{produkPage + 1}</strong> dari <strong>{totalProdukPages}</strong>
+                  <div className="flex items-center justify-between mt-5 pt-4 border-t border-slate-200">
+                    <p className="text-xs text-slate-500">
+                      Halaman <strong className="text-slate-800">{produkPage + 1}</strong> dari <strong>{totalProdukPages}</strong>
                     </p>
 
                     <div className="flex items-center gap-2">
@@ -206,7 +206,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                         type="button"
                         onClick={() => setProdukPage(Math.max(0, produkPage - 1))}
                         disabled={produkPage === 0}
-                        className="px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
                         aria-label="Halaman produk sebelumnya"
                       >
                         <ChevronLeft size={14} /> Sebelumnya
@@ -216,7 +216,7 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
                         type="button"
                         onClick={() => setProdukPage(Math.min(totalProdukPages - 1, produkPage + 1))}
                         disabled={produkPage === totalProdukPages - 1}
-                        className="px-3 py-1.5 rounded-lg border border-border text-xs font-semibold text-text-secondary hover:bg-surface-muted disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1"
+                        className="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold text-slate-700 hover:bg-slate-100 disabled:opacity-30 disabled:cursor-not-allowed transition flex items-center gap-1 cursor-pointer"
                         aria-label="Halaman produk berikutnya"
                       >
                         Selanjutnya <ChevronRight size={14} />
@@ -228,17 +228,17 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
             )}
 
             {/* Titik Lokasi Rumah Produksi Peta Interaktif */}
-            <section aria-labelledby="lokasi-umkm-heading" className="pt-4 border-t border-border space-y-3">
+            <section aria-labelledby="lokasi-umkm-heading" className="pt-4 border-t border-slate-200 space-y-3">
               <div className="flex items-center justify-between">
-                <h2 id="lokasi-umkm-heading" className="text-xl font-semibold text-text-primary flex items-center gap-2">
-                  <MapPin size={20} className="text-primary" />
+                <h2 id="lokasi-umkm-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+                  <MapPin size={22} className="text-primary" />
                   Lokasi Rumah Produksi
                 </h2>
-                <span className="text-xs text-text-secondary">
+                <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
                   Kelurahan Gempeng, Bangil
                 </span>
               </div>
-              <p className="text-xs text-text-secondary leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                 Titik lokasi presisi rumah produksi <strong>{umkm.namaUsaha}</strong> di Kampung Tempe Gempeng. Anda dapat memperbesar peta, beralih ke tampilan foto satelit, atau membuka petunjuk arah navigasi langsung.
               </p>
               <SingleUMKMMap
@@ -254,8 +254,8 @@ export default function DetailUMKMPage({ params }: { params: Promise<{ slug: str
           {/* Sidebar Cards (Informasi Usaha & Hubungi Langsung di bawah foto) */}
           <aside className="space-y-5 lg:sticky lg:top-24" aria-label="Informasi kontak dan lokasi">
             {/* Contact card */}
-            <div className="card p-6 space-y-4 bg-white shadow-card border border-border/80 rounded-2xl">
-              <h2 className="font-semibold text-text-primary text-base pb-3 border-b border-border/60">
+            <div className="card p-6 space-y-4 bg-white shadow-card border border-slate-200 rounded-2xl">
+              <h2 className="font-extrabold text-slate-900 text-base pb-3 border-b border-slate-100">
                 Informasi Usaha
               </h2>
               <dl className="space-y-3.5 text-sm">

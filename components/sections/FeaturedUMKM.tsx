@@ -19,19 +19,20 @@ export default function FeaturedUMKM() {
       <div className="container-content">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <p className="section-label mb-2">Pelaku Usaha</p>
-            <h2 id="featured-umkm-heading">Produsen Tempe di Kawasan Kami</h2>
-            <p className="mt-2 text-text-secondary max-w-xl">
-              Seluruh pelaku usaha ditampilkan secara adil dan setara. Temukan produsen yang
-              sesuai kebutuhan Anda.
+            <p className="section-label mb-2">Pelaku Usaha Unggulan</p>
+            <h2 id="featured-umkm-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Daftar Rumah Produksi Tempe Gempeng
+            </h2>
+            <p className="mt-2 text-slate-600 max-w-xl text-sm sm:text-base leading-relaxed">
+              Jelajahi profil perajin tempe terdaftar, lihat varian produk yang dihasilkan, dan hubungi langsung via WhatsApp.
             </p>
           </div>
           <Link
             href="/umkm"
-            className="btn-secondary flex-shrink-0 gap-1.5"
+            className="btn-secondary flex-shrink-0 font-bold gap-2 px-5 py-2.5 rounded-xl border border-slate-300 hover:border-emerald-500 hover:text-emerald-700 transition shadow-2xs"
             aria-label="Lihat seluruh direktori UMKM"
           >
-            Lihat Semua <ArrowRight size={15} />
+            Lihat Semua Pelaku Usaha <ArrowRight size={15} />
           </Link>
         </div>
 

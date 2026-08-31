@@ -4,6 +4,7 @@ import MainLayout from "@/components/layout/MainLayout";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://kampungtempegempeng.com"),
   title: {
     template: "%s | Kampung Tempe Gempeng",
     default: "Kampung Tempe Gempeng — Sentra Produksi Tempe Bangil",
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     siteName: "Kampung Tempe Gempeng",
     locale: "id_ID",
     type: "website",
+    url: "https://kampungtempegempeng.com",
   },
 };
 

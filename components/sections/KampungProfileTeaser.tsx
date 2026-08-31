@@ -35,35 +35,41 @@ export default function KampungProfileTeaser() {
     <section className="section-spacing" aria-labelledby="profil-teaser-heading">
       <div className="container-content">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="section-label mb-3">{pengaturan?.profileTeaserEyebrow || "Profil Kawasan"}</p>
-            <h2 id="profil-teaser-heading" className="heading-2">{pengaturan?.profileTeaserHeading || "Mengenal Kampung Tempe Gempeng"}</h2>
-            <p className="mt-4 text-text-secondary leading-relaxed">
-              {pengaturan?.profileTeaserParagraph1 || "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan telah lama dikenal sebagai kawasan sentra produksi tempe. Keahlian membuat tempe diwariskan turun-temurun dan menjadi identitas kuat kawasan ini."}
+          <div className="space-y-4">
+            <p className="section-label">{pengaturan?.profileTeaserEyebrow || "Warisan & Tradisi"}</p>
+            <h2 id="profil-teaser-heading" className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
+              {pengaturan?.profileTeaserHeading || "Mengenal Sentra Tempe Gempeng"}
+            </h2>
+            <p className="text-slate-600 leading-relaxed text-base">
+              {pengaturan?.profileTeaserParagraph1 || "Kelurahan Gempeng, Kecamatan Bangil telah lama menjadi sentra penghasil tempe unggulan di Kabupaten Pasuruan. Keahlian memilih kedelai dan proses fermentasi alami diwariskan turun-temurun, menghasilkan tempe yang padat, gurih, dan berkualitas tinggi."}
             </p>
-            <p className="mt-3 text-text-secondary leading-relaxed">
-              {pengaturan?.profileTeaserParagraph2 || "Portal ini hadir untuk memperkuat identitas digital kawasan dan menjadi media promosi kolektif bagi seluruh pelaku usaha — tanpa mengutamakan siapapun secara individual."}
+            <p className="text-slate-600 leading-relaxed text-base">
+              {pengaturan?.profileTeaserParagraph2 || "Melalui portal terpadu ini, seluruh rumah produksi tempe Gempeng dapat dijangkau dengan mudah oleh masyarakat umum, pelaku usaha kuliner, hingga distributor luar kota."}
             </p>
 
-            <div className="grid grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               {potensi.map((item) => (
-                <div key={item.title} className="flex flex-col gap-2">
+                <div
+                  key={item.title}
+                  className="flex flex-col gap-2 p-3.5 rounded-xl border border-slate-200/80 bg-white/80 hover:bg-white hover:shadow-xs transition-all"
+                >
                   <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: "var(--color-primary-soft)" }}
+                    className="w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-50 text-emerald-700"
                     aria-hidden="true"
                   >
                     {item.icon}
                   </div>
-                  <h3 className="text-sm font-semibold text-text-primary">{item.title}</h3>
-                  <p className="text-xs text-text-secondary leading-relaxed">{item.desc}</p>
+                  <h3 className="text-sm font-bold text-slate-800">{item.title}</h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
 
-            <Link href="/profil" className="btn-primary mt-8 inline-flex gap-1.5">
-              Baca Profil Kampung <ArrowRight size={16} />
-            </Link>
+            <div className="pt-2">
+              <Link href="/profil" className="btn-primary inline-flex items-center gap-2 font-bold px-6 py-3 rounded-xl shadow-xs hover:shadow-md transition">
+                Baca Profil Lengkap Kampung <ArrowRight size={16} />
+              </Link>
+            </div>
           </div>
 
           <div className="relative">

@@ -25,38 +25,38 @@ export default function CTASection() {
           />
 
           <div className="relative">
-            <p className="text-sm font-semibold tracking-widest uppercase text-white/70 mb-3">
-              {pengaturan?.ctaSectionEyebrow || "Temukan Produsen"}
+            <p className="text-xs sm:text-sm font-bold tracking-widest uppercase text-emerald-100/90 mb-3">
+              {pengaturan?.ctaSectionEyebrow || "Pemesanan & Kerjasama"}
             </p>
             <h2
               id="cta-heading"
-              className="text-white mb-4"
-              style={{ fontSize: "clamp(1.75rem, 4vw, 2.5rem)" }}
+              className="text-white mb-4 font-extrabold tracking-tight"
+              style={{ fontSize: "clamp(1.85rem, 4vw, 2.75rem)" }}
             >
-              {pengaturan?.ctaSectionHeading || "Temukan Produsen yang Sesuai Kebutuhan Anda"}
+              {pengaturan?.ctaSectionHeading || "Pesan Tempe Segar Langsung dari Produsennya"}
             </h2>
-            <p className="text-white/80 max-w-xl mx-auto mb-8 text-base leading-relaxed">
-              {pengaturan?.ctaSectionSubtext || "Jelajahi seluruh pelaku usaha tempe di Kampung Gempeng, lihat profil dan produk mereka, lalu hubungi langsung melalui WhatsApp."}
+            <p className="text-white/90 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+              {pengaturan?.ctaSectionSubtext || "Temukan perajin tempe terdekat, pilih varian tempe sesuai kebutuhan dapur atau usaha kuliner Anda, dan hubungi langsung melalui WhatsApp tanpa biaya perantara."}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link
                 href="/umkm"
-                className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                className="inline-flex items-center gap-2 bg-white rounded-full px-7 py-3.5 text-sm font-bold transition-all hover:scale-105 active:scale-95 shadow-md"
                 style={{ color: "var(--color-primary)" }}
                 aria-label="Jelajahi direktori UMKM"
               >
-                {pengaturan?.ctaSectionBtn1Label || "Jelajahi UMKM"} <ArrowRight size={15} />
+                {pengaturan?.ctaSectionBtn1Label || "Jelajahi Direktori UMKM"} <ArrowRight size={16} />
               </Link>
               <Link
                 href="/peta"
-                className="inline-flex items-center gap-2 rounded-full border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-white/20"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-white/50 bg-white/10 px-7 py-3.5 text-sm font-bold text-white transition-all hover:bg-white/20 hover:scale-105 active:scale-95"
                 aria-label="Lihat peta produksi tempe"
               >
                 {pengaturan?.ctaSectionBtn2Label === "Katalog Produk" ? "Lihat Peta Produksi" : (pengaturan?.ctaSectionBtn2Label || "Lihat Peta Produksi")}
               </Link>
             </div>
-            <p className="text-xs text-white/60 mt-6">
-              Semua kontak pembelian dilakukan langsung ke UMKM — tanpa perantara
+            <p className="text-xs text-white/75 mt-6 font-medium">
+              ✓ 100% Bebas Biaya Perantara — Terhubung Langsung ke Pemilik Rumah Produksi
             </p>
           </div>
         </div>

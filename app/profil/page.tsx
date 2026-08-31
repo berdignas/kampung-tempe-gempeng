@@ -33,13 +33,15 @@ export default function ProfilPage() {
         className="py-16 md:py-24 relative overflow-hidden"
         style={{ backgroundColor: "var(--color-surface-muted)" }}
       >
-        <div className="container-content relative">
+        <div className="container-content relative animate-fade-in-up">
           <div className="max-w-3xl">
-            <p className="section-label mb-2">{profilData.heroEyebrow || "Profil Kawasan"}</p>
-            <h1 className="mb-4">{profilData.heroJudul || "Identitas & Legasi Kampung Tempe Gempeng"}</h1>
-            <p className="text-lg text-text-secondary leading-relaxed">
+            <p className="section-label mb-2">{profilData.heroEyebrow || "Profil Sentra Produksi"}</p>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
+              {profilData.heroJudul || "Identitas & Warisan Sentra Tempe Gempeng"}
+            </h1>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
               {profilData.heroDeskripsi ||
-                "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan merupakan pusat produksi tempe yang telah menghidupi puluhan keluarga pengrajin dan melayani kebutuhan gizi masyarakat secara lintas generasi."}
+                "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan merupakan pusat produksi tempe tradisional yang telah menghidupi puluhan keluarga perajin dan dipercaya masyarakat luas lintas generasi."}
             </p>
           </div>
         </div>
@@ -65,34 +67,33 @@ export default function ProfilPage() {
       <section className="section-spacing" aria-labelledby="sejarah-heading">
         <div className="container-content">
           <div className="grid lg:grid-cols-12 gap-12 items-start">
-            <div className="lg:col-span-5">
-              <p className="section-label mb-2">{profilData.sejarahEyebrow || "Sejarah & Perjalanan"}</p>
-              <h2 id="sejarah-heading" className="mb-4">
+            <div className="lg:col-span-5 space-y-3">
+              <p className="section-label">{profilData.sejarahEyebrow || "Sejarah & Perjalanan"}</p>
+              <h2 id="sejarah-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
                 {profilData.sejarahJudul || "Jejak Langkah Sentra Tempe Gempeng"}
               </h2>
-              <p className="text-text-secondary leading-relaxed mb-4">
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
                 {profilData.sejarahParagraf1 ||
-                  "Tradisi membuat tempe di Gempeng berawal dari keterampilan rumahan yang diturunkan antar generasi. Kualitas air, keahlian fermentasi alami, dan etos kerja warga menjadikan tempe dari Gempeng memiliki tekstur padat dan citarasa yang khas."}
+                  "Tradisi pembuatan tempe di Kelurahan Gempeng berakar dari keahlian keluarga perajin yang diwariskan secara turun-temurun. Kualitas sumber air, teknik peragian alami, dan ketelitian proses perendaman kedelai menghasilkan tempe dengan aroma segar, tekstur padat, dan rasa gurih yang khas."}
               </p>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
                 {profilData.sejarahParagraf2 ||
-                  "Kini, kawasan ini terus bertransformasi menjadi sentra produksi pangan lokal yang adaptif terhadap standar sanitasi dan perkembangan teknologi digital."}
+                  "Kini, kawasan Kampung Tempe Gempeng terus berkembang menjadi pusat pangan lokal yang menjaga higienitas dan terbuka bagi kemitraan usaha, studi edukasi, maupun pasokan pasar."}
               </p>
             </div>
 
-            <div className="lg:col-span-7 space-y-6">
+            <div className="lg:col-span-7 space-y-4">
               {profilData.timeline &&
                 profilData.timeline.map((item, idx) => (
-                  <div key={idx} className="flex gap-4 p-5 rounded-2xl border border-border bg-white shadow-sm">
+                  <div key={idx} className="flex gap-4 p-5 rounded-2xl border border-slate-200 bg-white shadow-xs hover:shadow-md transition duration-300">
                     <div
-                      className="flex-shrink-0 font-bold text-lg px-3 py-1.5 rounded-xl h-fit text-primary"
-                      style={{ backgroundColor: "var(--color-primary-soft)" }}
+                      className="flex-shrink-0 font-extrabold text-base sm:text-lg px-3.5 py-1.5 rounded-xl h-fit text-emerald-800 bg-emerald-100/80"
                     >
                       {item.tahun}
                     </div>
                     <div>
-                      <h3 className="text-base font-semibold text-text-primary mb-1">{item.judul}</h3>
-                      <p className="text-sm text-text-secondary leading-relaxed">{item.deskripsi}</p>
+                      <h3 className="text-base font-bold text-slate-900 mb-1">{item.judul}</h3>
+                      <p className="text-sm text-slate-600 leading-relaxed">{item.deskripsi}</p>
                     </div>
                   </div>
                 ))}
@@ -110,30 +111,32 @@ export default function ProfilPage() {
         <div className="container-content">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <p className="section-label mb-2">Arah Pengembangan</p>
-            <h2 id="visi-misi-heading">Visi & Misi Kawasan</h2>
+            <h2 id="visi-misi-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Visi & Misi Kawasan
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            <div className="card p-8 bg-white">
-              <h3 className="text-xl font-bold text-text-primary mb-3 flex items-center gap-2">
-                <Target className="text-primary" /> {profilData.visiJudul || "Visi Kawasan"}
+            <div className="card p-8 bg-white shadow-xs hover:shadow-md transition">
+              <h3 className="text-xl font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                <Target className="text-primary" /> {profilData.visiJudul || "Visi Sentra Produksi"}
               </h3>
-              <p className="text-text-secondary leading-relaxed">
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
                 {profilData.visiTeks ||
-                  "Menjadikan Kampung Tempe Gempeng sebagai sentra produksi tempe yang mandiri, berdaya saing, berstandar higienis tinggi, serta dikenal secara luas sebagai ikon kuliner tradisional Kabupaten Pasuruan."}
+                  "Menjadikan Kampung Tempe Gempeng sebagai sentra produksi tempe yang mandiri, berdaya saing, berstandar higienis tinggi, serta dikenal luas sebagai ikon pangan bergizi Kabupaten Pasuruan."}
               </p>
             </div>
 
-            <div className="card p-8 bg-white">
-              <h3 className="text-xl font-bold text-text-primary mb-3 flex items-center gap-2">
-                <Leaf className="text-primary" /> {profilData.misiJudul || "Misi Kawasan"}
+            <div className="card p-8 bg-white shadow-xs hover:shadow-md transition">
+              <h3 className="text-xl font-extrabold text-slate-900 mb-3 flex items-center gap-2">
+                <Leaf className="text-primary" /> {profilData.misiJudul || "Misi Sentra Produksi"}
               </h3>
-              <ul className="space-y-3 text-sm text-text-secondary">
+              <ul className="space-y-3 text-sm text-slate-600">
                 {profilData.misiList &&
                   profilData.misiList.map((misi, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                      {misi}
+                    <li key={idx} className="flex items-start gap-2.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-600 mt-1.5 flex-shrink-0" />
+                      <span className="leading-relaxed">{misi}</span>
                     </li>
                   ))}
               </ul>
@@ -146,22 +149,23 @@ export default function ProfilPage() {
       <section className="section-spacing" aria-labelledby="nilai-heading">
         <div className="container-content">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <p className="section-label mb-2">{profilData.nilaiEyebrow || "Prinsip Komunitas"}</p>
-            <h2 id="nilai-heading">{profilData.nilaiJudul || "Nilai Bersama Pelaku UMKM"}</h2>
+            <p className="section-label mb-2">{profilData.nilaiEyebrow || "Komitmen & Prinsip"}</p>
+            <h2 id="nilai-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              {profilData.nilaiJudul || "Nilai Utama Perajin Tempe Gempeng"}
+            </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {profilData.nilaiList &&
               profilData.nilaiList.map((n, idx) => (
-                <div key={idx} className="card p-6 text-center flex flex-col items-center">
+                <div key={idx} className="card p-6 text-center flex flex-col items-center shadow-xs hover:shadow-md hover:-translate-y-1 transition duration-300">
                   <div
-                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4"
-                    style={{ backgroundColor: "var(--color-primary-soft)" }}
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 bg-emerald-100/70"
                   >
                     {getIconForIndex(idx)}
                   </div>
-                  <h3 className="text-base font-semibold text-text-primary mb-2">{n.judul}</h3>
-                  <p className="text-sm text-text-secondary leading-relaxed">{n.deskripsi}</p>
+                  <h3 className="text-base font-bold text-slate-900 mb-2">{n.judul}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{n.deskripsi}</p>
                 </div>
               ))}
           </div>
@@ -176,8 +180,10 @@ export default function ProfilPage() {
       >
         <div className="container-content">
           <div className="text-center max-w-2xl mx-auto mb-10">
-            <p className="section-label mb-2">Lokasi Kawasan</p>
-            <h2 id="lokasi-heading">Temukan Kami di Peta</h2>
+            <p className="section-label mb-2">Navigasi Lokasi</p>
+            <h2 id="lokasi-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Peta Lokasi Sentra Produksi
+            </h2>
           </div>
 
           <div className="grid lg:grid-cols-5 gap-8 items-start">

@@ -91,10 +91,10 @@ export default function Footer() {
               <div className="flex items-center gap-2">
                 <Mail size={15} className="flex-shrink-0 text-primary" />
                 <a
-                  href={`mailto:${pengaturan?.emailPengelola || "portal@kampungtempegempeng.id"}`}
+                  href={`mailto:${pengaturan?.emailPengelola || "portal@kampungtempegempeng.com"}`}
                   className="hover:text-primary transition-colors"
                 >
-                  {pengaturan?.emailPengelola || "portal@kampungtempegempeng.id"}
+                  {pengaturan?.emailPengelola || "portal@kampungtempegempeng.com"}
                 </a>
               </div>
             </div>
@@ -103,13 +103,13 @@ export default function Footer() {
           {/* Nav Columns */}
           {footerLinks.map((col) => (
             <div key={col.title}>
-              <h3 className="text-sm font-semibold text-text-primary mb-3">{col.title}</h3>
-              <ul className="space-y-2" role="list">
+              <h3 className="text-sm font-bold text-slate-900 mb-3.5 tracking-tight">{col.title}</h3>
+              <ul className="space-y-2.5" role="list">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-secondary hover:text-primary transition-colors"
+                      className="text-xs sm:text-sm text-slate-600 hover:text-emerald-700 font-medium transition-colors"
                     >
                       {link.label}
                     </Link>

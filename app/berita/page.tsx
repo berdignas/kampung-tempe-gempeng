@@ -24,12 +24,14 @@ export default function BeritaPage() {
 
   return (
     <main className="pt-20">
-      <section className="py-12" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="berita-heading">
-        <div className="container-content">
-          <p className="section-label mb-2">Berita & Kegiatan</p>
-          <h1 id="berita-heading" className="mb-3">Perkembangan Kampung Tempe Gempeng</h1>
-          <p className="text-text-secondary max-w-xl">
-            Dokumentasi kegiatan pelatihan, kunjungan, program KKN, dan perkembangan kawasan.
+      <section className="py-12 md:py-16" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="berita-heading">
+        <div className="container-content animate-fade-in-up">
+          <p className="section-label mb-2">Pusat Informasi & Liputan</p>
+          <h1 id="berita-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
+            Kabar & Aktivitas Sentra Tempe
+          </h1>
+          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+            Liputan kegiatan perajin, inovasi pengolahan pangan, pelatihan sertifikasi halal, dokumentasi program KKN, dan kunjungan industri di Kelurahan Gempeng.
           </p>
         </div>
       </section>

@@ -46,20 +46,20 @@ export default function HeroSection({
       <div className="container-content relative z-10 w-full my-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Kolom Kiri: Teks & Aksi */}
-          <div className="flex flex-col items-start text-left space-y-6">
+          <div className="flex flex-col items-start text-left space-y-6 animate-fade-in-up">
             {/* Eyebrow Chip */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-200 text-emerald-800 shadow-2xs">
-              <MapPin size={14} className="text-emerald-700 flex-shrink-0" aria-hidden="true" />
-              <span className="text-xs font-bold tracking-wide uppercase">{eyebrow}</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 shadow-2xs font-semibold">
+              <MapPin size={15} className="text-emerald-700 flex-shrink-0 animate-bounce" aria-hidden="true" />
+              <span className="text-xs font-bold tracking-wider uppercase">{eyebrow}</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[2.75rem] xl:text-[3.25rem] font-bold text-slate-900 leading-[1.18] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.5rem] font-extrabold text-slate-900 leading-[1.12] tracking-tight">
               {headline}
             </h1>
 
             {/* Subtext */}
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl font-normal">
               {subtext}
             </p>
 
@@ -67,23 +67,24 @@ export default function HeroSection({
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <Link
                 href={ctaPrimaryHref}
-                className="btn-primary shadow-md hover:shadow-lg transition-all text-sm px-6 sm:px-7 py-3 rounded-xl inline-flex items-center gap-2"
+                className="btn-primary shadow-md hover:shadow-lg hover:scale-105 active:scale-95 transition-all text-sm font-bold px-7 py-3.5 rounded-xl inline-flex items-center gap-2"
               >
                 {ctaPrimaryLabel}
                 <ArrowRight size={17} />
               </Link>
               <Link
                 href={ctaSecondaryHref}
-                className="btn-secondary text-sm px-6 sm:px-7 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-2xs transition-all"
+                className="btn-secondary text-sm font-semibold px-7 py-3.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-300 shadow-2xs hover:shadow-sm transition-all"
               >
                 {ctaSecondaryLabel}
               </Link>
             </div>
 
             {/* Trust indicator */}
-            <p className="text-xs text-slate-400 pt-1">
-              Portal informasi resmi kawasan — bukan marketplace
-            </p>
+            <div className="flex items-center gap-2 pt-1 text-xs text-slate-500 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>Portal Resmi Sentra Tempe Gempeng — Transaksi Langsung dengan Perajin</span>
+            </div>
           </div>
 
           {/* Kolom Kanan: Gambar Hero Section */}

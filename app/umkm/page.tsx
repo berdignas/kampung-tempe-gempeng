@@ -37,16 +37,17 @@ export default function UMKMPage() {
     <main className="pt-20">
       {/* Page header */}
       <section
-        className="py-12"
+        className="py-12 md:py-16"
         style={{ backgroundColor: "var(--color-surface-muted)" }}
         aria-labelledby="umkm-dir-heading"
       >
-        <div className="container-content">
-          <p className="section-label mb-2">Direktori</p>
-          <h1 id="umkm-dir-heading" className="mb-3">Direktori UMKM Tempe</h1>
-          <p className="text-text-secondary max-w-xl">
-            Seluruh pelaku usaha tempe di Kampung Gempeng ditampilkan secara adil. Urutan berdasarkan
-            alfabet nama usaha.
+        <div className="container-content animate-fade-in-up">
+          <p className="section-label mb-2">Direktori Lengkap</p>
+          <h1 id="umkm-dir-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
+            Direktori Perajin Tempe Gempeng
+          </h1>
+          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+            Daftar seluruh rumah produksi tempe resmi di Kelurahan Gempeng. Temukan perajin tempe sesuai kebutuhan eceran, grosir, maupun pasokan usaha kuliner Anda.
           </p>
         </div>
       </section>

@@ -51,15 +51,15 @@ export default function DetailBeritaPage({ params }: { params: Promise<{ slug: s
         {/* Article header */}
         <header className="mb-8">
           <div className="flex items-center gap-3 mb-4">
-            <span className="badge-kategori">{labelKategoriBerita[berita.kategori]}</span>
-            <time dateTime={berita.tanggal} className="text-sm text-text-secondary flex items-center gap-1.5">
-              <Calendar size={13} aria-hidden="true" />
+            <span className="badge-kategori font-bold">{labelKategoriBerita[berita.kategori]}</span>
+            <time dateTime={berita.tanggal} className="text-xs sm:text-sm text-slate-500 font-medium flex items-center gap-1.5">
+              <Calendar size={14} aria-hidden="true" />
               {formatTanggal(berita.tanggal)}
             </time>
           </div>
-          <h1 className="mb-4">{berita.judul}</h1>
-          <p className="text-lg text-text-secondary leading-relaxed">{berita.ringkasan}</p>
-          <p className="text-xs text-text-secondary mt-3">Oleh: {berita.penulis}</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">{berita.judul}</h1>
+          <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">{berita.ringkasan}</p>
+          <p className="text-xs text-slate-400 mt-3 font-medium">Ditulis oleh: {berita.penulis}</p>
         </header>
 
         {/* Hero image */}

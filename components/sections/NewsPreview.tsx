@@ -21,18 +21,20 @@ export default function NewsPreview() {
       <div className="container-content">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <p className="section-label mb-2">Berita & Kegiatan</p>
-            <h2 id="news-preview-heading">Perkembangan Kampung Tempe Gempeng</h2>
-            <p className="mt-2 text-text-secondary max-w-xl">
-              Dokumentasi kegiatan, pelatihan, kunjungan, dan perkembangan terbaru kawasan.
+            <p className="section-label mb-2">Berita & Kegiatan Terkini</p>
+            <h2 id="news-preview-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+              Kabar & Dokumentasi Kawasan
+            </h2>
+            <p className="mt-2 text-slate-600 max-w-xl text-sm sm:text-base leading-relaxed">
+              Ikuti informasi terbaru seputar kegiatan perajin, inovasi pengolahan kedelai, program KKN, dan pelatihan usaha.
             </p>
           </div>
           <Link
             href="/berita"
-            className="btn-secondary flex-shrink-0 gap-1.5"
+            className="btn-secondary flex-shrink-0 font-bold gap-2 px-5 py-2.5 rounded-xl border border-slate-300 hover:border-emerald-500 hover:text-emerald-700 transition shadow-2xs"
             aria-label="Lihat semua berita dan kegiatan"
           >
-            Lihat Semua <ArrowRight size={15} />
+            Lihat Semua Berita <ArrowRight size={15} />
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">

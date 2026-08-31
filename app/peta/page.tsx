@@ -39,8 +39,8 @@ export default function PetaPage() {
         <div className="container-content">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h1 className="text-lg font-semibold text-text-primary">Peta Produksi</h1>
-              <p className="text-xs text-text-secondary">Lokasi rumah produksi UMKM di Kampung Tempe Gempeng</p>
+              <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">Peta Interaktif Sentra Tempe</h1>
+              <p className="text-xs text-slate-500 font-medium">Navigasi titik lokasi rumah produksi tempe aktif di Kelurahan Gempeng</p>
             </div>
             <div className="flex gap-2 overflow-x-auto" role="group" aria-label="Filter peta">
               {layananOptions.map((opt) => (

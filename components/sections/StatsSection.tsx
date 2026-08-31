@@ -35,31 +35,32 @@ export default function StatsSection() {
       style={{ backgroundColor: "var(--color-surface-muted)" }}
     >
       <div className="container-content">
-        <p id="stats-heading" className="section-label text-center mb-10">
-          {pengaturan?.statsHeading || "Kampung Tempe Gempeng dalam Angka"}
-        </p>
+        <div className="text-center max-w-2xl mx-auto mb-10">
+          <p className="section-label mb-2">Potensi & Kapasitas</p>
+          <h2 id="stats-heading" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            {pengaturan?.statsHeading || "Kapasitas & Kekuatan Sentra Tempe Gempeng"}
+          </h2>
+        </div>
+
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           {stats.map((stat, i) => (
             <div
               key={i}
-              className="bg-white rounded-2xl p-6 text-center border border-border shadow-sm"
+              className="bg-white rounded-2xl p-6 text-center border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
             >
               <p
-                className="text-2xl md:text-3xl font-bold mb-1"
+                className="text-3xl sm:text-4xl font-extrabold mb-1.5 transition-transform group-hover:scale-105"
                 style={{ color: "var(--color-primary)" }}
               >
                 {stat.value}
               </p>
-              <p className="font-semibold text-sm text-text-primary">{stat.label}</p>
+              <p className="font-bold text-sm text-slate-800">{stat.label}</p>
               {stat.note && (
-                <p className="text-xs text-text-secondary mt-1">{stat.note}</p>
+                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{stat.note}</p>
               )}
             </div>
           ))}
         </div>
-        <p className="text-center text-xs text-text-secondary mt-6">
-          * Data dapat diperbarui secara dinamis melalui Panel CMS Pengelola
-        </p>
       </div>
     </section>
   );

@@ -60,57 +60,57 @@ export default function DetailProdukPage({ params }: { params: Promise<{ slug: s
           {/* Info */}
           <div className="space-y-5">
             <div>
-              <span className="badge-kategori mb-3 inline-block">{produk.kategori.replace(/-/g, " ")}</span>
-              <h1 className="mb-3">{produk.nama}</h1>
-              <p className="text-text-secondary leading-relaxed">{produk.deskripsiPanjang}</p>
+              <span className="badge-kategori mb-3 inline-block font-semibold">{produk.kategori.replace(/-/g, " ")}</span>
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-3">{produk.nama}</h1>
+              <p className="text-slate-600 leading-relaxed text-sm sm:text-base">{produk.deskripsiPanjang}</p>
             </div>
 
             {/* Kemasan */}
             <div>
-              <h2 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                <Package size={15} className="text-primary" /> Ukuran & Kemasan
+              <h2 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <Package size={16} className="text-primary" /> Pilihan Ukuran & Kemasan
               </h2>
               <div className="flex flex-wrap gap-2">
                 {produk.ukuranKemasan.map((k) => (
-                  <span key={k} className="px-3 py-1.5 text-xs rounded-full border border-border text-text-secondary">{k}</span>
+                  <span key={k} className="px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-100 text-slate-700">{k}</span>
                 ))}
               </div>
             </div>
 
             {/* Cocok untuk */}
             <div>
-              <h2 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-                <ChefHat size={15} className="text-primary" /> Cocok Untuk
+              <h2 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <ChefHat size={16} className="text-primary" /> Rekomendasi Pengolahan Kuliner
               </h2>
-              <ul className="space-y-1">
+              <ul className="space-y-1.5">
                 {produk.cocokUntuk.map((c) => (
-                  <li key={c} className="text-sm text-text-secondary flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" aria-hidden="true" />
-                    {c}
+                  <li key={c} className="text-sm text-slate-600 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-600 flex-shrink-0" aria-hidden="true" />
+                    <span>{c}</span>
                   </li>
                 ))}
               </ul>
             </div>
 
             {/* Ketersediaan */}
-            <div className="flex flex-wrap gap-2">
-              {produk.tersediaEceran && <span className="badge-layanan">Eceran</span>}
-              {produk.tersediaGrosir && <span className="badge-layanan">Grosir</span>}
-              {produk.tersediaPemasokKuliner && <span className="badge-layanan">Pemasok Kuliner</span>}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {produk.tersediaEceran && <span className="badge-layanan font-bold">Layanan Eceran</span>}
+              {produk.tersediaGrosir && <span className="badge-layanan font-bold">Layanan Grosir</span>}
+              {produk.tersediaPemasokKuliner && <span className="badge-layanan font-bold">Pemasok Kuliner</span>}
             </div>
           </div>
         </div>
 
         {/* Produsen */}
         <section className="mt-14" aria-labelledby="produsen-heading">
-          <div className="flex items-center gap-2 mb-6">
-            <Users size={20} className="text-primary" />
-            <h2 id="produsen-heading" className="text-xl font-semibold text-text-primary">
+          <div className="flex items-center gap-2 mb-2">
+            <Users size={22} className="text-primary" />
+            <h2 id="produsen-heading" className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
               Produsen {produk.nama} di Kampung Tempe Gempeng
             </h2>
           </div>
-          <p className="text-text-secondary mb-6 text-sm">
-            {produsen.length} pelaku usaha memproduksi {produk.nama}. Hubungi langsung masing-masing produsen untuk informasi pembelian.
+          <p className="text-slate-600 mb-6 text-sm">
+            Tersedia di {produsen.length} rumah produksi tempe. Hubungi perajin langsung via WhatsApp untuk pemesanan segar.
           </p>
           <div className="space-y-4">
             {produsen.map((u) => {
