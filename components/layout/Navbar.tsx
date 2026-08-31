@@ -33,6 +33,10 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [pathname]);
 
+  // Hide navbar on full-screen map page
+  const isMapPage = pathname === "/peta";
+  if (isMapPage) return null;
+
   return (
     <>
       <header

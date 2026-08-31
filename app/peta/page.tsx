@@ -43,25 +43,44 @@ export default function PetaPage() {
     .filter((u) => filterLayanan === "semua" || u.jenisLayanan.includes(filterLayanan));
 
   return (
-    <main className="pt-24 sm:pt-28 h-screen flex flex-col bg-slate-50">
-      {/* Header */}
-      <div className="py-3 sm:py-4 border-b border-slate-200 bg-white shadow-2xs" style={{ flexShrink: 0 }}>
+    <main className="h-screen flex flex-col bg-slate-50">
+      {/* Header with inline navigation (navbar hidden on this page) */}
+      <div className="py-2.5 sm:py-3 border-b border-slate-200 bg-white shadow-2xs" style={{ flexShrink: 0 }}>
         <div className="container-content">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div>
-              <h1 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">Peta Interaktif Sentra Tempe</h1>
-              <p className="text-xs text-slate-500 font-medium">Navigasi titik lokasi rumah produksi tempe aktif di Kelurahan Gempeng</p>
+          <div className="flex flex-wrap items-center justify-between gap-2 sm:gap-3">
+            <div className="flex items-center gap-3">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-slate-600 hover:text-emerald-700 transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-lg bg-emerald-600 flex items-center justify-center text-white text-xs font-extrabold shadow-xs group-hover:bg-emerald-700 transition-colors">
+                  T
+                </div>
+              </Link>
+              <div className="h-6 w-px bg-slate-200 hidden sm:block" />
+              <div>
+                <h1 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight leading-tight">Peta Interaktif Sentra Tempe</h1>
+                <p className="text-[11px] text-slate-500 font-medium hidden sm:block">Navigasi titik lokasi rumah produksi tempe aktif di Kelurahan Gempeng</p>
+              </div>
             </div>
-            <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label="Filter peta">
-              {layananOptions.map((opt) => (
-                <button key={opt.value}
-                  onClick={() => setFilterLayanan(opt.value)}
-                  className={`flex-shrink-0 px-3.5 py-1.5 rounded-full text-xs font-bold border transition-all cursor-pointer ${filterLayanan === opt.value ? "text-white bg-emerald-600 border-emerald-600 shadow-xs" : "border-slate-200 text-slate-600 hover:border-emerald-600 hover:text-emerald-700 bg-white"}`}
-                  aria-pressed={filterLayanan === opt.value}
-                >
-                  {opt.label}
-                </button>
-              ))}
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1.5 overflow-x-auto pb-0.5" role="group" aria-label="Filter peta">
+                {layananOptions.map((opt) => (
+                  <button key={opt.value}
+                    onClick={() => setFilterLayanan(opt.value)}
+                    className={`flex-shrink-0 px-3 py-1 rounded-full text-[11px] font-bold border transition-all cursor-pointer ${filterLayanan === opt.value ? "text-white bg-emerald-600 border-emerald-600 shadow-xs" : "border-slate-200 text-slate-500 hover:border-emerald-500 hover:text-emerald-700 bg-white"}`}
+                    aria-pressed={filterLayanan === opt.value}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+              <Link
+                href="/"
+                className="hidden sm:flex items-center gap-1 text-[11px] font-bold text-slate-500 hover:text-emerald-700 transition-colors ml-1"
+              >
+                ← Beranda
+              </Link>
             </div>
           </div>
         </div>
