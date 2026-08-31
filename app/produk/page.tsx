@@ -32,12 +32,15 @@ export default function ProdukPage() {
   return (
     <main className="pt-20">
       <section className="py-12 md:py-16" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="produk-heading">
-        <div className="container-content animate-fade-in-up">
-          <p className="section-label mb-2">Katalog Resmi</p>
-          <h1 id="produk-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-            Ragam Produk Tempe Gempeng
-          </h1>
-          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+        <div className="container-content space-y-3">
+          <p className="animate-badge section-label">Katalog Resmi</p>
+          <div className="space-y-2">
+            <h1 id="produk-heading" className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              Ragam Produk Tempe Gempeng
+            </h1>
+            <span className="animate-accent-bar"></span>
+          </div>
+          <p className="animate-subtext text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
             Pilihan tempe segar tradisional daun pisang, tempe plastik higienis, tempe balokan, hingga olahan keripik tempe renyah yang diproduksi setiap hari.
           </p>
         </div>

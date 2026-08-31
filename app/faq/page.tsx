@@ -34,12 +34,15 @@ export default function FAQPage() {
   return (
     <main className="pt-20">
       <section className="py-12 md:py-16" style={{ backgroundColor: "var(--color-surface-muted)" }}>
-        <div className="container-content animate-fade-in-up">
-          <p className="section-label mb-2">Pusat Bantuan</p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-            Pertanyaan yang Sering Diajukan (FAQ)
-          </h1>
-          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+        <div className="container-content space-y-3">
+          <p className="animate-badge section-label">Pusat Bantuan</p>
+          <div className="space-y-2">
+            <h1 className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              Pertanyaan yang Sering Diajukan (FAQ)
+            </h1>
+            <span className="animate-accent-bar"></span>
+          </div>
+          <p className="animate-subtext text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
             Jawaban lengkap seputar cara pemesanan, layanan pasokan tempe, dan koordinasi kunjungan ke sentra tempe Gempeng.
           </p>
         </div>

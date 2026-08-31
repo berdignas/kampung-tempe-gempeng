@@ -41,12 +41,15 @@ export default function UMKMPage() {
         style={{ backgroundColor: "var(--color-surface-muted)" }}
         aria-labelledby="umkm-dir-heading"
       >
-        <div className="container-content animate-fade-in-up">
-          <p className="section-label mb-2">Direktori Lengkap</p>
-          <h1 id="umkm-dir-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-            Direktori Perajin Tempe Gempeng
-          </h1>
-          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+        <div className="container-content space-y-3">
+          <p className="animate-badge section-label">Direktori Lengkap</p>
+          <div className="space-y-2">
+            <h1 id="umkm-dir-heading" className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              Direktori Perajin Tempe Gempeng
+            </h1>
+            <span className="animate-accent-bar"></span>
+          </div>
+          <p className="animate-subtext text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
             Daftar seluruh rumah produksi tempe resmi di Kelurahan Gempeng. Temukan perajin tempe sesuai kebutuhan eceran, grosir, maupun pasokan usaha kuliner Anda.
           </p>
         </div>

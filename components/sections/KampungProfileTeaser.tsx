@@ -36,11 +36,14 @@ export default function KampungProfileTeaser() {
       <div className="container-content">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-4">
-            <p className="section-label">{pengaturan?.profileTeaserEyebrow || "Warisan & Tradisi"}</p>
-            <h2 id="profil-teaser-heading" className="text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
-              {pengaturan?.profileTeaserHeading || "Mengenal Sentra Tempe Gempeng"}
-            </h2>
-            <p className="text-slate-600 leading-relaxed text-base">
+            <p className="animate-badge section-label">{pengaturan?.profileTeaserEyebrow || "Warisan & Tradisi"}</p>
+            <div className="space-y-2">
+              <h2 id="profil-teaser-heading" className="animate-heading text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight tracking-tight">
+                {pengaturan?.profileTeaserHeading || "Mengenal Sentra Tempe Gempeng"}
+              </h2>
+              <span className="animate-accent-bar"></span>
+            </div>
+            <p className="animate-subtext text-slate-600 leading-relaxed text-base">
               {pengaturan?.profileTeaserParagraph1 || "Kelurahan Gempeng, Kecamatan Bangil telah lama menjadi sentra penghasil tempe unggulan di Kabupaten Pasuruan. Keahlian memilih kedelai dan proses fermentasi alami diwariskan turun-temurun, menghasilkan tempe yang padat, gurih, dan berkualitas tinggi."}
             </p>
             <p className="text-slate-600 leading-relaxed text-base">

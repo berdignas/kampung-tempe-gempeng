@@ -35,11 +35,14 @@ export default function StatsSection() {
       style={{ backgroundColor: "var(--color-surface-muted)" }}
     >
       <div className="container-content">
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <p className="section-label mb-2">Potensi & Kapasitas</p>
-          <h2 id="stats-heading" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+        <div className="text-center max-w-2xl mx-auto mb-10 space-y-2">
+          <p className="animate-badge section-label">Potensi & Kapasitas</p>
+          <h2 id="stats-heading" className="animate-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
             {pengaturan?.statsHeading || "Kapasitas & Kekuatan Sentra Tempe Gempeng"}
           </h2>
+          <div className="flex justify-center pt-1">
+            <span className="animate-accent-bar"></span>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">

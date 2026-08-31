@@ -24,18 +24,18 @@ export default function CTASection() {
             }}
           />
 
-          <div className="relative">
-            <p className="text-xs sm:text-sm font-bold tracking-widest uppercase text-emerald-100/90 mb-3">
+          <div className="relative space-y-3">
+            <p className="animate-badge text-xs sm:text-sm font-bold tracking-widest uppercase text-emerald-100/90">
               {pengaturan?.ctaSectionEyebrow || "Pemesanan & Kerjasama"}
             </p>
             <h2
               id="cta-heading"
-              className="text-white mb-4 font-extrabold tracking-tight"
+              className="animate-heading text-white mb-4 font-extrabold tracking-tight"
               style={{ fontSize: "clamp(1.85rem, 4vw, 2.75rem)" }}
             >
               {pengaturan?.ctaSectionHeading || "Pesan Tempe Segar Langsung dari Produsennya"}
             </h2>
-            <p className="text-white/90 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
+            <p className="animate-subtext text-white/90 max-w-xl mx-auto mb-8 text-sm sm:text-base leading-relaxed">
               {pengaturan?.ctaSectionSubtext || "Temukan perajin tempe terdekat, pilih varian tempe sesuai kebutuhan dapur atau usaha kuliner Anda, dan hubungi langsung melalui WhatsApp tanpa biaya perantara."}
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">

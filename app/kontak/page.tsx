@@ -9,12 +9,15 @@ export default function KontakPage() {
   return (
     <main className="pt-20">
       <section className="py-12 md:py-16" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="kontak-heading">
-        <div className="container-content animate-fade-in-up">
-          <p className="section-label mb-2">Pusat Informasi & Sekretariat</p>
-          <h1 id="kontak-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-            Hubungi Pengelola Kawasan
-          </h1>
-          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+        <div className="container-content space-y-3">
+          <p className="animate-badge section-label">Pusat Informasi & Sekretariat</p>
+          <div className="space-y-2">
+            <h1 id="kontak-heading" className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              Hubungi Pengelola Kawasan
+            </h1>
+            <span className="animate-accent-bar"></span>
+          </div>
+          <p className="animate-subtext text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
             Layanan koordinasi resmi untuk kunjungan industri, program KKN/penelitian akademis, kerjasama pengembangan UMKM, serta informasi umum seputar Kampung Tempe Gempeng.
           </p>
         </div>

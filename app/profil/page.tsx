@@ -33,13 +33,16 @@ export default function ProfilPage() {
         className="py-16 md:py-24 relative overflow-hidden"
         style={{ backgroundColor: "var(--color-surface-muted)" }}
       >
-        <div className="container-content relative animate-fade-in-up">
-          <div className="max-w-3xl">
-            <p className="section-label mb-2">{profilData.heroEyebrow || "Profil Sentra Produksi"}</p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight mb-4">
-              {profilData.heroJudul || "Identitas & Warisan Sentra Tempe Gempeng"}
-            </h1>
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
+        <div className="container-content relative">
+          <div className="max-w-3xl space-y-4">
+            <p className="animate-badge section-label">{profilData.heroEyebrow || "Profil Sentra Produksi"}</p>
+            <div className="space-y-2">
+              <h1 className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                {profilData.heroJudul || "Identitas & Warisan Sentra Tempe Gempeng"}
+              </h1>
+              <span className="animate-accent-bar"></span>
+            </div>
+            <p className="animate-subtext text-base sm:text-lg text-slate-600 leading-relaxed font-normal">
               {profilData.heroDeskripsi ||
                 "Kelurahan Gempeng, Kecamatan Bangil, Kabupaten Pasuruan merupakan pusat produksi tempe tradisional yang telah menghidupi puluhan keluarga perajin dan dipercaya masyarakat luas lintas generasi."}
             </p>

@@ -25,12 +25,15 @@ export default function BeritaPage() {
   return (
     <main className="pt-20">
       <section className="py-12 md:py-16" style={{ backgroundColor: "var(--color-surface-muted)" }} aria-labelledby="berita-heading">
-        <div className="container-content animate-fade-in-up">
-          <p className="section-label mb-2">Pusat Informasi & Liputan</p>
-          <h1 id="berita-heading" className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3">
-            Kabar & Aktivitas Sentra Tempe
-          </h1>
-          <p className="text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
+        <div className="container-content space-y-3">
+          <p className="animate-badge section-label">Pusat Informasi & Liputan</p>
+          <div className="space-y-2">
+            <h1 id="berita-heading" className="animate-heading text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+              Kabar & Aktivitas Sentra Tempe
+            </h1>
+            <span className="animate-accent-bar"></span>
+          </div>
+          <p className="animate-subtext text-slate-600 max-w-2xl text-sm sm:text-base leading-relaxed">
             Liputan kegiatan perajin, inovasi pengolahan pangan, pelatihan sertifikasi halal, dokumentasi program KKN, dan kunjungan industri di Kelurahan Gempeng.
           </p>
         </div>

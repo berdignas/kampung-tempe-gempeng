@@ -21,11 +21,14 @@ export default function NewsPreview() {
       <div className="container-content">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
           <div>
-            <p className="section-label mb-2">Berita & Kegiatan Terkini</p>
-            <h2 id="news-preview-heading" className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Kabar & Dokumentasi Kawasan
-            </h2>
-            <p className="mt-2 text-slate-600 max-w-xl text-sm sm:text-base leading-relaxed">
+            <p className="animate-badge section-label mb-2">Berita & Kegiatan Terkini</p>
+            <div className="space-y-2">
+              <h2 id="news-preview-heading" className="animate-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+                Kabar & Dokumentasi Kawasan
+              </h2>
+              <span className="animate-accent-bar"></span>
+            </div>
+            <p className="animate-subtext mt-2 text-slate-600 max-w-xl text-sm sm:text-base leading-relaxed">
               Ikuti informasi terbaru seputar kegiatan perajin, inovasi pengolahan kedelai, program KKN, dan pelatihan usaha.
             </p>
           </div>

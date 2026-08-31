@@ -46,20 +46,23 @@ export default function HeroSection({
       <div className="container-content relative z-10 w-full my-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Kolom Kiri: Teks & Aksi */}
-          <div className="flex flex-col items-start text-left space-y-6 animate-fade-in-up">
+          <div className="flex flex-col items-start text-left space-y-6">
             {/* Eyebrow Chip */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 shadow-2xs font-semibold">
+            <div className="animate-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100/90 border border-emerald-300 text-emerald-900 shadow-2xs font-semibold">
               <MapPin size={15} className="text-emerald-700 flex-shrink-0 animate-bounce" aria-hidden="true" />
               <span className="text-xs font-bold tracking-wider uppercase">{eyebrow}</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.5rem] font-extrabold text-slate-900 leading-[1.12] tracking-tight">
-              {headline}
-            </h1>
+            <div className="space-y-3">
+              <h1 className="animate-heading text-3xl sm:text-4xl md:text-5xl lg:text-[3rem] xl:text-[3.5rem] font-extrabold text-slate-900 leading-[1.14] tracking-tight">
+                {headline}
+              </h1>
+              <span className="animate-accent-bar"></span>
+            </div>
 
             {/* Subtext */}
-            <p className="text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl font-normal">
+            <p className="animate-subtext text-base sm:text-lg text-slate-600 leading-relaxed max-w-xl font-normal">
               {subtext}
             </p>
 
