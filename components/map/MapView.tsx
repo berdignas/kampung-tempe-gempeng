@@ -7,37 +7,39 @@ import Link from "next/link";
 
 interface MapViewProps {
   umkmList: UMKM[];
+  selectedId?: string | null;
+  onSelectUMKM?: (id: string) => void;
   height?: string;
 }
 
-export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
+export default function MapView({
+  umkmList,
+  selectedId,
+  onSelectUMKM,
+  height = "500px",
+}: MapViewProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
+  const markersMapRef = useRef<Map<string, any>>(new Map());
 
   useEffect(() => {
-    if (typeof window === "undefined" || !mapRef.current || mapInstanceRef.current) return;
+    if (typeof window === "undefined" || !mapRef.current) return;
 
     import("leaflet").then((L) => {
+      if (!mapRef.current) return;
+
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+        markersMapRef.current.clear();
+      }
+
       // Fix default icon paths for Next.js
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
         iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
-
-      // Custom green marker
-      const greenIcon = L.divIcon({
-        html: `<div style="
-          width: 36px; height: 36px;
-          background: #2FA84F; border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg); border: 3px solid white;
-          box-shadow: 0 4px 12px rgba(20,32,22,0.25);
-        "></div>`,
-        iconSize: [36, 36],
-        iconAnchor: [18, 36],
-        popupAnchor: [0, -40],
-        className: "",
       });
 
       const center = umkmList[0]?.koordinat
@@ -70,7 +72,7 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
 
         const photoMarkerIcon = L.divIcon({
           html: `
-            <div class="umkm-map-pin" style="
+            <div class="umkm-map-pin group" style="
               position: relative;
               width: 50px;
               height: 58px;
@@ -83,7 +85,7 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
                 height: 48px;
                 border-radius: 50%;
                 background: #ffffff;
-                border: 3px solid #2fa84f;
+                border: 3.5px solid #2fa84f;
                 overflow: hidden;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.18);
                 position: absolute;
@@ -122,6 +124,10 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
           riseOnHover: true,
         }).addTo(map);
 
+        marker.on("click", () => {
+          onSelectUMKM?.(umkm.id);
+        });
+
         marker.bindPopup(`
           <div style="min-width:220px; max-width:260px; font-family: var(--font-poppins), 'Poppins', sans-serif; padding:2px;">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
@@ -152,6 +158,8 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
           maxWidth: 280,
           className: "kampung-tempe-popup",
         });
+
+        markersMapRef.current.set(umkm.id, marker);
       });
 
       mapInstanceRef.current = map;
@@ -161,9 +169,31 @@ export default function MapView({ umkmList, height = "500px" }: MapViewProps) {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+        markersMapRef.current.clear();
       }
     };
-  }, [umkmList]);
+  }, [umkmList, onSelectUMKM]);
+
+  // Efek animasi flyTo dan open popup saat list item diklik
+  useEffect(() => {
+    if (!selectedId || !mapInstanceRef.current) return;
+
+    const marker = markersMapRef.current.get(selectedId);
+    if (marker) {
+      const latLng = marker.getLatLng();
+      mapInstanceRef.current.flyTo(latLng, 17, {
+        animate: true,
+        duration: 1.2,
+      });
+
+      // Buka popup animasi saat kamera peta mulai mendarat
+      const timer = setTimeout(() => {
+        marker.openPopup();
+      }, 350);
+
+      return () => clearTimeout(timer);
+    }
+  }, [selectedId]);
 
   return (
     <>

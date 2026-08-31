@@ -60,29 +60,70 @@ export default function PetaPage() {
       {/* Map + List Layout */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar list (desktop) */}
-        <aside className="hidden lg:flex flex-col w-80 border-r border-border overflow-y-auto bg-white" aria-label="Daftar UMKM">
-          <div className="p-4 border-b border-border">
-            <p className="text-sm font-medium text-text-primary">{filtered.length} lokasi ditemukan</p>
+        <aside className="hidden lg:flex flex-col w-84 border-r border-slate-200 overflow-y-auto bg-white" aria-label="Daftar UMKM">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+            <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+              {filtered.length} Lokasi Ditemukan
+            </p>
+            <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-100/80 px-2 py-0.5 rounded-full">
+              Klik untuk ke Titik
+            </span>
           </div>
-          <ul className="divide-y divide-border" role="list">
+          <ul className="divide-y divide-slate-100" role="list">
             {filtered.map((umkm) => {
               const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
+              const photoUrl = umkm.foto || (umkm.galeri && umkm.galeri[0]) || "";
+              const initial = (umkm.namaUsaha || "T").charAt(0).toUpperCase();
+              const isSelected = selectedUMKM === umkm.id;
+
               return (
-                <li key={umkm.id} className={`p-4 hover:bg-surface-muted transition-colors cursor-pointer ${selectedUMKM === umkm.id ? "bg-primary-soft" : ""}`} onClick={() => setSelectedUMKM(umkm.id)}>
+                <li
+                  key={umkm.id}
+                  className={`p-4 transition-all cursor-pointer border-l-4 ${
+                    isSelected
+                      ? "bg-emerald-50/70 border-emerald-600 shadow-2xs"
+                      : "border-transparent hover:bg-slate-50 hover:border-slate-300"
+                  }`}
+                  onClick={() => setSelectedUMKM(umkm.id)}
+                >
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 text-white text-xs font-bold" style={{ backgroundColor: "var(--color-primary)" }}>
-                      <MapPin size={14} />
+                    <div className="relative w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200 shadow-2xs">
+                      {photoUrl ? (
+                        <img src={photoUrl} alt={umkm.namaUsaha} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-emerald-600 text-white font-bold text-sm flex items-center justify-center">
+                          {initial}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-text-primary truncate">{umkm.namaUsaha}</p>
-                      <p className="text-xs text-text-secondary mt-0.5 truncate">{umkm.alamat}</p>
-                      <div className="flex gap-1.5 mt-2 flex-wrap">
-                        {umkm.jenisLayanan.map((l) => <span key={l} className="badge-layanan text-xs">{labelLayanan[l]}</span>)}
+                      <p className={`font-bold text-sm truncate ${isSelected ? "text-emerald-800" : "text-slate-900"}`}>
+                        {umkm.namaUsaha}
+                      </p>
+                      <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">{umkm.alamat}</p>
+                      <div className="flex gap-1 mt-2 flex-wrap">
+                        {umkm.jenisLayanan.map((l) => (
+                          <span key={l} className="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                            {labelLayanan[l]}
+                          </span>
+                        ))}
                       </div>
-                      <div className="flex gap-2 mt-3">
-                        <Link href={`/umkm/${umkm.slug}`} className="text-xs font-semibold text-primary hover:underline flex items-center gap-1">Profil <ArrowRight size={11} /></Link>
-                        <a href={waUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold flex items-center gap-1" style={{ color: "#25D366" }}>
-                          <MessageCircle size={11} /> WA
+                      <div className="flex items-center gap-3 mt-2.5 pt-2 border-t border-slate-100">
+                        <Link
+                          href={`/umkm/${umkm.slug}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-bold text-emerald-700 hover:text-emerald-800 hover:underline flex items-center gap-1"
+                        >
+                          Lihat Profil <ArrowRight size={11} />
+                        </Link>
+                        <a
+                          href={waUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1"
+                        >
+                          <MessageCircle size={12} /> WhatsApp
                         </a>
                       </div>
                     </div>
@@ -95,16 +136,21 @@ export default function PetaPage() {
 
         {/* Map */}
         <div className="flex-1 relative">
-          <MapView umkmList={filtered} height="100%" />
+          <MapView
+            umkmList={filtered}
+            selectedId={selectedUMKM}
+            onSelectUMKM={(id) => setSelectedUMKM(id)}
+            height="100%"
+          />
 
           {/* Mobile bottom sheet toggle */}
           <button
-            className="lg:hidden absolute bottom-4 left-1/2 -translate-x-1/2 btn-primary shadow-card-hover gap-2"
+            className="lg:hidden absolute bottom-5 left-1/2 -translate-x-1/2 btn-primary shadow-lg gap-2 text-xs font-bold px-5 py-3 rounded-full cursor-pointer z-30"
             onClick={() => setShowList(true)}
             aria-label="Lihat daftar UMKM"
           >
             <MapPin size={16} />
-            {filtered.length} Lokasi
+            <span>Lihat {filtered.length} Lokasi</span>
           </button>
         </div>
       </div>
@@ -112,30 +158,48 @@ export default function PetaPage() {
       {/* Mobile bottom sheet */}
       {showList && (
         <div className="fixed inset-0 z-50 lg:hidden flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/30" onClick={() => setShowList(false)} aria-hidden="true" />
-          <div className="relative bg-white rounded-t-2xl max-h-[70vh] flex flex-col">
-            <div className="flex items-center justify-between p-4 border-b border-border">
-              <p className="font-semibold text-text-primary">{filtered.length} Lokasi UMKM</p>
-              <button onClick={() => setShowList(false)} className="w-8 h-8 flex items-center justify-center" aria-label="Tutup">
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onClick={() => setShowList(false)} aria-hidden="true" />
+          <div className="relative bg-white rounded-t-3xl max-h-[70vh] flex flex-col shadow-2xl z-10">
+            <div className="flex items-center justify-between p-4 border-b border-slate-100">
+              <p className="font-bold text-slate-900 text-sm">{filtered.length} Lokasi Perajin Tempe</p>
+              <button
+                onClick={() => setShowList(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-slate-100 text-slate-500 cursor-pointer"
+                aria-label="Tutup"
+              >
                 <X size={18} />
               </button>
             </div>
-            <ul className="overflow-y-auto divide-y divide-border">
+            <ul className="overflow-y-auto divide-y divide-slate-100">
               {filtered.map((umkm) => {
-                const waUrl = buildWhatsAppUrl(umkm.nomorWhatsApp, buildWhatsAppMessageUMKM(umkm.namaUsaha));
+                const photoUrl = umkm.foto || (umkm.galeri && umkm.galeri[0]) || "";
+                const initial = (umkm.namaUsaha || "T").charAt(0).toUpperCase();
+
                 return (
-                  <li key={umkm.id} className="p-4 flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white flex-shrink-0" style={{ backgroundColor: "var(--color-primary)" }}>
-                      <MapPin size={14} />
+                  <li
+                    key={umkm.id}
+                    className="p-4 flex items-center gap-3 hover:bg-slate-50 cursor-pointer"
+                    onClick={() => {
+                      setSelectedUMKM(umkm.id);
+                      setShowList(false);
+                    }}
+                  >
+                    <div className="relative w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-slate-100 border border-slate-200">
+                      {photoUrl ? (
+                        <img src={photoUrl} alt={umkm.namaUsaha} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-emerald-600 text-white font-bold text-sm flex items-center justify-center">
+                          {initial}
+                        </div>
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-sm text-text-primary truncate">{umkm.namaUsaha}</p>
-                      <p className="text-xs text-text-secondary truncate">{umkm.alamat}</p>
+                      <p className="font-bold text-sm text-slate-900 truncate">{umkm.namaUsaha}</p>
+                      <p className="text-xs text-slate-500 truncate">{umkm.alamat}</p>
                     </div>
-                    <div className="flex gap-2">
-                      <Link href={`/umkm/${umkm.slug}`} className="btn-secondary text-xs py-1.5 px-3" onClick={() => setShowList(false)}>Profil</Link>
-                      <a href={waUrl} target="_blank" rel="noopener noreferrer" className="btn-whatsapp text-xs py-1.5 px-3"><MessageCircle size={13} /></a>
-                    </div>
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg">
+                      Buka Peta
+                    </span>
                   </li>
                 );
               })}
