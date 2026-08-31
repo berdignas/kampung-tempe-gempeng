@@ -90,28 +90,20 @@ export default function UMKMForm({ initialData, isEdit }: UMKMFormProps) {
     if (isEdit && initialData) {
       updateUMKM(initialData.id, formData);
       showAlert({
-        title: "Profil Pengrajin Berhasil Diperbarui!",
-        message: `Data usaha "${namaUsaha}" beserta foto profil berhasil disimpan ke database.`,
+        title: "Berhasil Disimpan",
+        message: `Profil "${namaUsaha}" berhasil diperbarui.`,
         type: "success",
-        badgeText: "Perubahan Disimpan",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/umkm/${slug}`,
-        actionText: "Lihat Profil Pengrajin di Web",
-        onConfirm: () => router.push("/admin/umkm"),
       });
     } else {
       addUMKM(formData);
       showAlert({
-        title: "Pengrajin Baru Berhasil Ditambahkan!",
-        message: `Pengrajin "${namaUsaha}" berhasil didaftarkan dan langsung tampil di direktori UMKM & peta interaktif.`,
+        title: "Berhasil Disimpan",
+        message: `Pengrajin "${namaUsaha}" berhasil ditambahkan.`,
         type: "success",
-        badgeText: "Pengrajin Aktif",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/umkm/${slug}`,
-        actionText: "Lihat Halaman Publik",
-        onConfirm: () => router.push("/admin/umkm"),
       });
     }
+
+    router.push("/admin/umkm");
   };
 
   const toggleLayanan = (layanan: JenisLayanan) => {

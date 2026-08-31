@@ -37,13 +37,9 @@ export default function AdminProfilPage() {
     e.preventDefault();
     updateProfil(formData);
     showAlert({
-      title: "Profil Kawasan Berhasil Disimpan!",
-      message: "Seluruh sejarah, visi-misi, nilai kearifan, dan peta lokasi sekretariat telah berhasil diperbarui.",
+      title: "Berhasil Disimpan",
+      message: "Konten Profil Kampung berhasil diperbarui.",
       type: "success",
-      badgeText: "Profil Kampung Diperbarui",
-      confirmText: "Oke, Selesai",
-      actionHref: "/profil",
-      actionText: "Lihat Halaman Profil Publik",
     });
   };
 

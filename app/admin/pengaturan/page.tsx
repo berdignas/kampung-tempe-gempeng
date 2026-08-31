@@ -33,13 +33,9 @@ export default function AdminPengaturanPage() {
     e.preventDefault();
     updatePengaturan(formData);
     showAlert({
-      title: "Pengaturan Berhasil Disimpan!",
-      message: "Seluruh perubahan teks, statistik, foto hero banner, dan kontak portal telah berhasil diperbarui ke database.",
+      title: "Berhasil Disimpan",
+      message: "Pengaturan portal & hero banner berhasil diperbarui.",
       type: "success",
-      badgeText: "Tersimpan Permanen",
-      confirmText: "Oke, Selesai",
-      actionHref: "/",
-      actionText: "Lihat Halaman Beranda Publik",
     });
   };
 

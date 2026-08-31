@@ -79,28 +79,20 @@ export default function BeritaForm({ initialData, isEdit }: BeritaFormProps) {
     if (isEdit && initialData) {
       updateBerita(initialData.id, formData);
       showAlert({
-        title: "Artikel Berita Berhasil Diperbarui!",
-        message: `Artikel "${judul}" berhasil disimpan dan diperbarui di portal kabar & berita.`,
+        title: "Berhasil Disimpan",
+        message: `Artikel "${judul}" berhasil diperbarui.`,
         type: "success",
-        badgeText: "Artikel Diperbarui",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/berita/${slug}`,
-        actionText: "Lihat Artikel di Web",
-        onConfirm: () => router.push("/admin/berita"),
       });
     } else {
       addBerita(formData);
       showAlert({
-        title: "Artikel Berita Berhasil Dipublikasikan!",
-        message: `Artikel "${judul}" berhasil dipublikasikan dan langsung aktif di halaman berita kawasan.`,
+        title: "Berhasil Disimpan",
+        message: `Artikel "${judul}" berhasil dipublikasikan.`,
         type: "success",
-        badgeText: "Dipublikasikan",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/berita/${slug}`,
-        actionText: "Lihat Artikel di Web",
-        onConfirm: () => router.push("/admin/berita"),
       });
     }
+
+    router.push("/admin/berita");
   };
 
   return (

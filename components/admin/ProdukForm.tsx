@@ -113,28 +113,20 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
     if (isEdit && initialData) {
       updateProduk(initialData.id, formData);
       showAlert({
-        title: "Produk Berhasil Diperbarui!",
-        message: `Produk "${nama}" berhasil disimpan dan diperbarui di katalog produk.`,
+        title: "Berhasil Disimpan",
+        message: `Produk "${nama}" berhasil diperbarui.`,
         type: "success",
-        badgeText: "Katalog Diperbarui",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/produk/${slug}`,
-        actionText: "Lihat Produk di Web",
-        onConfirm: () => router.push("/admin/produk"),
       });
     } else {
       addProduk(formData);
       showAlert({
-        title: "Produk Baru Berhasil Ditambahkan!",
-        message: `Produk "${nama}" berhasil ditambahkan ke katalog portal Kampung Tempe.`,
+        title: "Berhasil Disimpan",
+        message: `Produk "${nama}" berhasil ditambahkan.`,
         type: "success",
-        badgeText: "Produk Aktif",
-        confirmText: "Kembali ke Daftar",
-        actionHref: `/produk/${slug}`,
-        actionText: "Lihat Produk di Web",
-        onConfirm: () => router.push("/admin/produk"),
       });
     }
+
+    router.push("/admin/produk");
   };
 
   const toggleProdusen = (id: string) => {
