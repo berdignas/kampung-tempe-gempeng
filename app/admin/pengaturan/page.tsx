@@ -433,7 +433,10 @@ export default function AdminPengaturanPage() {
               label="Logo Resmi Website / Kawasan"
               value={formData.logoUrl || ""}
               onChange={(url) => setFormData({ ...formData, logoUrl: url })}
-              helpText="Upload file gambar logo (PNG transparan / JPG / SVG) dari komputer Anda atau masukkan URL. Logo ini akan tampil di Navbar, Footer, dan Panel Admin."
+              aspectRatio={1}
+              aspectRatioLabel="1:1 (Persegi / Square)"
+              previewMaxWidth="max-w-[160px]"
+              helpText="Upload file gambar logo persegi (PNG transparan / JPG / SVG). Logo ini akan tampil di Navbar, Footer, dan Panel Admin."
             />
           </div>
 
