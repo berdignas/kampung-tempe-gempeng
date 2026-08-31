@@ -122,7 +122,7 @@ export default function AdminPengaturanPage() {
             <div className="pt-2 border-t border-slate-100">
               <ImageUploader
                 label="Foto Banner Utama Hero"
-                value={formData.heroImage || "/images/hero-tempe-production.jpg"}
+                value={formData.heroImage || ""}
                 onChange={(url) => setFormData({ ...formData, heroImage: url })}
                 aspectRatio={4 / 3}
                 aspectRatioLabel="4:3 (Ukuran Banner Hero)"

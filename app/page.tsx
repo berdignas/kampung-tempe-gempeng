@@ -24,7 +24,7 @@ export default function BerandaPage() {
         ctaPrimaryHref={pengaturan?.heroCtaPrimaryHref || "/umkm"}
         ctaSecondaryLabel={pengaturan?.heroCtaSecondaryLabel || "Lihat Peta Produksi"}
         ctaSecondaryHref={pengaturan?.heroCtaSecondaryHref || "/peta"}
-        imageSrc={pengaturan?.heroImage || "/images/hero-tempe-production.jpg"}
+        imageSrc={pengaturan?.heroImage || ""}
         imageAlt="Aktivitas produksi tempe di rumah produksi Kampung Tempe Gempeng"
       />
       <StatsSection />
