@@ -45,24 +45,36 @@ export default function StatsSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="bg-white rounded-2xl p-6 text-center border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 group"
-            >
-              <p
-                className="text-3xl sm:text-4xl font-extrabold mb-1.5 transition-transform group-hover:scale-105"
-                style={{ color: "var(--color-primary)" }}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 items-stretch">
+          {stats.map((stat, i) => {
+            const isLong = stat.value.length > 5;
+            return (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-5 sm:p-6 text-center border border-slate-200 shadow-xs hover:shadow-md hover:-translate-y-1 transition-all duration-300 group h-full flex flex-col justify-center items-center"
               >
-                {stat.value}
-              </p>
-              <p className="font-bold text-sm text-slate-800">{stat.label}</p>
-              {stat.note && (
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">{stat.note}</p>
-              )}
-            </div>
-          ))}
+                {/* Fixed height value container for 100% horizontal alignment */}
+                <div className="min-h-[52px] sm:min-h-[64px] flex items-center justify-center w-full px-1">
+                  <p
+                    className={`font-extrabold tracking-tight transition-transform group-hover:scale-105 ${
+                      isLong
+                        ? "text-xl sm:text-2xl md:text-2xl leading-tight"
+                        : "text-3xl sm:text-4xl"
+                    }`}
+                    style={{ color: "var(--color-primary)" }}
+                  >
+                    {stat.value}
+                  </p>
+                </div>
+                <div className="pt-2 border-t border-slate-100/80 w-full flex-1 flex flex-col justify-center">
+                  <p className="font-bold text-xs sm:text-sm text-slate-800 leading-snug">{stat.label}</p>
+                  {stat.note && (
+                    <p className="text-[11px] sm:text-xs text-slate-500 mt-1 leading-normal">{stat.note}</p>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
