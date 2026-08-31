@@ -429,7 +429,7 @@ export default function ImageCropperModal({
             <div className="lg:col-span-4 space-y-3">
               <span className="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
                 <Eye size={14} className="text-emerald-600" />
-                Hasil Pratinjau di Kartu UMKM
+                Hasil Pratinjau Tampilan Website
               </span>
 
               {/* Mockup Card */}
@@ -443,7 +443,7 @@ export default function ImageCropperModal({
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={previewUrl}
-                      alt="Pratinjau Hasil Kartu"
+                      alt="Pratinjau Hasil Tampilan"
                       className="w-full h-full object-cover"
                     />
                   ) : (
@@ -452,20 +452,20 @@ export default function ImageCropperModal({
                     </div>
                   )}
                   <span className="absolute bottom-2 right-2 bg-slate-900/80 text-white text-[9px] px-2 py-0.5 rounded-md backdrop-blur-xs font-semibold">
-                    16:9 Pas
+                    {aspectRatioLabel.split("(")[0].trim()} Pas
                   </span>
                 </div>
 
                 {/* Mockup Content */}
-                <div className="p-4 space-y-2">
-                  <div className="flex gap-1">
-                    <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 text-[9px] font-bold">
-                      Eceran & Grosir
+                <div className="p-3.5 space-y-1.5 bg-slate-50/50">
+                  <div className="flex items-center gap-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span className="text-[10px] font-bold text-emerald-700">
+                      {aspectRatioLabel}
                     </span>
                   </div>
-                  <h4 className="font-bold text-slate-800 text-xs">Nama Usaha Tempe Anda</h4>
-                  <p className="text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
-                    Foto ini akan tampil rapi dan presisi di halaman direktori utama dan profil publik.
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Hasil pemotongan di atas adalah bentuk persis yang akan tampil di halaman website.
                   </p>
                 </div>
               </div>
@@ -473,10 +473,10 @@ export default function ImageCropperModal({
               <div className="p-3 bg-emerald-50/70 border border-emerald-200 rounded-xl text-[11px] text-emerald-800 space-y-1">
                 <p className="font-bold flex items-center gap-1">
                   <Sparkles size={12} className="text-emerald-600" />
-                  Kelebihan Fitur Drag:
+                  Presisi Sesuai Website:
                 </p>
                 <p className="text-emerald-700 leading-relaxed">
-                  Posisi yang Anda tentukan akan langsung dipotong presisi dan disimpan otomatis dengan kualitas tinggi.
+                  Foto yang disimpan akan otomatis terpasang dengan proporsi dan posisi yang pas tanpa terpotong sembarangan.
                 </p>
               </div>
             </div>

@@ -12,6 +12,7 @@ interface ImageUploaderProps {
   helpText?: string;
   aspectRatio?: number;
   aspectRatioLabel?: string;
+  previewMaxWidth?: string;
   allowCrop?: boolean;
 }
 
@@ -23,12 +24,24 @@ export default function ImageUploader({
   helpText = "Upload foto dari file komputer Anda atau masukkan URL gambar.",
   aspectRatio = 16 / 9,
   aspectRatioLabel = "16:9 (Ukuran Kartu UMKM)",
+  previewMaxWidth,
   allowCrop = true,
 }: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isCropperOpen, setIsCropperOpen] = useState(false);
   const [cropperSrc, setCropperSrc] = useState<string>("");
+
+  // Tentukan lebar maksimum container preview berdasarkan rasio jika tidak dispesifikasikan
+  const resolvedMaxWidth =
+    previewMaxWidth ||
+    (aspectRatio >= 2.2
+      ? "max-w-2xl"
+      : aspectRatio >= 1.6
+      ? "max-w-lg"
+      : aspectRatio >= 1.2
+      ? "max-w-md"
+      : "max-w-xs");
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,15 +84,15 @@ export default function ImageUploader({
     <div className="space-y-2">
       {label && <label className="block text-xs font-semibold text-slate-700">{label}</label>}
 
-      {/* Preview Box if image exists */}
+      {/* Preview Box if image exists (Ukuran dan rasio sesuai tampilan website) */}
       {value && (
-        <div className="relative group w-full max-w-md rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mb-3 shadow-xs">
+        <div className={`relative group w-full ${resolvedMaxWidth} rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 mb-3 shadow-xs`}>
           <div style={{ aspectRatio: `${aspectRatio}` }} className="relative w-full overflow-hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={value} alt="Pratinjau Gambar" className="w-full h-full object-cover" />
 
             {/* Quick Action Overlay */}
-            <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-2xs p-3">
+            <div className="absolute inset-0 bg-slate-900/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 backdrop-blur-2xs p-3">
               {allowCrop && (
                 <button
                   type="button"
@@ -106,8 +119,9 @@ export default function ImageUploader({
           {/* Bottom Bar on Preview */}
           {allowCrop && (
             <div className="p-2.5 bg-white border-t border-slate-200 flex items-center justify-between gap-2">
-              <span className="text-[11px] text-slate-500 font-medium truncate">
-                Rasio: {aspectRatioLabel}
+              <span className="text-[11px] text-slate-500 font-medium truncate flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Preview Pas: {aspectRatioLabel}
               </span>
               <button
                 type="button"

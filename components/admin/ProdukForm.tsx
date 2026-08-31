@@ -189,10 +189,13 @@ export default function ProdukForm({ initialData, isEdit }: ProdukFormProps) {
         {/* Foto Produk dengan ImageUploader */}
         <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
           <ImageUploader
-            label="Foto Produk"
+            label="Foto Produk (Persegi 1:1)"
             value={foto}
             onChange={(url) => setFoto(url)}
-            helpText="Pilih file foto produk dari komputer Anda atau masukkan URL."
+            aspectRatio={1}
+            aspectRatioLabel="1:1 (Ukuran Persegi Kartu Produk)"
+            previewMaxWidth="max-w-xs"
+            helpText="Pilih file foto produk. Anda dapat menggeser (drag) dan memotong foto menjadi persegi pas."
           />
         </div>
 

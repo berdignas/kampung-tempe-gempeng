@@ -182,10 +182,13 @@ export default function BeritaForm({ initialData, isEdit }: BeritaFormProps) {
         {/* Thumbnail Foto dengan ImageUploader */}
         <div className="space-y-1.5 md:col-span-2 border-t border-slate-100 pt-4">
           <ImageUploader
-            label="Gambar Utama (Thumbnail Berita)"
+            label="Gambar Utama (Thumbnail Berita - 16:9)"
             value={thumbnail}
             onChange={(url) => setThumbnail(url)}
-            helpText="Upload foto berita dari komputer Anda (JPG, PNG, WebP) atau masukkan URL."
+            aspectRatio={16 / 9}
+            aspectRatioLabel="16:9 (Ukuran Kartu Berita)"
+            previewMaxWidth="max-w-lg"
+            helpText="Upload foto berita. Anda dapat menggeser (drag) dan memotong foto agar pas di kartu berita."
           />
         </div>
 

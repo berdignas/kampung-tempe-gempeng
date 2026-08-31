@@ -204,10 +204,13 @@ export default function AdminProfilPage() {
 
             <div className="pt-2 border-t border-slate-100">
               <ImageUploader
-                label="Foto Banner Utama Halaman Profil"
+                label="Foto Banner Utama Halaman Profil (Landscape Lebar 21:9)"
                 value={formData.bannerFoto}
                 onChange={(url) => setFormData({ ...formData, bannerFoto: url })}
-                helpText="Upload foto pemukiman/kawasan dari file komputer Anda atau masukkan URL gambar."
+                aspectRatio={21 / 9}
+                aspectRatioLabel="21:9 (Ukuran Banner Lebar Profil Kawasan)"
+                previewMaxWidth="max-w-2xl"
+                helpText="Upload foto pemukiman/kawasan. Anda dapat menggeser (drag) dan memotong foto sesuai rasio banner lebar."
               />
             </div>
           </div>
