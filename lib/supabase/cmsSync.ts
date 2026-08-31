@@ -124,52 +124,63 @@ function mapBeritaToDb(data: Berita) {
   };
 }
 
-function mapPengaturanFromDb(row: any): PengaturanPortal {
-  if (!row) return initialPengaturan;
+function mapPengaturanFromDb(row: any, fallback?: PengaturanPortal): PengaturanPortal {
+  const base = fallback || initialPengaturan;
+  if (!row) return base;
+
+  // Jika tabel Supabase menyimpan seluruh object dalam kolom JSONB 'data' (seperti tabel profil)
+  if (row.data && typeof row.data === "object") {
+    return {
+      ...base,
+      ...row.data,
+    };
+  }
+
+  // Jika tabel Supabase menggunakan kolom individual
   return {
-    namaKawasan: row.nama_kawasan || initialPengaturan.namaKawasan,
-    subjudulKawasan: row.subjudul_kawasan || initialPengaturan.subjudulKawasan,
-    logoUrl: row.logo_url || initialPengaturan.logoUrl,
-    alamatSekretariat: row.alamat_sekretariat || initialPengaturan.alamatSekretariat,
-    nomorWhatsAppPengelola: row.nomor_whatsapp_pengelola || initialPengaturan.nomorWhatsAppPengelola,
-    jamLayananPengelola: row.jam_layanan_pengelola || initialPengaturan.jamLayananPengelola,
-    emailPengelola: row.email_pengelola || initialPengaturan.emailPengelola,
+    namaKawasan: row.nama_kawasan ?? base.namaKawasan,
+    subjudulKawasan: row.subjudul_kawasan ?? base.subjudulKawasan,
+    logoUrl: row.logo_url ?? base.logoUrl,
+    alamatSekretariat: row.alamat_sekretariat ?? base.alamatSekretariat,
+    nomorWhatsAppPengelola: row.nomor_whatsapp_pengelola ?? base.nomorWhatsAppPengelola,
+    jamLayananPengelola: row.jam_layanan_pengelola ?? base.jamLayananPengelola,
+    emailPengelola: row.email_pengelola ?? base.emailPengelola,
 
-    heroEyebrow: row.hero_eyebrow || initialPengaturan.heroEyebrow,
-    heroHeadline: row.hero_headline || initialPengaturan.heroHeadline,
-    heroSubtext: row.hero_subtext || initialPengaturan.heroSubtext,
-    heroImage: row.hero_image || initialPengaturan.heroImage,
-    heroCtaPrimaryLabel: row.hero_cta_primary_label || initialPengaturan.heroCtaPrimaryLabel,
-    heroCtaPrimaryHref: row.hero_cta_primary_href || initialPengaturan.heroCtaPrimaryHref,
-    heroCtaSecondaryLabel: row.hero_cta_secondary_label || initialPengaturan.heroCtaSecondaryLabel,
-    heroCtaSecondaryHref: row.hero_cta_secondary_href || initialPengaturan.heroCtaSecondaryHref,
+    heroEyebrow: row.hero_eyebrow ?? base.heroEyebrow,
+    heroHeadline: row.hero_headline ?? base.heroHeadline,
+    heroSubtext: row.hero_subtext ?? base.heroSubtext,
+    heroImage: row.hero_image ?? base.heroImage,
+    heroCtaPrimaryLabel: row.hero_cta_primary_label ?? base.heroCtaPrimaryLabel,
+    heroCtaPrimaryHref: row.hero_cta_primary_href ?? base.heroCtaPrimaryHref,
+    heroCtaSecondaryLabel: row.hero_cta_secondary_label ?? base.heroCtaSecondaryLabel,
+    heroCtaSecondaryHref: row.hero_cta_secondary_href ?? base.heroCtaSecondaryHref,
 
-    statsHeading: row.stats_heading || initialPengaturan.statsHeading,
-    statsItem1Value: row.stats_item1_value || initialPengaturan.statsItem1Value,
-    statsItem1Label: row.stats_item1_label || initialPengaturan.statsItem1Label,
-    statsItem1Note: row.stats_item1_note || initialPengaturan.statsItem1Note,
-    statsItem2Value: row.stats_item2_value || initialPengaturan.statsItem2Value,
-    statsItem2Label: row.stats_item2_label || initialPengaturan.statsItem2Label,
-    statsItem2Note: row.stats_item2_note || initialPengaturan.statsItem2Note,
-    statsItem3Value: row.stats_item3_value || initialPengaturan.statsItem3Value,
-    statsItem3Label: row.stats_item3_label || initialPengaturan.statsItem3Label,
-    statsItem3Note: row.stats_item3_note || initialPengaturan.statsItem3Note,
-    statsItem4Value: row.stats_item4_value || initialPengaturan.statsItem4Value,
-    statsItem4Label: row.stats_item4_label || initialPengaturan.statsItem4Label,
-    statsItem4Note: row.stats_item4_note || initialPengaturan.statsItem4Note,
+    statsHeading: row.stats_heading ?? base.statsHeading,
+    statsItem1Value: row.stats_item1_value ?? base.statsItem1Value,
+    statsItem1Label: row.stats_item1_label ?? base.statsItem1Label,
+    statsItem1Note: row.stats_item1_note ?? base.statsItem1Note,
+    statsItem2Value: row.stats_item2_value ?? base.statsItem2Value,
+    statsItem2Label: row.stats_item2_label ?? base.statsItem2Label,
+    statsItem2Note: row.stats_item2_note ?? base.statsItem2Note,
+    statsItem3Value: row.stats_item3_value ?? base.statsItem3Value,
+    statsItem3Label: row.stats_item3_label ?? base.statsItem3Label,
+    statsItem3Note: row.stats_item3_note ?? base.statsItem3Note,
+    statsItem4Value: row.stats_item4_value ?? base.statsItem4Value,
+    statsItem4Label: row.stats_item4_label ?? base.statsItem4Label,
+    statsItem4Note: row.stats_item4_note ?? base.statsItem4Note,
 
-    profileTeaserEyebrow: row.profile_teaser_eyebrow || initialPengaturan.profileTeaserEyebrow,
-    profileTeaserHeading: row.profile_teaser_heading || initialPengaturan.profileTeaserHeading,
-    profileTeaserParagraph1: row.profile_teaser_paragraph1 || initialPengaturan.profileTeaserParagraph1,
-    profileTeaserParagraph2: row.profile_teaser_paragraph2 || initialPengaturan.profileTeaserParagraph2,
-    profileTeaserImage: row.profile_teaser_image || initialPengaturan.profileTeaserImage,
-    profileTeaserAccentVal: row.profile_teaser_accent_val || initialPengaturan.profileTeaserAccentVal,
+    profileTeaserEyebrow: row.profile_teaser_eyebrow ?? base.profileTeaserEyebrow,
+    profileTeaserHeading: row.profile_teaser_heading ?? base.profileTeaserHeading,
+    profileTeaserParagraph1: row.profile_teaser_paragraph1 ?? base.profileTeaserParagraph1,
+    profileTeaserParagraph2: row.profile_teaser_paragraph2 ?? base.profileTeaserParagraph2,
+    profileTeaserImage: row.profile_teaser_image ?? base.profileTeaserImage,
+    profileTeaserAccentVal: row.profile_teaser_accent_val ?? base.profileTeaserAccentVal,
 
-    ctaSectionEyebrow: row.cta_section_eyebrow || initialPengaturan.ctaSectionEyebrow,
-    ctaSectionHeading: row.cta_section_heading || initialPengaturan.ctaSectionHeading,
-    ctaSectionSubtext: row.cta_section_subtext || initialPengaturan.ctaSectionSubtext,
-    ctaSectionBtn1Label: row.cta_section_btn1_label || initialPengaturan.ctaSectionBtn1Label,
-    ctaSectionBtn2Label: row.cta_section_btn2_label || initialPengaturan.ctaSectionBtn2Label,
+    ctaSectionEyebrow: row.cta_section_eyebrow ?? base.ctaSectionEyebrow,
+    ctaSectionHeading: row.cta_section_heading ?? base.ctaSectionHeading,
+    ctaSectionSubtext: row.cta_section_subtext ?? base.ctaSectionSubtext,
+    ctaSectionBtn1Label: row.cta_section_btn1_label ?? base.ctaSectionBtn1Label,
+    ctaSectionBtn2Label: row.cta_section_btn2_label ?? base.ctaSectionBtn2Label,
   };
 }
 
@@ -248,7 +259,7 @@ export async function fetchAllFromSupabase(currentLocal?: {
     let beritaList: Berita[] | null =
       beritaRes.data && beritaRes.data.length > 0 ? beritaRes.data.map(mapBeritaFromDb) : null;
     let pengaturan: PengaturanPortal | null =
-      pengRes.data ? mapPengaturanFromDb(pengRes.data) : null;
+      pengRes.data ? mapPengaturanFromDb(pengRes.data, currentLocal?.pengaturan) : null;
     let profil: ProfilKampungData | null =
       profilRes.data && profilRes.data.data ? { ...initialProfilKampung, ...profilRes.data.data } : null;
 
@@ -329,20 +340,30 @@ export async function updatePengaturanSupabase(data: PengaturanPortal) {
   const payload = mapPengaturanToDb(data);
   const { error } = await supabase.from("pengaturan").upsert(payload);
   if (error) {
-    console.error("Error update Pengaturan to Supabase:", error);
-    // Fallback if some new columns don't exist in Supabase yet
-    const basicPayload = {
+    console.warn("Retrying update Pengaturan with JSONB / clean payload:", error);
+    // 1. Coba schema JSONB (seperti tabel profil)
+    const jsonbPayload = {
       id: "default",
-      nama_kawasan: data.namaKawasan,
-      subjudul_kawasan: data.subjudulKawasan,
-      alamat_sekretariat: data.alamatSekretariat,
-      nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
-      jam_layanan_pengelola: data.jamLayananPengelola,
-      email_pengelola: data.emailPengelola,
-      hero_headline: data.heroHeadline,
-      hero_subtext: data.heroSubtext,
+      data: data,
+      updated_at: new Date().toISOString(),
     };
-    await supabase.from("pengaturan").upsert(basicPayload);
+    const res = await supabase.from("pengaturan").upsert(jsonbPayload);
+    
+    // 2. Jika masih gagal, coba payload kolom esensial
+    if (res.error) {
+      const basicPayload = {
+        id: "default",
+        nama_kawasan: data.namaKawasan,
+        subjudul_kawasan: data.subjudulKawasan,
+        alamat_sekretariat: data.alamatSekretariat,
+        nomor_whatsapp_pengelola: data.nomorWhatsAppPengelola,
+        jam_layanan_pengelola: data.jamLayananPengelola,
+        email_pengelola: data.emailPengelola,
+        hero_headline: data.heroHeadline,
+        hero_subtext: data.heroSubtext,
+      };
+      await supabase.from("pengaturan").upsert(basicPayload);
+    }
   }
 }
 

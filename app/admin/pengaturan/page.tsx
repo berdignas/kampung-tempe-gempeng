@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCMS } from "@/lib/cms/CMSContext";
 import {
   Save,
@@ -20,6 +20,12 @@ export default function AdminPengaturanPage() {
   const [activeTab, setActiveTab] = useState<
     "hero" | "stats" | "profile" | "cta" | "contact"
   >("hero");
+
+  useEffect(() => {
+    if (pengaturan) {
+      setFormData(pengaturan);
+    }
+  }, [pengaturan]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -128,7 +134,9 @@ export default function AdminPengaturanPage() {
                 label="Foto Banner Utama Hero"
                 value={formData.heroImage || "/images/hero-tempe-production.jpg"}
                 onChange={(url) => setFormData({ ...formData, heroImage: url })}
-                helpText="Klik tombol di atas untuk memilih foto dari file komputer Anda (JPG, PNG, WebP) atau tempelkan URL."
+                aspectRatio={4 / 3}
+                aspectRatioLabel="4:3 (Ukuran Banner Hero)"
+                helpText="Pilih foto dari komputer Anda. Anda dapat menggeser (drag) dan menyesuaikan posisi foto."
               />
             </div>
 
@@ -343,7 +351,9 @@ export default function AdminPengaturanPage() {
                 label="Foto Profil Kawasan"
                 value={formData.profileTeaserImage || "/images/kampung-profile.jpg"}
                 onChange={(url) => setFormData({ ...formData, profileTeaserImage: url })}
-                helpText="Upload foto suasana kawasan kampung tempe dari komputer atau masukkan URL."
+                aspectRatio={4 / 3}
+                aspectRatioLabel="4:3 (Ukuran Kartu Profil Teaser)"
+                helpText="Upload foto suasana kawasan kampung tempe. Anda dapat menggeser (drag) dan menyesuaikan posisi foto."
               />
             </div>
 
